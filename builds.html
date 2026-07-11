@@ -75,38 +75,100 @@
 
 <script src="js/script.js"></script>
 <script>
+const THEME = {
+  gaming:  { accent: '#ff2530', glow: '#ff2530', bg: '#3a0509' },
+  creator: { accent: '#2a5aff', glow: '#4d9aff', bg: '#0a1a3a' },
+  office:  { accent: '#6a6a6e', glow: '#9a9aa1', bg: '#1c1c1e' },
+};
+
+function pcArt(cat, tier) {
+  const th = THEME[cat] || THEME.gaming;
+  const fanCount = tier === 0 ? 2 : tier === 1 ? 3 : 4;
+  const gpuLen = 60 + tier * 20;
+  const uid = Math.random().toString(36).slice(2, 8);
+  let fans = '';
+  const spacing = 175 / (fanCount + 1);
+  for (let i = 0; i < fanCount; i++) {
+    const fy = 45 + spacing * (i + 1);
+    fans += `<circle cx="137" cy="${fy}" r="11" fill="url(#fg${uid})"/><circle cx="137" cy="${fy}" r="11" fill="none" stroke="${th.glow}" stroke-width="1"/>`;
+  }
+  return `
+    <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+      <defs>
+        <linearGradient id="bg${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${th.bg}"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
+        <radialGradient id="fg${uid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${th.glow}"/><stop offset="70%" stop-color="${th.accent}"/><stop offset="100%" stop-color="#0e0e10"/></radialGradient>
+      </defs>
+      <rect width="400" height="260" fill="url(#bg${uid})"/>
+      <ellipse cx="200" cy="150" rx="150" ry="90" fill="${th.accent}" opacity="0.14"/>
+      <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="${th.accent}" stroke-width="1.4"/>
+      <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="${th.accent}" stroke-width="1"/>
+      <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
+      ${fans}
+      <rect x="178" y="150" width="${gpuLen}" height="26" rx="3" fill="#0a0a0c" stroke="${th.accent}" stroke-width="1"/>
+      <circle cx="${178 + gpuLen*0.3}" cy="163" r="8" fill="url(#fg${uid})"/>
+      <circle cx="${178 + gpuLen*0.7}" cy="163" r="8" fill="url(#fg${uid})"/>
+      <rect x="220" y="95" width="7" height="30" fill="${th.accent}" opacity="0.8"/>
+      <rect x="232" y="95" width="7" height="30" fill="${th.accent}" opacity="0.55"/>
+      <path d="M178 188 Q210 200 250 188" stroke="${th.accent}" stroke-width="2" fill="none" opacity="0.5"/>
+    </svg>
+  `;
+}
+
 const CATALOG = [
-  { cat:'gaming', name:'Vortex Gaming Rig', desc:'i5-14600K · RTX 4070 Super · 16GB', price: 1499 },
-  { cat:'gaming', name:'Apex Predator', desc:'Ryzen 7 7800X3D · RTX 4080 Super · 32GB', price: 2199 },
-  { cat:'gaming', name:'Titan Ultra', desc:'Ryzen 9 7950X · RTX 4090 · 32GB', price: 3299 },
-  { cat:'creator', name:'Studio Pro', desc:'i7-14700K · RTX 4070 Super · 32GB · 2TB', price: 1899 },
-  { cat:'creator', name:'Render Master', desc:'Ryzen 9 7950X · RTX 4080 Super · 64GB', price: 2799 },
-  { cat:'office', name:'Workhorse Compact', desc:'i5-14600K · 16GB · 1TB SSD', price: 799 },
-  { cat:'office', name:'Office Elite', desc:'Ryzen 7 7800X3D · 32GB · 1TB SSD', price: 1099 },
-  { cat:'gaming', name:'Skirmish Starter', desc:'i5-14600K · RX 7800 XT · 16GB', price: 1199 },
+  { cat:'gaming', tier:1, name:'Vortex Gaming Rig', desc:'i5-14600K · RTX 4070 Super · 16GB', price: 1499 },
+  { cat:'gaming', tier:2, name:'Apex Predator', desc:'Ryzen 7 7800X3D · RTX 4080 Super · 32GB', price: 2199 },
+  { cat:'gaming', tier:2, name:'Titan Ultra', desc:'Ryzen 9 7950X · RTX 4090 · 32GB', price: 3299 },
+  { cat:'gaming', tier:0, name:'Skirmish Starter', desc:'Ryzen 5 7600X · RX 7800 XT · 16GB', price: 1199 },
+  { cat:'gaming', tier:1, name:'Frostbyte 1440p', desc:'i5-14600K · RTX 4070 Super · 32GB', price: 1699 },
+  { cat:'gaming', tier:2, name:'Overkill Extreme', desc:'i9-14900K · RTX 4090 · 64GB', price: 3899 },
+  { cat:'creator', tier:1, name:'Studio Pro', desc:'i7-14700K · RTX 4070 Super · 32GB · 2TB', price: 1899 },
+  { cat:'creator', tier:2, name:'Render Master', desc:'Ryzen 9 7950X · RTX 4080 Super · 64GB', price: 2799 },
+  { cat:'creator', tier:2, name:'Motion Graphics X1', desc:'i9-14900K · RTX 4090 · 64GB · 4TB', price: 3999 },
+  { cat:'creator', tier:0, name:'Edit Bay Starter', desc:'Ryzen 5 7600X · RTX 4060 Ti · 32GB', price: 1399 },
+  { cat:'office', tier:0, name:'Workhorse Compact', desc:'i5-14600K · 16GB · 1TB SSD', price: 799 },
+  { cat:'office', tier:1, name:'Office Elite', desc:'Ryzen 7 7800X3D · 32GB · 1TB SSD', price: 1099 },
+  { cat:'office', tier:0, name:'Desk Essential', desc:'Ryzen 5 7600X · 16GB · 500GB SSD', price: 649 },
+  { cat:'office', tier:1, name:'SFF Productivity', desc:'i5-14600K · 32GB · 1TB SSD, small form', price: 949 },
 ];
 const params = new URLSearchParams(location.search);
 const cat = params.get('cat');
-const items = cat ? CATALOG.filter(i => i.cat === cat) : CATALOG;
+const search = (params.get('search') || '').toLowerCase().trim();
+let items = cat ? CATALOG.filter(i => i.cat === cat) : CATALOG;
+if (search) {
+  items = items.filter(i =>
+    i.name.toLowerCase().includes(search) ||
+    i.desc.toLowerCase().includes(search) ||
+    i.cat.toLowerCase().includes(search)
+  );
+}
 const grid = document.getElementById('buildGrid');
-grid.innerHTML = items.map(i => `
-  <div class="build-card reveal">
-    <div class="build-card-media">
-      <svg viewBox="0 0 400 260"><rect width="400" height="260" fill="#0c0c0e"/><rect x="0" y="0" width="400" height="260" fill="#1a0509" opacity="0.5"/>
-      <rect x="230" y="60" width="130" height="150" rx="6" fill="#111114" stroke="#ff2530" stroke-width="1.5"/><circle cx="295" cy="100" r="20" fill="#ff3b3b" opacity="0.7"/><circle cx="295" cy="160" r="20" fill="#ff3b3b" opacity="0.7"/>
-      <rect x="40" y="40" width="150" height="90" rx="4" fill="#08080a" stroke="#333"/></svg>
+if (search) {
+  const heading = document.querySelector('.page-hero h1');
+  if (heading) heading.innerHTML = `Results for <span>"${search}"</span>`;
+  const sub = document.querySelector('.page-hero p');
+  if (sub) sub.textContent = items.length ? `${items.length} build${items.length===1?'':'s'} found.` : 'No matches — try a different search, or start a custom build.';
+}
+if (!items.length) {
+  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grey-dim);">
+    <p style="font-size:16px;color:var(--grey);margin-bottom:14px;">No builds match that search.</p>
+    <a href="builder.html" class="btn btn-primary">Start a Custom Build</a>
+  </div>`;
+} else {
+  grid.innerHTML = items.map(i => `
+    <div class="build-card reveal">
+      <div class="build-card-media">${pcArt(i.cat, i.tier)}</div>
+      <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/></svg></div>
+      <div class="build-card-body">
+        <h3>${i.name}</h3>
+        <p>${i.desc}</p>
+        <div style="font-family:var(--font-display);font-size:22px;color:var(--red-bright);margin-bottom:14px;">$${i.price.toLocaleString()}</div>
+        <button class="build-card-btn" data-add-cart="${i.name}" data-price="${i.price}">Add To Cart
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/></svg></div>
-    <div class="build-card-body">
-      <h3>${i.name}</h3>
-      <p>${i.desc}</p>
-      <div style="font-family:var(--font-display);font-size:22px;color:var(--red-bright);margin-bottom:14px;">$${i.price.toLocaleString()}</div>
-      <button class="build-card-btn" data-add-cart="${i.name}" data-price="${i.price}">Add To Cart
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-    </div>
-  </div>
-`).join('');
+  `).join('');
+}
 document.querySelectorAll('[data-add-cart]').forEach(btn => {
   btn.addEventListener('click', () => {
     window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price });
@@ -114,6 +176,15 @@ document.querySelectorAll('[data-add-cart]').forEach(btn => {
   });
 });
 document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
+document.querySelectorAll('.build-card').forEach(el => {
+  el.addEventListener('mousemove', (e) => {
+    const r = el.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    el.style.transform = `perspective(800px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg) translateY(-6px)`;
+  });
+  el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+});
 </script>
 </body>
 </html>
