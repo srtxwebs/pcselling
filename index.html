@@ -113,7 +113,7 @@
     </div>
 
     <div class="hero-visual">
-      <!-- Stylized gaming PC render -->
+      <!-- Realistic gaming PC render -->
       <svg viewBox="0 0 560 560" xmlns="http://www.w3.org/2000/svg">
         <defs>
           <radialGradient id="fanGlow" cx="50%" cy="50%" r="50%">
@@ -122,107 +122,150 @@
             <stop offset="100%" stop-color="#1a0507"/>
           </radialGradient>
           <linearGradient id="caseGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#1f1f24"/>
+            <stop offset="0%" stop-color="#232328"/>
             <stop offset="100%" stop-color="#09090b"/>
           </linearGradient>
           <linearGradient id="glassGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#1a1a1e" stop-opacity="0.9"/>
-            <stop offset="100%" stop-color="#050506" stop-opacity="0.95"/>
+            <stop offset="0%" stop-color="#1c1c20" stop-opacity="0.92"/>
+            <stop offset="100%" stop-color="#050506" stop-opacity="0.97"/>
           </linearGradient>
-          <linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#ffffff" stop-opacity="0.08"/>
-            <stop offset="40%" stop-color="#ffffff" stop-opacity="0"/>
+          <linearGradient id="sweepGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#ffffff" stop-opacity="0"/>
+            <stop offset="50%" stop-color="#ffffff" stop-opacity="0.16"/>
+            <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="rgbStrip" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#ff2530"/>
+            <stop offset="50%" stop-color="#ff8a2b"/>
+            <stop offset="100%" stop-color="#ff2530"/>
           </linearGradient>
           <filter id="glowBlur" x="-60%" y="-60%" width="220%" height="220%">
             <feGaussianBlur stdDeviation="9"/>
           </filter>
+          <pattern id="meshDots" width="8" height="8" patternUnits="userSpaceOnUse">
+            <circle cx="2" cy="2" r="1" fill="#000" opacity="0.5"/>
+          </pattern>
+          <clipPath id="glassClip">
+            <rect x="176" y="66" width="288" height="408" rx="6"/>
+          </clipPath>
+
+          <!-- reusable 7-blade fan groups -->
+          <g id="bladeSm">
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(0.0)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(51.4)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(102.9)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(154.3)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(205.7)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(257.1)"/>
+            <path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(308.6)"/>
+          </g>
+          <g id="bladeLg">
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(0.0)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(51.4)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(102.9)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(154.3)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(205.7)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(257.1)"/>
+            <path d="M0 0 L0 -33 A33 33 0 0 1 14.6 -29.8 Z" fill="#22050a" opacity="0.72" transform="rotate(308.6)"/>
+          </g>
         </defs>
 
         <!-- ambient glow behind case -->
-        <ellipse cx="280" cy="300" rx="240" ry="200" fill="#e0141f" opacity="0.16" filter="url(#glowBlur)"/>
+        <ellipse class="ambient-breathe" cx="280" cy="300" rx="240" ry="200" fill="#e0141f" opacity="0.16" filter="url(#glowBlur)"/>
         <ellipse cx="280" cy="520" rx="150" ry="18" fill="#000" opacity="0.5" filter="url(#glowBlur)"/>
 
         <!-- case body -->
         <rect x="80" y="50" width="400" height="440" rx="12" fill="url(#caseGrad)" stroke="#2a2a2e" stroke-width="1.5"/>
         <rect x="80" y="50" width="78" height="440" rx="12" fill="#111114" stroke="#2a2a2e" stroke-width="1.5"/>
+        <!-- mesh intake texture on front panel -->
+        <rect x="86" y="58" width="66" height="424" rx="8" fill="url(#meshDots)" opacity="0.5"/>
+        <!-- RGB accent strip -->
+        <rect class="rgb-cycle" x="80" y="50" width="5" height="440" fill="url(#rgbStrip)"/>
+        <rect class="rgb-cycle" x="475" y="50" width="5" height="440" fill="url(#rgbStrip)" style="animation-delay:-2s"/>
 
         <!-- tempered glass panel -->
         <rect x="176" y="66" width="288" height="408" rx="6" fill="url(#glassGrad)" stroke="#333" stroke-width="1.2"/>
-        <rect x="176" y="66" width="288" height="408" rx="6" fill="url(#sheen)"/>
+        <g clip-path="url(#glassClip)">
+          <rect class="glass-sweep" x="120" y="40" width="90" height="500" fill="url(#sweepGrad)" transform="skewX(-18)"/>
+        </g>
 
-        <!-- front intake fans (left column) -->
+        <!-- front intake fans (left column), 7-blade -->
         <g class="pulse-glow">
           <circle cx="119" cy="122" r="28" fill="url(#fanGlow)"/>
           <circle cx="119" cy="122" r="28" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
-          <g class="fan-spin">
-            <path d="M119 122 L119 98 A24 24 0 0 1 140 135 Z" fill="#22050a" opacity="0.75"/>
-            <path d="M119 122 L142 112 A24 24 0 0 1 128 144 Z" fill="#22050a" opacity="0.55"/>
-            <path d="M119 122 L97 112 A24 24 0 0 0 111 144 Z" fill="#22050a" opacity="0.65"/>
-          </g>
+          <use href="#bladeSm" x="119" y="122" class="fan-spin"/>
           <circle cx="119" cy="122" r="5" fill="#0a0a0c"/>
         </g>
         <g class="pulse-glow">
           <circle cx="119" cy="256" r="28" fill="url(#fanGlow)"/>
           <circle cx="119" cy="256" r="28" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
-          <g class="fan-spin rev">
-            <path d="M119 256 L119 232 A24 24 0 0 1 140 269 Z" fill="#22050a" opacity="0.75"/>
-            <path d="M119 256 L142 246 A24 24 0 0 1 128 278 Z" fill="#22050a" opacity="0.55"/>
-            <path d="M119 256 L97 246 A24 24 0 0 0 111 278 Z" fill="#22050a" opacity="0.65"/>
-          </g>
+          <use href="#bladeSm" x="119" y="256" class="fan-spin rev"/>
           <circle cx="119" cy="256" r="5" fill="#0a0a0c"/>
         </g>
         <g class="pulse-glow">
           <circle cx="119" cy="390" r="28" fill="url(#fanGlow)"/>
           <circle cx="119" cy="390" r="28" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
-          <g class="fan-spin slow">
-            <path d="M119 390 L119 366 A24 24 0 0 1 140 403 Z" fill="#22050a" opacity="0.75"/>
-            <path d="M119 390 L142 380 A24 24 0 0 1 128 412 Z" fill="#22050a" opacity="0.55"/>
-            <path d="M119 390 L97 380 A24 24 0 0 0 111 412 Z" fill="#22050a" opacity="0.65"/>
-          </g>
+          <use href="#bladeSm" x="119" y="390" class="fan-spin slow"/>
           <circle cx="119" cy="390" r="5" fill="#0a0a0c"/>
         </g>
 
         <!-- motherboard -->
         <rect x="206" y="230" width="238" height="160" rx="5" fill="#131316" stroke="#2a2a2e"/>
+        <line x1="216" y1="240" x2="260" y2="240" stroke="#2a2a2e" stroke-width="1.5"/>
+        <line x1="216" y1="246" x2="248" y2="246" stroke="#2a2a2e" stroke-width="1.5"/>
 
-        <!-- GPU -->
+        <!-- GPU with backplate + dual fans -->
         <rect x="206" y="284" width="228" height="52" rx="4" fill="#0a0a0c" stroke="#ff2530" stroke-width="1"/>
+        <rect x="206" y="278" width="228" height="6" fill="#1a1a1e"/>
         <text x="228" y="316" font-family="Arial, sans-serif" font-size="12" fill="#ff5050" letter-spacing="2">REDGEAR</text>
-        <circle cx="412" cy="298" r="14" fill="url(#fanGlow)" class="pulse-glow"/>
-        <circle cx="412" cy="322" r="14" fill="url(#fanGlow)" class="pulse-glow"/>
+        <g class="pulse-glow"><circle cx="412" cy="298" r="14" fill="url(#fanGlow)"/><use href="#bladeSm" x="412" y="298" class="fan-spin" style="transform-origin:412px 298px;" transform="scale(0.55)"/></g>
+        <g class="pulse-glow"><circle cx="412" cy="322" r="14" fill="url(#fanGlow)"/><use href="#bladeSm" x="412" y="322" class="fan-spin rev" style="transform-origin:412px 322px;" transform="scale(0.55)"/></g>
 
-        <!-- RAM sticks -->
+        <!-- RAM sticks with lit tops -->
         <rect x="352" y="240" width="9" height="40" fill="#ff2530" opacity="0.85"/>
+        <rect x="352" y="240" width="9" height="4" fill="#ff8a2b" class="pulse-glow"/>
         <rect x="366" y="240" width="9" height="40" fill="#ff2530" opacity="0.7"/>
+        <rect x="366" y="240" width="9" height="4" fill="#ff8a2b" class="pulse-glow"/>
         <rect x="380" y="240" width="9" height="40" fill="#ff2530" opacity="0.55"/>
         <rect x="394" y="240" width="9" height="40" fill="#ff2530" opacity="0.4"/>
 
         <!-- CPU cooler -->
         <circle cx="258" cy="258" r="18" fill="#1a1a1e" stroke="#ff2530" stroke-width="1.4"/>
         <circle cx="258" cy="258" r="6" fill="#ff2530" class="pulse-glow"/>
+        <path d="M246 246 L270 270 M270 246 L246 270" stroke="#3a3a40" stroke-width="1"/>
 
-        <!-- cable channel glow -->
-        <path d="M206 356 Q 270 374 340 356 T 440 364" stroke="#ff2530" stroke-width="2" fill="none" opacity="0.55" class="pulse-glow"/>
+        <!-- braided cable channel glow -->
+        <path d="M206 356 Q 270 374 340 356 T 440 364" stroke="#ff2530" stroke-width="2.5" fill="none" opacity="0.55" class="pulse-glow"/>
+        <path d="M206 356 Q 270 374 340 356 T 440 364" stroke="#3a0509" stroke-width="5" fill="none" opacity="0.3"/>
 
-        <!-- rear fans (right column) -->
+        <!-- PSU shroud -->
+        <rect x="176" y="430" width="288" height="44" rx="4" fill="#0d0d10" stroke="#2a2a2e" stroke-width="1"/>
+        <line x1="190" y1="440" x2="230" y2="440" stroke="#2a2a2e" stroke-width="2"/>
+        <line x1="190" y1="448" x2="230" y2="448" stroke="#2a2a2e" stroke-width="2"/>
+        <line x1="190" y1="456" x2="230" y2="456" stroke="#2a2a2e" stroke-width="2"/>
+
+        <!-- rear fans (right column), 7-blade large -->
         <g class="pulse-glow">
           <circle cx="426" cy="122" r="42" fill="url(#fanGlow)"/>
           <circle cx="426" cy="122" r="42" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
+          <use href="#bladeLg" x="426" y="122" class="fan-spin"/>
           <circle cx="426" cy="122" r="7" fill="#0a0a0c"/>
         </g>
         <g class="pulse-glow">
           <circle cx="426" cy="238" r="42" fill="url(#fanGlow)"/>
           <circle cx="426" cy="238" r="42" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
+          <use href="#bladeLg" x="426" y="238" class="fan-spin rev"/>
           <circle cx="426" cy="238" r="7" fill="#0a0a0c"/>
         </g>
         <g class="pulse-glow">
           <circle cx="426" cy="362" r="42" fill="url(#fanGlow)"/>
           <circle cx="426" cy="362" r="42" fill="none" stroke="#ff5b5b" stroke-width="1.2"/>
+          <use href="#bladeLg" x="426" y="362" class="fan-spin slow"/>
           <circle cx="426" cy="362" r="7" fill="#0a0a0c"/>
         </g>
 
         <!-- base logo -->
-        <path d="M262 502 L298 502 L289 520 L271 520 Z" fill="#e0141f" opacity="0.9"/>
+        <path d="M262 502 L298 502 L289 520 L271 520 Z" fill="#e0141f" opacity="0.9" class="pulse-glow"/>
         <!-- feet -->
         <rect x="106" y="480" width="16" height="14" rx="3" fill="#050506"/>
         <rect x="438" y="480" width="16" height="14" rx="3" fill="#050506"/>
@@ -269,21 +312,26 @@
             <defs>
               <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a0509"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
               <radialGradient id="fanGlowG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff4545"/><stop offset="70%" stop-color="#8c0d14"/><stop offset="100%" stop-color="#1a0507"/></radialGradient>
+              <linearGradient id="rgbStripG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff2530"/><stop offset="50%" stop-color="#ff8a2b"/><stop offset="100%" stop-color="#ff2530"/></linearGradient>
+              <linearGradient id="sweepG" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.14"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <clipPath id="clipG"><rect x="164" y="46" width="102" height="172" rx="4"/></clipPath>
             </defs>
             <rect width="400" height="260" fill="url(#g1)"/>
-            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#e0141f" opacity="0.18"/>
+            <ellipse class="ambient-breathe" cx="200" cy="150" rx="150" ry="90" fill="#e0141f" opacity="0.18"/>
             <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#ff2530" stroke-width="1.4"/>
             <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#ff2530" stroke-width="1"/>
+            <rect class="rgb-cycle" x="122" y="35" width="4" height="195" fill="url(#rgbStripG)"/>
             <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
-            <circle cx="137" cy="70" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="70" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
-            <circle cx="137" cy="130" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="130" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
-            <circle cx="137" cy="190" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="190" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <g clip-path="url(#clipG)"><rect class="glass-sweep" x="120" y="20" width="40" height="220" fill="url(#sweepG)" transform="skewX(-18)"/></g>
+            <circle class="pulse-glow" cx="137" cy="70" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="70" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <circle class="pulse-glow" cx="137" cy="130" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="130" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <circle class="pulse-glow" cx="137" cy="190" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="190" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
             <rect x="178" y="140" width="78" height="26" rx="3" fill="#0a0a0c" stroke="#ff2530" stroke-width="1"/>
-            <circle cx="196" cy="153" r="8" fill="url(#fanGlowG)"/>
-            <circle cx="222" cy="153" r="8" fill="url(#fanGlowG)"/>
+            <circle class="pulse-glow" cx="196" cy="153" r="8" fill="url(#fanGlowG)"/>
+            <circle class="pulse-glow" cx="222" cy="153" r="8" fill="url(#fanGlowG)"/>
             <rect x="220" y="95" width="7" height="30" fill="#ff2530" opacity="0.8"/>
             <rect x="232" y="95" width="7" height="30" fill="#ff2530" opacity="0.6"/>
-            <path d="M178 178 Q210 190 250 178" stroke="#ff2530" stroke-width="2" fill="none" opacity="0.6"/>
+            <path class="pulse-glow" d="M178 178 Q210 190 250 178" stroke="#ff2530" stroke-width="2" fill="none" opacity="0.6"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg></div>
@@ -302,19 +350,24 @@
             <defs>
               <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1a3a"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
               <radialGradient id="fanGlowB" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4d9aff"/><stop offset="70%" stop-color="#0d3a8c"/><stop offset="100%" stop-color="#050a1a"/></radialGradient>
+              <linearGradient id="rgbStripB" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4d9aff"/><stop offset="50%" stop-color="#7a5bff"/><stop offset="100%" stop-color="#4d9aff"/></linearGradient>
+              <linearGradient id="sweepB" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.14"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <clipPath id="clipB"><rect x="164" y="46" width="102" height="172" rx="4"/></clipPath>
             </defs>
             <rect width="400" height="260" fill="url(#g2)"/>
-            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#2a5aff" opacity="0.16"/>
+            <ellipse class="ambient-breathe" cx="200" cy="150" rx="150" ry="90" fill="#2a5aff" opacity="0.16"/>
             <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#2a5aff" stroke-width="1.4"/>
             <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#2a5aff" stroke-width="1"/>
+            <rect class="rgb-cycle" x="122" y="35" width="4" height="195" fill="url(#rgbStripB)"/>
             <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
-            <circle cx="137" cy="80" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="80" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
-            <circle cx="137" cy="150" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="150" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
+            <g clip-path="url(#clipB)"><rect class="glass-sweep" x="120" y="20" width="40" height="220" fill="url(#sweepB)" transform="skewX(-18)"/></g>
+            <circle class="pulse-glow" cx="137" cy="80" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="80" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
+            <circle class="pulse-glow" cx="137" cy="150" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="150" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
             <rect x="178" y="150" width="78" height="26" rx="3" fill="#0a0a0c" stroke="#2a5aff" stroke-width="1"/>
-            <circle cx="196" cy="163" r="8" fill="url(#fanGlowB)"/>
-            <circle cx="222" cy="163" r="8" fill="url(#fanGlowB)"/>
+            <circle class="pulse-glow" cx="196" cy="163" r="8" fill="url(#fanGlowB)"/>
+            <circle class="pulse-glow" cx="222" cy="163" r="8" fill="url(#fanGlowB)"/>
             <rect x="178" y="60" width="78" height="14" rx="3" fill="#0a0a0c" stroke="#2a5aff" stroke-width="1"/>
-            <circle cx="196" cy="67" r="5" fill="url(#fanGlowB)"/><circle cx="215" cy="67" r="5" fill="url(#fanGlowB)"/><circle cx="234" cy="67" r="5" fill="url(#fanGlowB)"/>
+            <circle class="pulse-glow" cx="196" cy="67" r="5" fill="url(#fanGlowB)"/><circle class="pulse-glow" cx="215" cy="67" r="5" fill="url(#fanGlowB)"/><circle class="pulse-glow" cx="234" cy="67" r="5" fill="url(#fanGlowB)"/>
             <rect x="220" y="105" width="7" height="30" fill="#2a5aff" opacity="0.8"/>
             <rect x="232" y="105" width="7" height="30" fill="#2a5aff" opacity="0.6"/>
           </svg>
@@ -335,13 +388,16 @@
             <defs>
               <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1c1c1e"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
               <radialGradient id="fanGlowW" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c8c8cc"/><stop offset="70%" stop-color="#4a4a4e"/><stop offset="100%" stop-color="#141416"/></radialGradient>
+              <linearGradient id="sweepW" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.1"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <clipPath id="clipW"><rect x="168" y="65" width="90" height="135" rx="3"/></clipPath>
             </defs>
             <rect width="400" height="260" fill="url(#g3)"/>
             <rect x="130" y="55" width="140" height="155" rx="6" fill="#131316" stroke="#4a4a4e" stroke-width="1.3"/>
             <rect x="130" y="55" width="26" height="155" rx="6" fill="#0d0d10" stroke="#4a4a4e" stroke-width="1"/>
             <rect x="168" y="65" width="90" height="135" rx="3" fill="#08080a" stroke="#2a2a2e" stroke-width="1"/>
-            <circle cx="143" cy="90" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="90" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
-            <circle cx="143" cy="150" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="150" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
+            <g clip-path="url(#clipW)"><rect class="glass-sweep" x="160" y="40" width="36" height="180" fill="url(#sweepW)" transform="skewX(-18)"/></g>
+            <circle class="pulse-glow" cx="143" cy="90" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="90" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
+            <circle class="pulse-glow" cx="143" cy="150" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="150" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
             <rect x="180" y="145" width="66" height="20" rx="2" fill="#0a0a0c" stroke="#4a4a4e" stroke-width="1"/>
             <rect x="180" y="80" width="66" height="12" rx="2" fill="#0a0a0c" stroke="#4a4a4e" stroke-width="1"/>
             <rect x="196" y="105" width="6" height="26" fill="#6a6a6e" opacity="0.7"/>
@@ -365,20 +421,25 @@
             <defs>
               <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a0538"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
               <radialGradient id="fanGlowP" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff4545"/><stop offset="55%" stop-color="#b02aff"/><stop offset="100%" stop-color="#1a0522"/></radialGradient>
+              <linearGradient id="rgbStripP" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ff2530"/><stop offset="33%" stop-color="#b02aff"/><stop offset="66%" stop-color="#2a5aff"/><stop offset="100%" stop-color="#ff2530"/></linearGradient>
+              <linearGradient id="sweepP" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.14"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
+              <clipPath id="clipP"><rect x="164" y="46" width="102" height="172" rx="4"/></clipPath>
             </defs>
             <rect width="400" height="260" fill="url(#g4)"/>
-            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#b02aff" opacity="0.15"/>
+            <ellipse class="ambient-breathe" cx="200" cy="150" rx="150" ry="90" fill="#b02aff" opacity="0.15"/>
             <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#ff2530" stroke-width="1.4"/>
             <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#b02aff" stroke-width="1"/>
+            <rect class="rgb-cycle" x="122" y="35" width="4" height="195" fill="url(#rgbStripP)"/>
             <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
-            <circle cx="137" cy="90" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="90" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
-            <circle cx="137" cy="170" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="170" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
-            <path d="M180 65 L250 65 L250 130 L180 130 Z" fill="none" stroke="#e070ff" stroke-width="2" opacity="0.8"/>
+            <g clip-path="url(#clipP)"><rect class="glass-sweep" x="120" y="20" width="40" height="220" fill="url(#sweepP)" transform="skewX(-18)"/></g>
+            <circle class="pulse-glow" cx="137" cy="90" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="90" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
+            <circle class="pulse-glow" cx="137" cy="170" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="170" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
+            <path class="pulse-glow" d="M180 65 L250 65 L250 130 L180 130 Z" fill="none" stroke="#e070ff" stroke-width="2" opacity="0.8"/>
             <circle cx="180" cy="65" r="4" fill="#ff2530"/><circle cx="250" cy="130" r="4" fill="#ff2530"/>
             <rect x="180" y="150" width="78" height="24" rx="3" fill="#0a0a0c" stroke="#b02aff" stroke-width="1"/>
-            <circle cx="198" cy="162" r="7" fill="url(#fanGlowP)"/>
-            <circle cx="222" cy="162" r="7" fill="url(#fanGlowP)"/>
-            <path d="M164 195 Q 215 210 266 195" stroke="#e070ff" stroke-width="2" fill="none" opacity="0.5"/>
+            <circle class="pulse-glow" cx="198" cy="162" r="7" fill="url(#fanGlowP)"/>
+            <circle class="pulse-glow" cx="222" cy="162" r="7" fill="url(#fanGlowP)"/>
+            <path class="pulse-glow" d="M164 195 Q 215 210 266 195" stroke="#e070ff" stroke-width="2" fill="none" opacity="0.5"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
