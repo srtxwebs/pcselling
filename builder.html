@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Custom PC Builder — RedGear PC Builds</title>
+<meta name="description" content="Configure your own custom PC — pick your case, CPU, GPU, RAM, storage, cooling and PSU with live pricing.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="topbar">
+  <div class="container">
+    <a href="tel:+15551234567">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+      +1 (555) 123-4567
+    </a>
+    <a href="mailto:support@redgear.com">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+      support@redgear.com
+    </a>
+  </div>
+</div>
+
+<header class="navbar">
+  <div class="container">
+    <a href="index.html" class="logo">
+      <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+        <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/>
+        <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+        <path d="M24 6 L24 42 M8 6 L24 24 L40 6" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      <span>
+        <span class="logo-text">RED<span class="accent">GEAR</span></span>
+        <span class="logo-sub">PC BUILDS</span>
+      </span>
+    </a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="builds.html">PC Builds</a>
+      <a href="services.html">Services</a>
+      <a href="about.html">About Us</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-icons">
+      <button aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+      <button aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+      <button aria-label="Cart" style="position:relative;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </button>
+      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-close" id="mobileNavClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+  <a href="index.html">Home</a>
+  <a href="builds.html">PC Builds</a>
+  <a href="services.html">Services</a>
+  <a href="about.html">About Us</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<section class="page-hero">
+  <div class="container">
+    <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span>Custom Build</span></div>
+    <h1>Build Your <span>Own PC</span></h1>
+    <p>Pick every part yourself. Real-time pricing, compatibility-checked components, built by our experts and shipped to your door.</p>
+  </div>
+</section>
+
+<section class="content-section" style="padding-top:60px;">
+  <div class="container">
+    <div class="builder-wrap">
+
+      <div class="builder-steps" id="builderSteps">
+        <!-- populated by js/builder.js -->
+      </div>
+
+      <aside class="summary-card reveal">
+        <h3>Your Build</h3>
+        <div id="summaryLines"></div>
+
+        <div class="summary-progress">
+          <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="progress-label" id="progressLabel">0 of 7 parts selected</div>
+        </div>
+
+        <div class="summary-total">
+          <span class="label">Total</span>
+          <span class="amount" id="summaryTotal">$0</span>
+        </div>
+
+        <button class="btn btn-primary summary-cta disabled" id="summaryCta" disabled>
+          Add Build To Cart
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+        <button class="btn btn-outline summary-cta" id="resetBuild" style="margin-top:10px;">
+          Reset Selections
+        </button>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="index.html" class="logo">
+          <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+            <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/>
+            <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/>
+          </svg>
+          <span><span class="logo-text">RED<span class="accent">GEAR</span></span></span>
+        </a>
+        <p>Custom PC builds engineered for performance, quality, and reliability. Built for victory, built for you.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Shop</h5>
+        <ul>
+          <li><a href="builds.html?cat=gaming">Gaming PCs</a></li>
+          <li><a href="builds.html?cat=creator">Creator PCs</a></li>
+          <li><a href="builds.html?cat=office">Office PCs</a></li>
+          <li><a href="builder.html">Custom Build</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Company</h5>
+        <ul>
+          <li><a href="about.html">About Us</a></li>
+          <li><a href="services.html">Services</a></li>
+          <li><a href="contact.html">Contact</a></li>
+          <li><a href="#">Warranty</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <ul>
+          <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
+          <li><a href="mailto:support@redgear.com">support@redgear.com</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 RedGear PC Builds. All rights reserved.</span>
+      <span>Privacy Policy · Terms of Service</span>
+    </div>
+  </div>
+</footer>
+
+<div class="toast" id="toast">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
+  <span id="toastMsg">Added to cart</span>
+</div>
+
+<script src="js/script.js"></script>
+<script src="js/builder.js"></script>
+</body>
+</html>
