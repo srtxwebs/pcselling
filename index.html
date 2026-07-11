@@ -266,15 +266,24 @@
       <div class="build-card reveal">
         <div class="build-card-media">
           <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="260" fill="#0c0c0e"/>
-            <rect x="0" y="0" width="400" height="260" fill="url(#g1)"/>
-            <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a0509"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
-            <rect x="230" y="60" width="130" height="150" rx="6" fill="#111114" stroke="#ff2530" stroke-width="1.5"/>
-            <circle cx="295" cy="100" r="20" fill="url(#fanGlow2)"/>
-            <circle cx="295" cy="160" r="20" fill="url(#fanGlow2)"/>
-            <defs><radialGradient id="fanGlow2"><stop offset="0%" stop-color="#ff3b3b"/><stop offset="100%" stop-color="#1a0507"/></radialGradient></defs>
-            <rect x="40" y="40" width="150" height="90" rx="4" fill="#08080a" stroke="#333"/>
-            <path d="M40 130 L120 65 L190 130 Z" fill="#ff2530" opacity="0.5"/>
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a0509"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
+              <radialGradient id="fanGlowG" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff4545"/><stop offset="70%" stop-color="#8c0d14"/><stop offset="100%" stop-color="#1a0507"/></radialGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#g1)"/>
+            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#e0141f" opacity="0.18"/>
+            <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#ff2530" stroke-width="1.4"/>
+            <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#ff2530" stroke-width="1"/>
+            <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
+            <circle cx="137" cy="70" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="70" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <circle cx="137" cy="130" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="130" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <circle cx="137" cy="190" r="11" fill="url(#fanGlowG)"/><circle cx="137" cy="190" r="11" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+            <rect x="178" y="140" width="78" height="26" rx="3" fill="#0a0a0c" stroke="#ff2530" stroke-width="1"/>
+            <circle cx="196" cy="153" r="8" fill="url(#fanGlowG)"/>
+            <circle cx="222" cy="153" r="8" fill="url(#fanGlowG)"/>
+            <rect x="220" y="95" width="7" height="30" fill="#ff2530" opacity="0.8"/>
+            <rect x="232" y="95" width="7" height="30" fill="#ff2530" opacity="0.6"/>
+            <path d="M178 178 Q210 190 250 178" stroke="#ff2530" stroke-width="2" fill="none" opacity="0.6"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h4M8 10v4M15 11h.01M18 13h.01"/></svg></div>
@@ -290,12 +299,24 @@
       <div class="build-card reveal reveal-delay-1">
         <div class="build-card-media">
           <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="260" fill="#0c0c0e"/>
-            <rect x="0" y="0" width="400" height="260" fill="url(#g2)"/>
-            <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1a3a"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
-            <rect x="40" y="50" width="150" height="95" rx="4" fill="#08080a" stroke="#333"/>
-            <rect x="200" y="70" width="150" height="90" rx="4" fill="#08080a" stroke="#333"/>
-            <rect x="150" y="160" width="100" height="70" rx="4" fill="#111114" stroke="#2a5aff" stroke-width="1"/>
+            <defs>
+              <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#0a1a3a"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
+              <radialGradient id="fanGlowB" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#4d9aff"/><stop offset="70%" stop-color="#0d3a8c"/><stop offset="100%" stop-color="#050a1a"/></radialGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#g2)"/>
+            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#2a5aff" opacity="0.16"/>
+            <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#2a5aff" stroke-width="1.4"/>
+            <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#2a5aff" stroke-width="1"/>
+            <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
+            <circle cx="137" cy="80" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="80" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
+            <circle cx="137" cy="150" r="11" fill="url(#fanGlowB)"/><circle cx="137" cy="150" r="11" fill="none" stroke="#4d9aff" stroke-width="1"/>
+            <rect x="178" y="150" width="78" height="26" rx="3" fill="#0a0a0c" stroke="#2a5aff" stroke-width="1"/>
+            <circle cx="196" cy="163" r="8" fill="url(#fanGlowB)"/>
+            <circle cx="222" cy="163" r="8" fill="url(#fanGlowB)"/>
+            <rect x="178" y="60" width="78" height="14" rx="3" fill="#0a0a0c" stroke="#2a5aff" stroke-width="1"/>
+            <circle cx="196" cy="67" r="5" fill="url(#fanGlowB)"/><circle cx="215" cy="67" r="5" fill="url(#fanGlowB)"/><circle cx="234" cy="67" r="5" fill="url(#fanGlowB)"/>
+            <rect x="220" y="105" width="7" height="30" fill="#2a5aff" opacity="0.8"/>
+            <rect x="232" y="105" width="7" height="30" fill="#2a5aff" opacity="0.6"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 3a2.83 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5z"/></svg></div>
@@ -311,12 +332,21 @@
       <div class="build-card reveal reveal-delay-2">
         <div class="build-card-media">
           <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="260" fill="#0c0c0e"/>
-            <rect x="0" y="0" width="400" height="260" fill="url(#g3)"/>
-            <defs><linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1a1a1a"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
-            <rect x="60" y="55" width="200" height="120" rx="4" fill="#08080a" stroke="#333"/>
-            <rect x="130" y="180" width="60" height="8" fill="#333"/>
-            <rect x="280" y="60" width="70" height="150" rx="4" fill="#111114" stroke="#555"/>
+            <defs>
+              <linearGradient id="g3" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#1c1c1e"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
+              <radialGradient id="fanGlowW" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c8c8cc"/><stop offset="70%" stop-color="#4a4a4e"/><stop offset="100%" stop-color="#141416"/></radialGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#g3)"/>
+            <rect x="130" y="55" width="140" height="155" rx="6" fill="#131316" stroke="#4a4a4e" stroke-width="1.3"/>
+            <rect x="130" y="55" width="26" height="155" rx="6" fill="#0d0d10" stroke="#4a4a4e" stroke-width="1"/>
+            <rect x="168" y="65" width="90" height="135" rx="3" fill="#08080a" stroke="#2a2a2e" stroke-width="1"/>
+            <circle cx="143" cy="90" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="90" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
+            <circle cx="143" cy="150" r="9" fill="url(#fanGlowW)"/><circle cx="143" cy="150" r="9" fill="none" stroke="#6a6a6e" stroke-width="1"/>
+            <rect x="180" y="145" width="66" height="20" rx="2" fill="#0a0a0c" stroke="#4a4a4e" stroke-width="1"/>
+            <rect x="180" y="80" width="66" height="12" rx="2" fill="#0a0a0c" stroke="#4a4a4e" stroke-width="1"/>
+            <rect x="196" y="105" width="6" height="26" fill="#6a6a6e" opacity="0.7"/>
+            <rect x="207" y="105" width="6" height="26" fill="#6a6a6e" opacity="0.5"/>
+            <rect x="150" y="215" width="100" height="6" rx="3" fill="#0a0a0c"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
@@ -332,12 +362,23 @@
       <div class="build-card reveal reveal-delay-3">
         <div class="build-card-media">
           <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="260" fill="#0c0c0e"/>
-            <rect x="0" y="0" width="400" height="260" fill="url(#g4)"/>
-            <defs><linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#3a0509"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient></defs>
-            <rect x="120" y="40" width="160" height="180" rx="6" fill="#111114" stroke="#ff2530" stroke-width="1.5"/>
-            <path d="M140 60 Q200 90 140 120 Q200 150 140 180" stroke="#ff2530" stroke-width="3" fill="none" opacity="0.8"/>
-            <path d="M260 60 Q200 90 260 120 Q200 150 260 180" stroke="#ff5050" stroke-width="3" fill="none" opacity="0.6"/>
+            <defs>
+              <linearGradient id="g4" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#2a0538"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
+              <radialGradient id="fanGlowP" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff4545"/><stop offset="55%" stop-color="#b02aff"/><stop offset="100%" stop-color="#1a0522"/></radialGradient>
+            </defs>
+            <rect width="400" height="260" fill="url(#g4)"/>
+            <ellipse cx="200" cy="150" rx="150" ry="90" fill="#b02aff" opacity="0.15"/>
+            <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="#ff2530" stroke-width="1.4"/>
+            <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="#b02aff" stroke-width="1"/>
+            <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
+            <circle cx="137" cy="90" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="90" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
+            <circle cx="137" cy="170" r="11" fill="url(#fanGlowP)"/><circle cx="137" cy="170" r="11" fill="none" stroke="#e070ff" stroke-width="1"/>
+            <path d="M180 65 L250 65 L250 130 L180 130 Z" fill="none" stroke="#e070ff" stroke-width="2" opacity="0.8"/>
+            <circle cx="180" cy="65" r="4" fill="#ff2530"/><circle cx="250" cy="130" r="4" fill="#ff2530"/>
+            <rect x="180" y="150" width="78" height="24" rx="3" fill="#0a0a0c" stroke="#b02aff" stroke-width="1"/>
+            <circle cx="198" cy="162" r="7" fill="url(#fanGlowP)"/>
+            <circle cx="222" cy="162" r="7" fill="url(#fanGlowP)"/>
+            <path d="M164 195 Q 215 210 266 195" stroke="#e070ff" stroke-width="2" fill="none" opacity="0.5"/>
           </svg>
         </div>
         <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
@@ -439,4 +480,3 @@
 <script src="js/script.js"></script>
 </body>
 </html>
-
