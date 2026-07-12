@@ -414,18 +414,27 @@ function renderPreview() {
     ? { w: 300, h: 400, x: 50 }
     : { w: 260, h: 360, x: 70 };
 
-  const caseColor = anySelected ? '#ff2530' : '#2a2a2e';
+  const depth = Math.round(dims.w * 0.12);
+  const caseColor = '#ff2530';
   const glow = caseOpt ? 0.55 : 0.15;
+
+  /* 7-blade fan defs (local to this render) */
+  const bladeAngles = [0, 51.4, 102.9, 154.3, 205.7, 257.1, 308.6];
+  const bladeSm = bladeAngles.map(a => `<path d="M0 0 L0 -16 A16 16 0 0 1 7 -14.5 Z" fill="#22050a" opacity="0.72" transform="rotate(${a})"/>`).join('');
+  const bladeLg = bladeAngles.map(a => `<path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(${a})"/>`).join('');
 
   let fanSvg = '';
   const fanCount = Math.max(totalFans, 0);
   const fanSpacing = dims.h / (fanCount + 1);
   for (let i = 0; i < fanCount; i++) {
     const fy = fanSpacing * (i + 1) + 10;
-    const r = style === 'itx' ? 16 : 20;
+    const r = style === 'itx' ? 15 : 18;
+    const dur = (6 + (i % 3)).toFixed(1);
+    const dir = i % 2 === 0 ? 'normal' : 'reverse';
     fanSvg += `
       <circle cx="${dims.x + 34}" cy="${fy}" r="${r}" fill="url(#pvFanGlow)" class="pulse-glow"/>
       <circle cx="${dims.x + 34}" cy="${fy}" r="${r}" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+      <g transform="translate(${dims.x + 34} ${fy})" style="animation: spin ${dur}s linear infinite; animation-direction:${dir}; transform-origin:${dims.x+34}px ${fy}px;">${bladeSm}</g>
       <circle cx="${dims.x + 34}" cy="${fy}" r="4" fill="#0a0a0c"/>
     `;
   }
@@ -450,36 +459,95 @@ function renderPreview() {
 
   const gpuSvg = state.gpu ? `
     <rect x="${dims.x + 90}" y="${dims.h*0.55}" width="${gpuLen}" height="34" rx="4" fill="#0a0a0c" stroke="${gpuColor}" stroke-width="1.3"/>
-    <circle cx="${dims.x + 90 + gpuLen*0.3}" cy="${dims.h*0.55+17}" r="9" fill="${gpuColor}" opacity="0.55" class="pulse-glow"/>
-    <circle cx="${dims.x + 90 + gpuLen*0.7}" cy="${dims.h*0.55+17}" r="9" fill="${gpuColor}" opacity="0.55" class="pulse-glow"/>
+    <rect x="${dims.x + 90}" y="${dims.h*0.55 - 5}" width="${gpuLen*0.35}" height="6" fill="${gpuColor}" opacity="0.8"/>
+    <g transform="translate(${dims.x + 90 + gpuLen*0.3} ${dims.h*0.55+17})" style="animation: spin 3.5s linear infinite; transform-origin:${dims.x + 90 + gpuLen*0.3}px ${dims.h*0.55+17}px;"><circle r="9" fill="${gpuColor}" opacity="0.55"/>${bladeSm.replace(/-16/g,'-6').replace(/-14.5/g,'-5.3').replace(/7 /g,'2.8 ')}</g>
+    <g transform="translate(${dims.x + 90 + gpuLen*0.7} ${dims.h*0.55+17})" style="animation: spin 4.2s linear infinite reverse; transform-origin:${dims.x + 90 + gpuLen*0.7}px ${dims.h*0.55+17}px;"><circle r="9" fill="${gpuColor}" opacity="0.55"/></g>
   ` : `<rect x="${dims.x + 90}" y="${dims.h*0.55}" width="90" height="34" rx="4" fill="none" stroke="#2a2a2e" stroke-dasharray="4 4" stroke-width="1.3"/>`;
 
   let ramSvg = '';
   for (let i = 0; i < 4; i++) {
     const active = i < ramSticks;
-    ramSvg += `<rect x="${dims.x + 90 + i*10}" y="${dims.h*0.4}" width="7" height="34" fill="${active ? '#ff2530' : 'none'}" stroke="${active ? '#ff2530' : '#2a2a2e'}" stroke-width="1" opacity="${active ? 0.9 - i*0.1 : 1}"/>`;
+    ramSvg += `<rect x="${dims.x + 90 + i*10}" y="${dims.h*0.4}" width="7" height="34" fill="${active ? '#ff2530' : 'none'}" stroke="${active ? '#ff2530' : '#2a2a2e'}" stroke-width="1" opacity="${active ? 0.9 - i*0.1 : 1}"/>${active ? `<rect class="pulse-glow" x="${dims.x + 90 + i*10}" y="${dims.h*0.4}" width="7" height="3" fill="#ff8a2b"/>` : ''}`;
   }
 
-  const psuSvg = state.psu ? `<rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="#141417" stroke="#ff5b5b" stroke-width="1.2"/>` : `<rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="none" stroke="#2a2a2e" stroke-dasharray="4 4" stroke-width="1.2"/>`;
+  const psuSvg = state.psu ? `
+    <rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="#141417" stroke="#ff5b5b" stroke-width="1.2"/>
+    <line x1="${dims.x + 32}" y1="${dims.h-38}" x2="${dims.x + 70}" y2="${dims.h-38}" stroke="#2a2a2e" stroke-width="2"/>
+    <line x1="${dims.x + 32}" y1="${dims.h-30}" x2="${dims.x + 70}" y2="${dims.h-30}" stroke="#2a2a2e" stroke-width="2"/>
+  ` : `<rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="none" stroke="#2a2a2e" stroke-dasharray="4 4" stroke-width="1.2"/>`;
+
+  const vbW = dims.x*2 + dims.w + depth;
+  const vbH = dims.h + 56;
+  const capX = dims.x + dims.w;
 
   const svg = `
-    <svg viewBox="0 0 ${dims.x*2 + dims.w} ${dims.h + 40}" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 -22 ${vbW} ${vbH + 22}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="pvFanGlow" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#ff4545"/>
           <stop offset="70%" stop-color="#8c0d14"/>
           <stop offset="100%" stop-color="#1a0507"/>
         </radialGradient>
+        <linearGradient id="pvCaseGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#26262b"/>
+          <stop offset="100%" stop-color="#0a0a0c"/>
+        </linearGradient>
+        <linearGradient id="pvDepthGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1a1a1e"/>
+          <stop offset="100%" stop-color="#050506"/>
+        </linearGradient>
+        <linearGradient id="pvTopGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#38383e"/>
+          <stop offset="100%" stop-color="#18181c"/>
+        </linearGradient>
+        <linearGradient id="pvRgb" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#ff2530"/>
+          <stop offset="50%" stop-color="#ff8a2b"/>
+          <stop offset="100%" stop-color="#ff2530"/>
+        </linearGradient>
+        <linearGradient id="pvSweep" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
+          <stop offset="50%" stop-color="#fff" stop-opacity="0.15"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </linearGradient>
+        <pattern id="pvMesh" width="7" height="7" patternUnits="userSpaceOnUse">
+          <circle cx="1.6" cy="1.6" r="0.9" fill="#000" opacity="0.55"/>
+        </pattern>
+        <clipPath id="pvGlassClip"><rect x="${dims.x + 70}" y="20" width="${dims.w - 90}" height="${dims.h - 20}" rx="6"/></clipPath>
         <filter id="pvBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
       </defs>
-      <ellipse cx="${dims.x + dims.w/2}" cy="${dims.h/2}" rx="${dims.w*0.7}" ry="${dims.h*0.55}" fill="#e0141f" opacity="${glow*0.3}" filter="url(#pvBlur)"/>
-      <rect x="${dims.x}" y="10" width="${dims.w}" height="${dims.h}" rx="12" fill="#111114" stroke="${caseColor}" stroke-width="1.6" opacity="0.95"/>
+
+      <!-- ambient glow + ground shadow -->
+      <ellipse class="ambient-breathe" cx="${dims.x + dims.w/2}" cy="${dims.h/2}" rx="${dims.w*0.7}" ry="${dims.h*0.55}" fill="#e0141f" opacity="${glow*0.3}" filter="url(#pvBlur)"/>
+      <ellipse cx="${dims.x + dims.w/2 + depth/2}" cy="${dims.h + 30}" rx="${dims.w*0.55}" ry="10" fill="#000" opacity="0.55" filter="url(#pvBlur)"/>
+
+      <!-- pseudo-3D top cap (suggests depth) -->
+      <polygon points="${dims.x},10 ${capX},10 ${capX+depth},${10-depth*0.55} ${dims.x+depth},${10-depth*0.55}" fill="url(#pvTopGrad)" stroke="#2a2a2e" stroke-width="1"/>
+      <!-- pseudo-3D side panel (depth) -->
+      <polygon points="${capX},10 ${capX+depth},${10-depth*0.55} ${capX+depth},${dims.h-depth*0.55} ${capX},${dims.h}" fill="url(#pvDepthGrad)" stroke="#2a2a2e" stroke-width="1"/>
+
+      <!-- case front body -->
+      <rect x="${dims.x}" y="10" width="${dims.w}" height="${dims.h}" rx="12" fill="url(#pvCaseGrad)" stroke="${caseColor}" stroke-width="1.6" opacity="0.97"/>
+      <!-- top edge highlight (bevel) -->
+      <rect x="${dims.x}" y="10" width="${dims.w}" height="3" rx="1.5" fill="#4a4a52" opacity="0.5"/>
+      <!-- front intake mesh -->
+      <rect x="${dims.x + 8}" y="18" width="60" height="${dims.h - 16}" rx="8" fill="url(#pvMesh)" opacity="0.5"/>
+      <!-- RGB accent strip -->
+      <rect class="rgb-cycle" x="${dims.x}" y="10" width="4" height="${dims.h}" fill="url(#pvRgb)"/>
+
+      <!-- tempered glass -->
       <rect x="${dims.x + 70}" y="20" width="${dims.w - 90}" height="${dims.h - 20}" rx="6" fill="#0a0a0c" stroke="#2a2a2e" stroke-width="1"/>
+      <g clip-path="url(#pvGlassClip)"><rect class="glass-sweep" x="${dims.x + 40}" y="0" width="${dims.w*0.3}" height="${dims.h+40}" fill="url(#pvSweep)" transform="skewX(-18)"/></g>
+
       ${fanSvg}
       ${coolerSvg}
       ${ramSvg}
       ${gpuSvg}
       ${psuSvg}
+
+      <!-- feet -->
+      <rect x="${dims.x + 16}" y="${dims.h + 8}" width="14" height="10" rx="2" fill="#050506"/>
+      <rect x="${dims.x + dims.w - 30}" y="${dims.h + 8}" width="14" height="10" rx="2" fill="#050506"/>
     </svg>
   `;
   mount.innerHTML = svg;
