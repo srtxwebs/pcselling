@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* ---------- Hero visual parallax ---------- */
-  const heroVisual = document.querySelector('.hero-visual svg');
+  const heroVisual = document.querySelector('.hero-photo');
   const heroSection = document.querySelector('.hero');
   if (heroVisual && heroSection) {
     heroSection.addEventListener('mousemove', (e) => {
