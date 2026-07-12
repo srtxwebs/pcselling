@@ -319,11 +319,13 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   align-items: center;
   justify-content: center;
 }
-.hero-visual svg {
+.hero-photo {
   width: 100%;
-  max-width: 440px;
-  filter: drop-shadow(0 24px 48px rgba(0,0,0,0.65));
+  max-width: 480px;
+  border-radius: 14px;
+  filter: drop-shadow(0 30px 60px rgba(0,0,0,0.7));
   animation: heroFloat 6s ease-in-out infinite;
+  box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
 }
 @keyframes heroFloat {
   0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -363,7 +365,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 @media (max-width: 980px) {
   .hero .container { grid-template-columns: 1fr; text-align: left; padding-top: 48px; }
   .hero-visual { order: -1; margin-bottom: 16px; }
-  .hero-visual svg { max-width: 340px; }
+  .hero-photo { max-width: 340px; }
   .hero-copy { max-width: 100%; }
 }
 
