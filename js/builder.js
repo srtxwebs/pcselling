@@ -399,102 +399,150 @@ function renderPreview() {
 
   const gpuIdx = state.gpu ? PARTS.find(p=>p.key==='gpu').options.findIndex(o=>o.id===state.gpu.id) : -1;
   const gpuTotal = PARTS.find(p=>p.key==='gpu').options.length;
-  const gpuLen = state.gpu ? 90 + (gpuIdx / (gpuTotal - 1)) * 90 : 0;
+  const gpuLen = state.gpu ? 60 + (gpuIdx / (gpuTotal - 1)) * 50 : 0;
   const gpuColor = state.gpu ? tierColor(gpuIdx, gpuTotal) : '#2a2a2e';
 
   const ramIdx = state.ram ? PARTS.find(p=>p.key==='ram').options.findIndex(o=>o.id===state.ram.id) : -1;
   const ramTotal = PARTS.find(p=>p.key==='ram').options.length;
-  const ramSticks = state.ram ? 1 + Math.round((ramIdx / (ramTotal - 1)) * 3) : 0;
+  const ramSticks = state.ram ? 1 + Math.round((ramIdx / (ramTotal - 1)) * 2) : 0;
 
   const coolType = state.cooling?.meta?.type || null;
 
   const dims = style === 'itx'
-    ? { w: 220, h: 300, x: 90 }
+    ? { w: 150, h: 230 }
     : style === 'tower'
-    ? { w: 300, h: 400, x: 50 }
-    : { w: 260, h: 360, x: 70 };
+    ? { w: 190, h: 290 }
+    : { w: 170, h: 260 };
 
-  const depth = Math.round(dims.w * 0.12);
-  const caseColor = '#ff2530';
-  const glow = caseOpt ? 0.55 : 0.15;
+  const sideW = Math.round(dims.w * 0.42);
+  const skew = Math.round(dims.w * 0.09);
+  const topY = 24;
+  const frontX = 14;
+  const sideFanCount = Math.min(caseOpt ? Math.max(Math.round(totalFans * 0.5), 1) : 0, 3);
 
-  /* 7-blade fan defs (local to this render) */
+  /* 7-blade fan defs (local) */
   const bladeAngles = [0, 51.4, 102.9, 154.3, 205.7, 257.1, 308.6];
-  const bladeSm = bladeAngles.map(a => `<path d="M0 0 L0 -16 A16 16 0 0 1 7 -14.5 Z" fill="#22050a" opacity="0.72" transform="rotate(${a})"/>`).join('');
-  const bladeLg = bladeAngles.map(a => `<path d="M0 0 L0 -19 A19 19 0 0 1 8.4 -17.1 Z" fill="#22050a" opacity="0.72" transform="rotate(${a})"/>`).join('');
+  const bladeSm = bladeAngles.map(a => `<path d="M0 0 L0 -13 A13 13 0 0 1 5.7 -11.8 Z" fill="#1c0407" opacity="0.72" transform="rotate(${a})"/>`).join('');
+  const bladeLg = bladeAngles.map(a => `<path d="M0 0 L0 -22 A22 22 0 0 1 9.7 -20 Z" fill="#1c0407" opacity="0.75" transform="rotate(${a})"/>`).join('');
 
-  let fanSvg = '';
-  const fanCount = Math.max(totalFans, 0);
-  const fanSpacing = dims.h / (fanCount + 1);
-  for (let i = 0; i < fanCount; i++) {
-    const fy = fanSpacing * (i + 1) + 10;
-    const r = style === 'itx' ? 15 : 18;
-    const dur = (6 + (i % 3)).toFixed(1);
-    const dir = i % 2 === 0 ? 'normal' : 'reverse';
-    fanSvg += `
-      <circle cx="${dims.x + 34}" cy="${fy}" r="${r}" fill="url(#pvFanGlow)" class="pulse-glow"/>
-      <circle cx="${dims.x + 34}" cy="${fy}" r="${r}" fill="none" stroke="#ff5b5b" stroke-width="1"/>
-      <g transform="translate(${dims.x + 34} ${fy})" style="animation: spin ${dur}s linear infinite; animation-direction:${dir}; transform-origin:${dims.x+34}px ${fy}px;">${bladeSm}</g>
-      <circle cx="${dims.x + 34}" cy="${fy}" r="4" fill="#0a0a0c"/>
-    `;
+  /* side panel fans */
+  let sideFanSvg = '';
+  if (sideFanCount > 0) {
+    const spacing = dims.h / (sideFanCount + 1);
+    for (let i = 0; i < sideFanCount; i++) {
+      const fy = topY + spacing * (i + 1) - skew * 0.4;
+      const fx = frontX + dims.w + sideW * 0.5;
+      const r = Math.min(sideW * 0.42, spacing * 0.42);
+      const dur = (6.5 + i).toFixed(1);
+      sideFanSvg += `
+        <ellipse cx="${fx}" cy="${fy}" rx="${r*0.85}" ry="${r}" fill="url(#pvFanGlow)" class="pulse-glow"/>
+        <ellipse cx="${fx}" cy="${fy}" rx="${r*0.85}" ry="${r}" fill="none" stroke="#ff5b5b" stroke-width="1"/>
+        <g transform="translate(${fx} ${fy}) scale(0.8,1)" style="animation: spin ${dur}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${fy}px;">${bladeLg}</g>
+        <circle cx="${fx}" cy="${fy}" r="3.5" fill="#0a0a0c"/>
+      `;
+    }
   }
+
+  /* top fan row (visible through glass) */
+  let topFanSvg = '';
+  if (caseOpt) {
+    const n = 3, rowY = topY + 22, rowSpacing = (dims.w - 40) / (n + 1);
+    for (let i = 0; i < n; i++) {
+      const fx = frontX + 20 + rowSpacing * (i + 1);
+      topFanSvg += `
+        <circle cx="${fx}" cy="${rowY}" r="12" fill="url(#pvFanGlow)" class="pulse-glow"/>
+        <circle cx="${fx}" cy="${rowY}" r="12" fill="none" stroke="#ff5b5b" stroke-width="0.8"/>
+        <g transform="translate(${fx} ${rowY}) scale(0.5)" style="animation: spin ${(6+i).toFixed(1)}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${rowY}px;">${bladeSm}</g>
+      `;
+    }
+  }
+
+  /* big front intake fan */
+  const bigFanSvg = caseOpt ? `
+    <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="${dims.w*0.24}" fill="url(#pvFanGlowBig)" class="pulse-glow"/>
+    <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="${dims.w*0.24}" fill="none" stroke="#ff6a6a" stroke-width="1.2"/>
+    <g transform="translate(${frontX + dims.w*0.28} ${topY + dims.h*0.5})" style="animation: spin 5.5s linear infinite; transform-origin:${frontX + dims.w*0.28}px ${topY + dims.h*0.5}px;">${bladeLg}</g>
+    <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="5" fill="#0a0a0c"/>
+  ` : '';
+
+  /* motherboard + cooler */
+  const moboX = frontX + dims.w*0.5, moboY = topY + dims.h*0.3, moboW = dims.w*0.42, moboH = dims.h*0.42;
+  const moboSvg = state.motherboard ? `<rect x="${moboX}" y="${moboY}" width="${moboW}" height="${moboH}" rx="3" fill="#131316" stroke="#2a2a2e"/>` : '';
 
   let coolerSvg = '';
+  const pumpCx = moboX + moboW*0.32, pumpCy = moboY + moboH*0.4;
   if (coolType === 'stock') {
-    coolerSvg = `<rect x="${dims.x + 92}" y="${dims.h*0.3}" width="12" height="14" rx="2" fill="#1a1a1e" stroke="#5a5a60" stroke-width="1.1"/>`;
+    coolerSvg = `<rect x="${pumpCx-6}" y="${pumpCy-6}" width="12" height="12" rx="2" fill="#1a1a1e" stroke="#5a5a60" stroke-width="1"/>`;
   } else if (coolType === 'air-lp') {
-    coolerSvg = `<rect x="${dims.x + 88}" y="${dims.h*0.3}" width="26" height="10" rx="2" fill="#1a1a1e" stroke="#ff5b5b" stroke-width="1.1"/>`;
+    coolerSvg = `<rect x="${pumpCx-12}" y="${pumpCy-4}" width="24" height="8" rx="2" fill="#1a1a1e" stroke="#ff5b5b" stroke-width="1"/>`;
   } else if (coolType === 'passive') {
-    coolerSvg = `${Array.from({length:5}).map((_,i)=>`<rect x="${dims.x + 88 + i*7}" y="${dims.h*0.26}" width="4" height="50" fill="#2a2a2e" stroke="#6a6a6e" stroke-width="0.8"/>`).join('')}`;
+    coolerSvg = Array.from({length:4}).map((_,i)=>`<rect x="${pumpCx-10+i*6}" y="${pumpCy-14}" width="3.5" height="28" fill="#2a2a2e" stroke="#6a6a6e" stroke-width="0.6"/>`).join('');
   } else if (coolType === 'air') {
-    coolerSvg = `<rect x="${dims.x + 90}" y="${dims.h*0.28}" width="16" height="46" rx="3" fill="#1a1a1e" stroke="#ff2530" stroke-width="1.2"/><circle cx="${dims.x + 98}" cy="${dims.h*0.28+23}" r="7" fill="#ff2530" opacity="0.7" class="pulse-glow"/>`;
+    coolerSvg = `<rect x="${pumpCx-7}" y="${pumpCy-16}" width="14" height="32" rx="2" fill="#1a1a1e" stroke="#ff2530" stroke-width="1"/><circle cx="${pumpCx}" cy="${pumpCy}" r="5" fill="#ff2530" opacity="0.7" class="pulse-glow"/>`;
   } else if (coolType && coolType.startsWith('aio')) {
-    const size = parseInt(coolType.replace('aio',''), 10) || 240;
-    const rw = Math.min(60 + (size / 420) * 90, 150);
-    const fanN = Math.max(1, Math.round(size / 140));
-    coolerSvg = `<rect x="${dims.x + (dims.w-rw)/2}" y="18" width="${rw}" height="16" rx="3" fill="#141417" stroke="#ff2530" stroke-width="1.2"/>${Array.from({length: fanN}).map((_,i)=>`<circle cx="${dims.x + (dims.w-rw)/2 + (rw/(fanN+1))*(i+1)}" cy="26" r="6" fill="#ff2530" opacity="0.5" class="pulse-glow"/>`).join('')}<path d="M${dims.x + dims.w/2} 34 Q ${dims.x+dims.w/2+20} 60 ${dims.x+dims.w/2} 90" stroke="#ff2530" stroke-width="3" fill="none" opacity="0.6"/>`;
+    coolerSvg = `<circle cx="${pumpCx}" cy="${pumpCy}" r="13" fill="#0d0d10" stroke="#ff2530" stroke-width="1.3"/><circle cx="${pumpCx}" cy="${pumpCy}" r="4" fill="#ff2530" class="pulse-glow"/>
+      <rect x="${frontX+30}" y="${topY-2}" width="${dims.w-60}" height="9" rx="2" fill="#141417" stroke="#ff2530" stroke-width="1"/>`;
   } else if (coolType === 'custom') {
-    coolerSvg = `<path d="M${dims.x+90} 40 L${dims.x+180} 40 L${dims.x+180} 100 L${dims.x+90} 100 Z" fill="none" stroke="#ff5b5b" stroke-width="2.5" opacity="0.8"/><circle cx="${dims.x+90}" cy="40" r="4" fill="#ff2530"/><circle cx="${dims.x+180}" cy="100" r="4" fill="#ff2530"/>`;
+    coolerSvg = `<path d="M${pumpCx-14} ${pumpCy-14} L${pumpCx+14} ${pumpCy-14} L${pumpCx+14} ${pumpCy+14} L${pumpCx-14} ${pumpCy+14} Z" fill="none" stroke="#ff5b5b" stroke-width="1.6" opacity="0.85"/><circle cx="${pumpCx-14}" cy="${pumpCy-14}" r="2.5" fill="#ff2530"/><circle cx="${pumpCx+14}" cy="${pumpCy+14}" r="2.5" fill="#ff2530"/>`;
   }
 
-  const gpuSvg = state.gpu ? `
-    <rect x="${dims.x + 90}" y="${dims.h*0.55}" width="${gpuLen}" height="34" rx="4" fill="#0a0a0c" stroke="${gpuColor}" stroke-width="1.3"/>
-    <rect x="${dims.x + 90}" y="${dims.h*0.55 - 5}" width="${gpuLen*0.35}" height="6" fill="${gpuColor}" opacity="0.8"/>
-    <g transform="translate(${dims.x + 90 + gpuLen*0.3} ${dims.h*0.55+17})" style="animation: spin 3.5s linear infinite; transform-origin:${dims.x + 90 + gpuLen*0.3}px ${dims.h*0.55+17}px;"><circle r="9" fill="${gpuColor}" opacity="0.55"/>${bladeSm.replace(/-16/g,'-6').replace(/-14.5/g,'-5.3').replace(/7 /g,'2.8 ')}</g>
-    <g transform="translate(${dims.x + 90 + gpuLen*0.7} ${dims.h*0.55+17})" style="animation: spin 4.2s linear infinite reverse; transform-origin:${dims.x + 90 + gpuLen*0.7}px ${dims.h*0.55+17}px;"><circle r="9" fill="${gpuColor}" opacity="0.55"/></g>
-  ` : `<rect x="${dims.x + 90}" y="${dims.h*0.55}" width="90" height="34" rx="4" fill="none" stroke="#2a2a2e" stroke-dasharray="4 4" stroke-width="1.3"/>`;
-
+  /* RAM */
   let ramSvg = '';
-  for (let i = 0; i < 4; i++) {
+  const ramX = moboX + moboW + 6;
+  for (let i = 0; i < 3; i++) {
     const active = i < ramSticks;
-    ramSvg += `<rect x="${dims.x + 90 + i*10}" y="${dims.h*0.4}" width="7" height="34" fill="${active ? '#ff2530' : 'none'}" stroke="${active ? '#ff2530' : '#2a2a2e'}" stroke-width="1" opacity="${active ? 0.9 - i*0.1 : 1}"/>${active ? `<rect class="pulse-glow" x="${dims.x + 90 + i*10}" y="${dims.h*0.4}" width="7" height="3" fill="#ff8a2b"/>` : ''}`;
+    ramSvg += `<rect x="${ramX + i*7}" y="${moboY+4}" width="5" height="${moboH*0.55}" fill="${active ? '#ff2530' : 'none'}" stroke="${active ? '#ff2530' : '#2a2a2e'}" stroke-width="0.8" opacity="${active ? 0.9 - i*0.12 : 1}"/>${active ? `<rect class="pulse-glow" x="${ramX + i*7}" y="${moboY+4}" width="5" height="3" fill="#ff8a2b"/>` : ''}`;
   }
 
-  const psuSvg = state.psu ? `
-    <rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="#141417" stroke="#ff5b5b" stroke-width="1.2"/>
-    <line x1="${dims.x + 32}" y1="${dims.h-38}" x2="${dims.x + 70}" y2="${dims.h-38}" stroke="#2a2a2e" stroke-width="2"/>
-    <line x1="${dims.x + 32}" y1="${dims.h-30}" x2="${dims.x + 70}" y2="${dims.h-30}" stroke="#2a2a2e" stroke-width="2"/>
-  ` : `<rect x="${dims.x + 20}" y="${dims.h - 46}" width="${dims.w - 40}" height="28" rx="3" fill="none" stroke="#2a2a2e" stroke-dasharray="4 4" stroke-width="1.2"/>`;
+  /* GPU */
+  const gpuY = topY + dims.h*0.72;
+  const gpuSvg = state.gpu ? `
+    <rect x="${moboX-2}" y="${gpuY}" width="${gpuLen}" height="${dims.h*0.15}" rx="3" fill="#0a0a0c" stroke="${gpuColor}" stroke-width="1.1"/>
+    <text x="${moboX+2}" y="${gpuY + dims.h*0.15 - 4}" font-family="Arial, sans-serif" font-size="5.5" fill="${gpuColor}" letter-spacing="0.6">REDGEAR RTX</text>
+    <g transform="translate(${moboX + gpuLen*0.78} ${gpuY + dims.h*0.075})" style="animation: spin 3.2s linear infinite; transform-origin:${moboX + gpuLen*0.78}px ${gpuY + dims.h*0.075}px;"><circle r="7" fill="${gpuColor}" opacity="0.5"/></g>
+    <rect x="${moboX-2}" y="${gpuY + dims.h*0.15 - 2}" width="${gpuLen}" height="2" fill="${gpuColor}" class="pulse-glow"/>
+  ` : `<rect x="${moboX-2}" y="${gpuY}" width="${dims.w*0.4}" height="${dims.h*0.15}" rx="3" fill="none" stroke="#2a2a2e" stroke-dasharray="3 3" stroke-width="1"/>`;
 
-  const vbW = dims.x*2 + dims.w + depth;
-  const vbH = dims.h + 56;
-  const capX = dims.x + dims.w;
+  /* cables */
+  const cableSvg = state.psu ? `
+    <path d="M${moboX+moboW-4} ${gpuY} Q ${moboX+moboW+10} ${gpuY-20} ${pumpCx+10} ${pumpCy+8}" stroke="#3a0509" stroke-width="4" fill="none" opacity="0.5"/>
+    <path d="M${moboX+moboW-4} ${gpuY} Q ${moboX+moboW+10} ${gpuY-20} ${pumpCx+10} ${pumpCy+8}" stroke="#ff2530" stroke-width="1.6" fill="none" opacity="0.7" class="pulse-glow"/>
+  ` : '';
+
+  /* PSU shroud */
+  const psuSvg = state.psu ? `<rect x="${frontX+8}" y="${topY+dims.h-24}" width="${dims.w-16}" height="18" rx="2" fill="#0d0d10" stroke="#2a2a2e" stroke-width="1"/>` : '';
+
+  /* bottom logo */
+  const logoSvg = caseOpt ? `
+    <rect x="${frontX}" y="${topY+dims.h}" width="${dims.w}" height="16" fill="#0c0c0e"/>
+    <path d="M${frontX+8} ${topY+dims.h+5} L${frontX+16} ${topY+dims.h+5} L${frontX+13} ${topY+dims.h+12} L${frontX+11} ${topY+dims.h+12} Z" fill="#e0141f" opacity="0.9" class="pulse-glow"/>
+    <text x="${frontX+20}" y="${topY+dims.h+11}" font-family="Arial, sans-serif" font-size="6" font-weight="bold" fill="#e5e5e8" letter-spacing="0.5">REDGEAR</text>
+  ` : '';
+
+  const vbW = frontX*2 + dims.w + sideW;
+  const vbH = dims.h + 60;
+  const capX = frontX + dims.w;
 
   const svg = `
-    <svg viewBox="0 -22 ${vbW} ${vbH + 22}" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 -20 ${vbW} ${vbH + 20}" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <radialGradient id="pvFanGlow" cx="50%" cy="50%" r="50%">
           <stop offset="0%" stop-color="#ff4545"/>
           <stop offset="70%" stop-color="#8c0d14"/>
           <stop offset="100%" stop-color="#1a0507"/>
         </radialGradient>
+        <radialGradient id="pvFanGlowBig" cx="45%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#ff6a6a"/>
+          <stop offset="55%" stop-color="#c41520"/>
+          <stop offset="100%" stop-color="#170406"/>
+        </radialGradient>
         <linearGradient id="pvCaseGrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#26262b"/>
           <stop offset="100%" stop-color="#0a0a0c"/>
         </linearGradient>
-        <linearGradient id="pvDepthGrad" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stop-color="#1a1a1e"/>
-          <stop offset="100%" stop-color="#050506"/>
+        <linearGradient id="pvMeshGrad" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#19191c"/>
+          <stop offset="100%" stop-color="#08080a"/>
         </linearGradient>
         <linearGradient id="pvTopGrad" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#38383e"/>
@@ -507,47 +555,40 @@ function renderPreview() {
         </linearGradient>
         <linearGradient id="pvSweep" x1="0" y1="0" x2="1" y2="1">
           <stop offset="0%" stop-color="#fff" stop-opacity="0"/>
-          <stop offset="50%" stop-color="#fff" stop-opacity="0.15"/>
+          <stop offset="50%" stop-color="#fff" stop-opacity="0.14"/>
           <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
         </linearGradient>
-        <pattern id="pvMesh" width="7" height="7" patternUnits="userSpaceOnUse">
-          <circle cx="1.6" cy="1.6" r="0.9" fill="#000" opacity="0.55"/>
-        </pattern>
-        <clipPath id="pvGlassClip"><rect x="${dims.x + 70}" y="20" width="${dims.w - 90}" height="${dims.h - 20}" rx="6"/></clipPath>
-        <filter id="pvBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="14"/></filter>
+        <pattern id="pvMesh" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.4" cy="1.4" r="0.8" fill="#000" opacity="0.55"/></pattern>
+        <clipPath id="pvGlassClip"><rect x="${frontX+10}" y="${topY+10}" width="${dims.w-20}" height="${dims.h-20}" rx="5"/></clipPath>
+        <filter id="pvBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="12"/></filter>
       </defs>
 
-      <!-- ambient glow + ground shadow -->
-      <ellipse class="ambient-breathe" cx="${dims.x + dims.w/2}" cy="${dims.h/2}" rx="${dims.w*0.7}" ry="${dims.h*0.55}" fill="#e0141f" opacity="${glow*0.3}" filter="url(#pvBlur)"/>
-      <ellipse cx="${dims.x + dims.w/2 + depth/2}" cy="${dims.h + 30}" rx="${dims.w*0.55}" ry="10" fill="#000" opacity="0.55" filter="url(#pvBlur)"/>
+      <ellipse class="ambient-breathe" cx="${frontX + dims.w/2 + sideW/2}" cy="${topY + dims.h/2}" rx="${dims.w*0.75}" ry="${dims.h*0.6}" fill="#e0141f" opacity="0.16" filter="url(#pvBlur)"/>
+      <ellipse cx="${frontX + dims.w/2 + sideW/2}" cy="${topY + dims.h + 22}" rx="${dims.w*0.6}" ry="8" fill="#000" opacity="0.55" filter="url(#pvBlur)"/>
 
-      <!-- pseudo-3D top cap (suggests depth) -->
-      <polygon points="${dims.x},10 ${capX},10 ${capX+depth},${10-depth*0.55} ${dims.x+depth},${10-depth*0.55}" fill="url(#pvTopGrad)" stroke="#2a2a2e" stroke-width="1"/>
-      <!-- pseudo-3D side panel (depth) -->
-      <polygon points="${capX},10 ${capX+depth},${10-depth*0.55} ${capX+depth},${dims.h-depth*0.55} ${capX},${dims.h}" fill="url(#pvDepthGrad)" stroke="#2a2a2e" stroke-width="1"/>
+      ${caseOpt ? `<polygon points="${frontX},${topY} ${capX},${topY} ${capX+sideW},${topY-skew} ${frontX+sideW},${topY-skew}" fill="url(#pvTopGrad)" stroke="#2a2a2e" stroke-width="0.8"/>` : ''}
+      ${caseOpt ? `<polygon points="${capX},${topY} ${capX+sideW},${topY-skew} ${capX+sideW},${topY+dims.h-skew} ${capX},${topY+dims.h}" fill="url(#pvMeshGrad)" stroke="#2a2a2e" stroke-width="1"/>
+      <polygon points="${capX},${topY} ${capX+sideW},${topY-skew} ${capX+sideW},${topY+dims.h-skew} ${capX},${topY+dims.h}" fill="url(#pvMesh)" opacity="0.5"/>` : ''}
+      ${sideFanSvg}
+      ${caseOpt ? `<rect class="rgb-cycle" x="${capX+sideW-4}" y="${topY-skew}" width="3" height="${dims.h}" fill="url(#pvRgb)" style="animation-delay:-1.2s"/>` : ''}
 
-      <!-- case front body -->
-      <rect x="${dims.x}" y="10" width="${dims.w}" height="${dims.h}" rx="12" fill="url(#pvCaseGrad)" stroke="${caseColor}" stroke-width="1.6" opacity="0.97"/>
-      <!-- top edge highlight (bevel) -->
-      <rect x="${dims.x}" y="10" width="${dims.w}" height="3" rx="1.5" fill="#4a4a52" opacity="0.5"/>
-      <!-- front intake mesh -->
-      <rect x="${dims.x + 8}" y="18" width="60" height="${dims.h - 16}" rx="8" fill="url(#pvMesh)" opacity="0.5"/>
-      <!-- RGB accent strip -->
-      <rect class="rgb-cycle" x="${dims.x}" y="10" width="4" height="${dims.h}" fill="url(#pvRgb)"/>
+      ${caseOpt ? `
+      <rect x="${frontX}" y="${topY}" width="${dims.w}" height="${dims.h}" rx="8" fill="url(#pvCaseGrad)" stroke="#ff2530" stroke-width="1.3" opacity="0.97"/>
+      <rect x="${frontX}" y="${topY}" width="${dims.w}" height="3" rx="1.5" fill="#4a4a52" opacity="0.5"/>
+      <rect class="rgb-cycle" x="${frontX}" y="${topY}" width="3" height="${dims.h}" fill="url(#pvRgb)"/>
+      <rect x="${frontX+10}" y="${topY+10}" width="${dims.w-20}" height="${dims.h-20}" rx="5" fill="#0a0a0c" stroke="#2a2a2e" stroke-width="0.8"/>
+      <g clip-path="url(#pvGlassClip)"><rect class="glass-sweep" x="${frontX-20}" y="${topY-10}" width="${dims.w*0.3}" height="${dims.h+40}" fill="url(#pvSweep)" transform="skewX(-18)"/></g>
+      ` : ''}
 
-      <!-- tempered glass -->
-      <rect x="${dims.x + 70}" y="20" width="${dims.w - 90}" height="${dims.h - 20}" rx="6" fill="#0a0a0c" stroke="#2a2a2e" stroke-width="1"/>
-      <g clip-path="url(#pvGlassClip)"><rect class="glass-sweep" x="${dims.x + 40}" y="0" width="${dims.w*0.3}" height="${dims.h+40}" fill="url(#pvSweep)" transform="skewX(-18)"/></g>
-
-      ${fanSvg}
+      ${topFanSvg}
+      ${bigFanSvg}
+      ${moboSvg}
       ${coolerSvg}
       ${ramSvg}
       ${gpuSvg}
+      ${cableSvg}
       ${psuSvg}
-
-      <!-- feet -->
-      <rect x="${dims.x + 16}" y="${dims.h + 8}" width="14" height="10" rx="2" fill="#050506"/>
-      <rect x="${dims.x + dims.w - 30}" y="${dims.h + 8}" width="14" height="10" rx="2" fill="#050506"/>
+      ${logoSvg}
     </svg>
   `;
   mount.innerHTML = svg;
