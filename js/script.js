@@ -294,6 +294,32 @@ document.addEventListener('DOMContentLoaded', () => {
     revealEls.forEach(el => el.classList.add('is-visible'));
   }
 
+  /* ---------- Stat count-up (elements with [data-count]) ---------- */
+  const statEls = document.querySelectorAll('[data-count]');
+  if (statEls.length && 'IntersectionObserver' in window) {
+    const statIO = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        const el = entry.target;
+        const target = parseFloat(el.dataset.count);
+        const suffix = el.dataset.suffix || '';
+        const decimals = el.dataset.count.includes('.') ? 1 : 0;
+        const duration = 1400;
+        const start = performance.now();
+        function tick(now) {
+          const t = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const val = target * eased;
+          el.textContent = (decimals ? val.toFixed(1) : Math.round(val).toLocaleString()) + suffix;
+          if (t < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        statIO.unobserve(el);
+      });
+    }, { threshold: 0.4 });
+    statEls.forEach(el => statIO.observe(el));
+  }
+
   /* ---------- Cart badge (persisted via localStorage) ---------- */
   const cartCountEl = document.getElementById('cartCount');
   const getCart = () => {
