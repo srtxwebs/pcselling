@@ -310,6 +310,8 @@ function buildUI() {
       card.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
       opt.classList.add('selected');
       card.classList.add('done');
+      const numEl = card.querySelector('.part-num');
+      if (numEl) numEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:14px;height:14px;"><path d="M20 6L9 17l-5-5"/></svg>';
       document.getElementById(`sel-${partKey}`).textContent = `${chosen.name}${chosen.price ? ' — ' + fmt(chosen.price) : ' — Included'}`;
 
       const body = card.querySelector('.part-card-body');
@@ -422,8 +424,8 @@ function renderPreview() {
 
   /* 7-blade fan defs (local) */
   const bladeAngles = [0, 51.4, 102.9, 154.3, 205.7, 257.1, 308.6];
-  const bladeSm = bladeAngles.map(a => `<path d="M0 0 L0 -13 A13 13 0 0 1 5.7 -11.8 Z" fill="#1c0407" opacity="0.72" transform="rotate(${a})"/>`).join('');
-  const bladeLg = bladeAngles.map(a => `<path d="M0 0 L0 -22 A22 22 0 0 1 9.7 -20 Z" fill="#1c0407" opacity="0.75" transform="rotate(${a})"/>`).join('');
+  const bladeSm = bladeAngles.map(a => `<path d="M0 0 L0 -13 A13 13 0 0 1 5.7 -11.8 Z" fill="#2a0810" opacity="0.55" transform="rotate(${a})"/>`).join('');
+  const bladeLg = bladeAngles.map(a => `<path d="M0 0 L0 -22 A22 22 0 0 1 9.7 -20 Z" fill="#2a0810" opacity="0.58" transform="rotate(${a})"/>`).join('');
 
   /* side panel fans */
   let sideFanSvg = '';
@@ -437,7 +439,7 @@ function renderPreview() {
       sideFanSvg += `
         <ellipse cx="${fx}" cy="${fy}" rx="${r*0.85}" ry="${r}" fill="url(#pvFanGlow)" class="pulse-glow"/>
         <ellipse cx="${fx}" cy="${fy}" rx="${r*0.85}" ry="${r}" fill="none" stroke="#ff5b5b" stroke-width="1"/>
-        <g transform="translate(${fx} ${fy}) scale(0.8,1)" style="animation: spin ${dur}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${fy}px;">${bladeLg}</g>
+        <g transform="translate(${fx} ${fy}) scale(0.8,1)" filter="url(#pvMotionBlur)" style="animation: spin ${dur}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${fy}px;">${bladeLg}</g>
         <circle cx="${fx}" cy="${fy}" r="3.5" fill="#0a0a0c"/>
       `;
     }
@@ -452,7 +454,7 @@ function renderPreview() {
       topFanSvg += `
         <circle cx="${fx}" cy="${rowY}" r="12" fill="url(#pvFanGlow)" class="pulse-glow"/>
         <circle cx="${fx}" cy="${rowY}" r="12" fill="none" stroke="#ff5b5b" stroke-width="0.8"/>
-        <g transform="translate(${fx} ${rowY}) scale(0.5)" style="animation: spin ${(6+i).toFixed(1)}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${rowY}px;">${bladeSm}</g>
+        <g transform="translate(${fx} ${rowY}) scale(0.5)" filter="url(#pvMotionBlur)" style="animation: spin ${(6+i).toFixed(1)}s linear infinite ${i%2?'reverse':''}; transform-origin:${fx}px ${rowY}px;">${bladeSm}</g>
       `;
     }
   }
@@ -461,7 +463,7 @@ function renderPreview() {
   const bigFanSvg = caseOpt ? `
     <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="${dims.w*0.24}" fill="url(#pvFanGlowBig)" class="pulse-glow"/>
     <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="${dims.w*0.24}" fill="none" stroke="#ff6a6a" stroke-width="1.2"/>
-    <g transform="translate(${frontX + dims.w*0.28} ${topY + dims.h*0.5})" style="animation: spin 5.5s linear infinite; transform-origin:${frontX + dims.w*0.28}px ${topY + dims.h*0.5}px;">${bladeLg}</g>
+    <g transform="translate(${frontX + dims.w*0.28} ${topY + dims.h*0.5})" filter="url(#pvMotionBlur)" style="animation: spin 5.5s linear infinite; transform-origin:${frontX + dims.w*0.28}px ${topY + dims.h*0.5}px;">${bladeLg}</g>
     <circle cx="${frontX + dims.w*0.28}" cy="${topY + dims.h*0.5}" r="5" fill="#0a0a0c"/>
   ` : '';
 
@@ -526,19 +528,21 @@ function renderPreview() {
   const svg = `
     <svg viewBox="0 -20 ${vbW} ${vbH + 20}" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <radialGradient id="pvFanGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#ff4545"/>
-          <stop offset="70%" stop-color="#8c0d14"/>
-          <stop offset="100%" stop-color="#1a0507"/>
+        <radialGradient id="pvFanGlow" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stop-color="#ffb0a8"/>
+          <stop offset="22%" stop-color="#ff4545"/>
+          <stop offset="65%" stop-color="#7c0a12"/>
+          <stop offset="100%" stop-color="#0d0304"/>
         </radialGradient>
-        <radialGradient id="pvFanGlowBig" cx="45%" cy="40%" r="60%">
-          <stop offset="0%" stop-color="#ff6a6a"/>
-          <stop offset="55%" stop-color="#c41520"/>
-          <stop offset="100%" stop-color="#170406"/>
+        <radialGradient id="pvFanGlowBig" cx="42%" cy="36%" r="62%">
+          <stop offset="0%" stop-color="#ffc4bd"/>
+          <stop offset="20%" stop-color="#ff6a6a"/>
+          <stop offset="58%" stop-color="#a01019"/>
+          <stop offset="100%" stop-color="#0d0304"/>
         </radialGradient>
         <linearGradient id="pvCaseGrad" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#26262b"/>
-          <stop offset="100%" stop-color="#0a0a0c"/>
+          <stop offset="0%" stop-color="#1c1c20"/>
+          <stop offset="100%" stop-color="#050506"/>
         </linearGradient>
         <linearGradient id="pvMeshGrad" x1="0" y1="0" x2="1" y2="0">
           <stop offset="0%" stop-color="#19191c"/>
@@ -561,6 +565,7 @@ function renderPreview() {
         <pattern id="pvMesh" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1.4" cy="1.4" r="0.8" fill="#000" opacity="0.55"/></pattern>
         <clipPath id="pvGlassClip"><rect x="${frontX+10}" y="${topY+10}" width="${dims.w-20}" height="${dims.h-20}" rx="5"/></clipPath>
         <filter id="pvBlur" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="12"/></filter>
+        <filter id="pvMotionBlur" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2"/></filter>
       </defs>
 
       <ellipse class="ambient-breathe" cx="${frontX + dims.w/2 + sideW/2}" cy="${topY + dims.h/2}" rx="${dims.w*0.75}" ry="${dims.h*0.6}" fill="#e0141f" opacity="0.16" filter="url(#pvBlur)"/>
@@ -626,7 +631,11 @@ document.addEventListener('DOMContentLoaded', () => {
     resetBtn.addEventListener('click', () => {
       Object.keys(state).forEach(k => delete state[k]);
       document.querySelectorAll('.option.selected').forEach(o => o.classList.remove('selected'));
-      document.querySelectorAll('.part-card.done').forEach(c => c.classList.remove('done'));
+      document.querySelectorAll('.part-card.done').forEach((c, idx) => {
+        c.classList.remove('done');
+        const numEl = c.querySelector('.part-num');
+        if (numEl) numEl.textContent = PARTS.findIndex(p => `card-${p.key}` === c.id) + 1;
+      });
       document.querySelectorAll('[id^="sel-"]').forEach(el => el.textContent = 'Not selected yet');
       updateSummary();
       renderPreview();
