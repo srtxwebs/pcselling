@@ -9,18 +9,24 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="cart-backdrop" id="cartBackdrop"></div>
     <aside class="cart-drawer" id="cartDrawer">
       <div class="cart-drawer-head">
-        <h3>Your Cart</h3>
+        <h3>Your Cart <span class="cart-item-count" id="cartItemCount">0 items</span></h3>
         <button class="cart-close" id="cartClose" aria-label="Close cart">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="cart-drawer-body" id="cartBody"></div>
-      <div class="cart-drawer-foot">
+      <div class="cart-drawer-foot" id="cartFoot">
+        <div class="cart-summary-row"><span>Subtotal</span><span class="val" id="cartSubtotal">$0</span></div>
+        <div class="cart-summary-row"><span>Estimated shipping</span><span class="val" id="cartShipping">Free</span></div>
         <div class="cart-total-row"><span>Total</span><span id="cartTotalAmount">$0</span></div>
         <button class="btn btn-primary" id="cartCheckout" style="width:100%;justify-content:center;">
           Checkout
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
+        <div class="cart-secure-note">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          Secure checkout · 30-day returns
+        </div>
       </div>
     </aside>
 
@@ -73,15 +79,26 @@ document.addEventListener('DOMContentLoaded', () => {
   const cartBackdrop = document.getElementById('cartBackdrop');
   const cartBody = document.getElementById('cartBody');
   const cartTotalAmount = document.getElementById('cartTotalAmount');
+  const cartSubtotal = document.getElementById('cartSubtotal');
+  const cartItemCount = document.getElementById('cartItemCount');
+  const cartFoot = document.getElementById('cartFoot');
 
   function renderCartDrawer() {
     const cart = window.RedGearCart.get();
+    cartItemCount.textContent = `${cart.length} item${cart.length === 1 ? '' : 's'}`;
+    cartFoot.style.display = cart.length ? '' : 'none';
+
     if (!cart.length) {
       cartBody.innerHTML = `
         <div class="cart-empty">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          <div class="cart-empty-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          </div>
           <p>Your cart is empty</p>
-          <span>Add a prebuilt PC or design your own</span>
+          <span>Add a prebuilt PC or design your own from scratch</span>
+          <a href="builder.html" class="btn btn-primary">Start a Custom Build
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
         </div>`;
     } else {
       cartBody.innerHTML = cart.map((item, i) => `
@@ -92,15 +109,23 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="cart-item-info">
             <div class="cart-item-name">${item.name}</div>
             ${item.parts ? `<div class="cart-item-parts">${Object.values(item.parts).slice(0,3).join(' · ')}${Object.values(item.parts).length > 3 ? '…' : ''}</div>` : ''}
-            <div class="cart-item-price">$${Number(item.price).toLocaleString()}</div>
+            <div class="cart-item-bottom">
+              <div class="cart-item-price">$${Number(item.price).toLocaleString()}</div>
+              <button class="cart-item-remove" data-remove="${i}" aria-label="Remove">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
           </div>
-          <button class="cart-item-remove" data-remove="${i}" aria-label="Remove">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-          </button>
         </div>
-      `).join('');
+      `).join('') + `
+        <div class="cart-promo">
+          <input type="text" placeholder="Promo code" id="cartPromoInput">
+          <button id="cartPromoApply">Apply</button>
+        </div>
+      `;
     }
     const total = cart.reduce((sum, i) => sum + Number(i.price || 0), 0);
+    cartSubtotal.textContent = `$${total.toLocaleString()}`;
     cartTotalAmount.textContent = `$${total.toLocaleString()}`;
   }
 
@@ -125,6 +150,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rm) {
       window.RedGearCart.removeAt(parseInt(rm.dataset.remove, 10));
       renderCartDrawer();
+      return;
+    }
+    if (e.target.id === 'cartPromoApply') {
+      const input = document.getElementById('cartPromoInput');
+      if (input && input.value.trim()) {
+        showToast('Promo code applied — demo only, hook this up to real pricing logic');
+      } else {
+        showToast('Enter a promo code first');
+      }
     }
   });
 
