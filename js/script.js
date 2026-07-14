@@ -351,6 +351,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (navbar) {
     let lastY = window.scrollY;
     window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 20);
       navbar.style.borderBottomColor = window.scrollY > 20 ? 'var(--red-dark)' : 'var(--border)';
       lastY = window.scrollY;
     });
@@ -379,5 +380,19 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     heroSection.addEventListener('mouseleave', () => { heroVisual.style.transform = ''; });
   }
+
+  /* ---------- Cursor spotlight glow ---------- */
+  const spotlight = document.createElement('div');
+  spotlight.className = 'spotlight';
+  document.body.appendChild(spotlight);
+  let spotlightRAF = null;
+  document.addEventListener('mousemove', (e) => {
+    spotlight.classList.add('active');
+    if (spotlightRAF) cancelAnimationFrame(spotlightRAF);
+    spotlightRAF = requestAnimationFrame(() => {
+      spotlight.style.transform = `translate(${e.clientX}px, ${e.clientY}px) translate(-50%, -50%)`;
+    });
+  });
+  document.addEventListener('mouseleave', () => spotlight.classList.remove('active'));
 
 });
