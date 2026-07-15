@@ -10,10 +10,26 @@
 </head>
 <body>
 
-<div class="topbar"><div class="container">
-  <a href="tel:+15551234567"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>+1 (555) 123-4567</a>
-  <a href="mailto:support@redgear.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>support@redgear.com</a>
-</div></div>
+<div class="topbar">
+  <div class="container topbar-inner">
+    <div class="topbar-tagline">High Performance. Premium Quality. <span>Built for Victory.</span></div>
+    <div class="topbar-right">
+      <a href="tel:+15551234567">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +1 (555) 123-4567
+      </a>
+      <a href="mailto:support@redgear.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
+        support@redgear.com
+      </a>
+      <div class="topbar-social">
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19.7 19.7 0 0 0 15.6 3l-.3.5a14 14 0 0 1 4.1 1.7 15.6 15.6 0 0 0-13 0A14 14 0 0 1 10.6 3.5L10.3 3a19.7 19.7 0 0 0-4.7 1.4C2.9 8.4 2.2 12.3 2.5 16.1a19.9 19.9 0 0 0 5.4 2.5l.7-1.1a12 12 0 0 1-1.9-.8l.5-.4a14.5 14.5 0 0 0 11.6 0l.5.4a12 12 0 0 1-1.9.8l.7 1.1a19.8 19.8 0 0 0 5.4-2.5c.4-4.4-.6-8.3-2.7-11.7zM9.3 13.7c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7c0 .9-.7 1.7-1.6 1.7zm5.4 0c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7c0 .9-.7 1.7-1.6 1.7z"/></svg></a>
+        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
+        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.5 6.2a2.8 2.8 0 0 0-2-2C18.9 3.7 12 3.7 12 3.7s-6.9 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 5.8 2.8 2.8 0 0 0 2 2c1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-5.8z"/><path d="M9.7 15.5l6-3.5-6-3.5z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</div>
 
 <header class="navbar"><div class="container">
   <a href="index.html" class="logo">
@@ -75,50 +91,16 @@
 
 <script src="js/script.js"></script>
 <script>
-const THEME = {
-  gaming:  { accent: '#ff2530', glow: '#ff2530', bg: '#3a0509' },
-  creator: { accent: '#2a5aff', glow: '#4d9aff', bg: '#0a1a3a' },
-  office:  { accent: '#6a6a6e', glow: '#9a9aa1', bg: '#1c1c1e' },
+const HUE = {
+  gaming:  { filter: 'hue-rotate(0deg) saturate(1.1)' },
+  creator: { filter: 'hue-rotate(190deg) saturate(1.3)' },
+  office:  { filter: 'saturate(0.15) brightness(1.05)' },
 };
 
 function pcArt(cat, tier) {
-  const th = THEME[cat] || THEME.gaming;
-  const fanCount = tier === 0 ? 2 : tier === 1 ? 3 : 4;
-  const gpuLen = 60 + tier * 20;
-  const uid = Math.random().toString(36).slice(2, 8);
-  let fans = '';
-  const spacing = 175 / (fanCount + 1);
-  for (let i = 0; i < fanCount; i++) {
-    const fy = 45 + spacing * (i + 1);
-    fans += `<circle class="pulse-glow" cx="137" cy="${fy}" r="11" fill="url(#fg${uid})"/><circle cx="137" cy="${fy}" r="11" fill="none" stroke="${th.glow}" stroke-width="1"/>`;
-  }
-  return `
-    <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
-      <defs>
-        <linearGradient id="bg${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="${th.bg}"/><stop offset="100%" stop-color="#0c0c0e"/></linearGradient>
-        <radialGradient id="fg${uid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${th.glow}"/><stop offset="70%" stop-color="${th.accent}"/><stop offset="100%" stop-color="#0e0e10"/></radialGradient>
-        <linearGradient id="rgb${uid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${th.accent}"/><stop offset="50%" stop-color="${th.glow}"/><stop offset="100%" stop-color="${th.accent}"/></linearGradient>
-        <linearGradient id="sw${uid}" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#fff" stop-opacity="0"/><stop offset="50%" stop-color="#fff" stop-opacity="0.13"/><stop offset="100%" stop-color="#fff" stop-opacity="0"/></linearGradient>
-        <clipPath id="cl${uid}"><rect x="164" y="46" width="102" height="172" rx="4"/></clipPath>
-      </defs>
-      <rect width="400" height="260" fill="url(#bg${uid})"/>
-      <ellipse class="ambient-breathe" cx="200" cy="150" rx="150" ry="90" fill="${th.accent}" opacity="0.14"/>
-      <polygon points="122,35 278,35 292,29.4 136,29.4" fill="#2c2c31" stroke="#2a2a2e" stroke-width="0.8"/>
-      <polygon points="278,35 292,29.4 292,224.4 278,230" fill="#141417" stroke="#2a2a2e" stroke-width="0.8"/>
-      <rect x="122" y="35" width="156" height="195" rx="8" fill="#141417" stroke="${th.accent}" stroke-width="1.4"/>
-      <rect x="122" y="35" width="30" height="195" rx="8" fill="#0d0d10" stroke="${th.accent}" stroke-width="1"/>
-      <rect class="rgb-cycle" x="122" y="35" width="4" height="195" fill="url(#rgb${uid})"/>
-      <rect x="164" y="46" width="102" height="172" rx="4" fill="#08080a" stroke="#333" stroke-width="1"/>
-      <g clip-path="url(#cl${uid})"><rect class="glass-sweep" x="120" y="20" width="40" height="220" fill="url(#sw${uid})" transform="skewX(-18)" style="animation-delay:${(tier*0.6).toFixed(1)}s"/></g>
-      ${fans}
-      <rect x="178" y="150" width="${gpuLen}" height="26" rx="3" fill="#0a0a0c" stroke="${th.accent}" stroke-width="1"/>
-      <circle class="pulse-glow" cx="${178 + gpuLen*0.3}" cy="163" r="8" fill="url(#fg${uid})"/>
-      <circle class="pulse-glow" cx="${178 + gpuLen*0.7}" cy="163" r="8" fill="url(#fg${uid})"/>
-      <rect x="220" y="95" width="7" height="30" fill="${th.accent}" opacity="0.8"/>
-      <rect x="232" y="95" width="7" height="30" fill="${th.accent}" opacity="0.55"/>
-      <path d="M178 188 Q210 200 250 188" stroke="${th.accent}" stroke-width="2" fill="none" opacity="0.5"/>
-    </svg>
-  `;
+  const h = HUE[cat] || HUE.gaming;
+  const brightness = 0.92 + tier * 0.07;
+  return `<img src="images/pc-cutout.png" alt="${cat} PC build" class="card-photo" style="filter:${h.filter} brightness(${brightness.toFixed(2)}) drop-shadow(0 14px 20px rgba(0,0,0,0.5));">`;
 }
 
 const CATALOG = [
