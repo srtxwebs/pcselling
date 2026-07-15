@@ -53,18 +53,17 @@ document.addEventListener('DOMContentLoaded', () => {
     <div class="account-backdrop" id="accountBackdrop"></div>
     <div class="account-panel" id="accountPanel">
       <div class="account-panel-head">
-        <h3>Sign In</h3>
+        <h3 id="accountHeadTitle">Sign In</h3>
         <button class="cart-close" id="accountClose" aria-label="Close">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
-      <div class="account-panel-body">
-        <label>Email<input type="email" placeholder="you@example.com"></label>
-        <label>Password<input type="password" placeholder="••••••••"></label>
-        <button class="btn btn-primary" id="accountSubmit" style="width:100%;justify-content:center;margin-top:4px;">Sign In</button>
+      <div class="account-panel-body" id="accountPanelBody">
+        <p class="account-gate-msg" id="accountGateMsg" style="display:none;"></p>
+        <div id="googleSignInBtn" class="google-btn-mount"></div>
         <div class="account-divider"><span>or</span></div>
-        <button class="btn btn-outline" style="width:100%;justify-content:center;">Continue as Guest</button>
-        <p class="account-footnote">No account yet? <a href="#">Create one</a></p>
+        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;">Continue as Guest</button>
+        <p class="account-footnote" id="guestFootnote">Guests can browse freely, but need to sign in to add items to cart or check out.</p>
       </div>
     </div>
 
@@ -170,6 +169,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
   document.getElementById('cartCheckout').addEventListener('click', () => {
     if (!window.RedGearCart.get().length) return;
+    if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
+      closeCart();
+      window.openAccount('Sign in with Google to complete checkout.');
+      return;
+    }
     showToast('Demo checkout — hook this up to a real payment provider');
   });
 
@@ -199,10 +203,106 @@ document.addEventListener('DOMContentLoaded', () => {
     b.addEventListener('click', () => runSearch(b.dataset.q));
   });
 
+  /* ---------- Auth: Google Sign-In + Guest mode ---------- */
+  // NOTE: Replace with your own OAuth Client ID from https://console.cloud.google.com/apis/credentials
+  // (create an OAuth 2.0 Client ID, type "Web application", add your domain under
+  // "Authorized JavaScript origins"). Sign-in will not work until this is set.
+  const GOOGLE_CLIENT_ID = 'YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com';
+
+  function getAuth() {
+    try { return JSON.parse(localStorage.getItem('redgear_auth') || 'null'); }
+    catch (e) { return null; }
+  }
+  function setAuth(data) { localStorage.setItem('redgear_auth', JSON.stringify(data)); }
+  function clearAuth() { localStorage.removeItem('redgear_auth'); }
+
+  function decodeJwt(token) {
+    try {
+      const base64 = token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/');
+      return JSON.parse(decodeURIComponent(atob(base64).split('').map(c =>
+        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join('')));
+    } catch (e) { return null; }
+  }
+
+  function handleGoogleSignIn(response) {
+    const payload = decodeJwt(response.credential);
+    if (!payload) { showToast('Sign-in failed — try again'); return; }
+    setAuth({ signedIn: true, guest: false, name: payload.name, email: payload.email, picture: payload.picture });
+    updateAccountUI();
+    closeAccount();
+    showToast(`Welcome, ${payload.given_name || payload.name}!`);
+  }
+  window.handleGoogleSignIn = handleGoogleSignIn;
+
+  function updateAccountUI() {
+    const auth = getAuth();
+    const title = document.getElementById('accountHeadTitle');
+    const body = document.getElementById('accountPanelBody');
+    if (auth && auth.signedIn) {
+      title.textContent = 'My Account';
+      body.innerHTML = `
+        <div class="account-profile">
+          <img src="${auth.picture || ''}" alt="${auth.name}" onerror="this.style.display='none'">
+          <div><div class="account-profile-name">${auth.name}</div><div class="account-profile-email">${auth.email}</div></div>
+        </div>
+        <button class="btn btn-outline" id="signOutBtn" style="width:100%;justify-content:center;">Sign Out</button>
+      `;
+      document.getElementById('signOutBtn').addEventListener('click', () => {
+        clearAuth();
+        updateAccountUI();
+        showToast('Signed out');
+      });
+    } else {
+      title.textContent = 'Sign In';
+      body.innerHTML = `
+        <p class="account-gate-msg" id="accountGateMsg" style="display:none;"></p>
+        <div id="googleSignInBtn" class="google-btn-mount"></div>
+        <div class="account-divider"><span>or</span></div>
+        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;">Continue as Guest</button>
+        <p class="account-footnote" id="guestFootnote">Guests can browse freely, but need to sign in to add items to cart or check out.</p>
+      `;
+      document.getElementById('guestBtn').addEventListener('click', () => {
+        setAuth({ signedIn: false, guest: true });
+        closeAccount();
+        showToast('Browsing as guest — sign in anytime to shop');
+      });
+      renderGoogleButton();
+    }
+  }
+
+  function renderGoogleButton() {
+    const mount = document.getElementById('googleSignInBtn');
+    if (!mount || typeof google === 'undefined' || !google.accounts) return;
+    try {
+      google.accounts.id.initialize({ client_id: GOOGLE_CLIENT_ID, callback: handleGoogleSignIn });
+      google.accounts.id.renderButton(mount, { theme: 'filled_black', size: 'large', shape: 'pill', width: 300 });
+    } catch (e) { /* GSI not ready yet */ }
+  }
+
+  // Load Google Identity Services script once
+  if (!document.getElementById('gsiScript')) {
+    const s = document.createElement('script');
+    s.src = 'https://accounts.google.com/gsi/client';
+    s.async = true; s.defer = true; s.id = 'gsiScript';
+    s.onload = () => { if (!getAuth() || !getAuth().signedIn) renderGoogleButton(); };
+    document.head.appendChild(s);
+  }
+
+  window.RedGearAuth = {
+    isSignedIn: () => { const a = getAuth(); return !!(a && a.signedIn); },
+    get: getAuth,
+  };
+
   /* ---------- Account panel ---------- */
   const accountPanel = document.getElementById('accountPanel');
   const accountBackdrop = document.getElementById('accountBackdrop');
-  window.openAccount = () => {
+  window.openAccount = (gateMsg) => {
+    updateAccountUI();
+    const msg = document.getElementById('accountGateMsg');
+    if (msg) {
+      if (gateMsg) { msg.textContent = gateMsg; msg.style.display = 'block'; }
+      else { msg.style.display = 'none'; }
+    }
     accountPanel.classList.add('open');
     accountBackdrop.classList.add('open');
     document.body.classList.add('nav-open');
@@ -214,11 +314,8 @@ document.addEventListener('DOMContentLoaded', () => {
   };
   document.getElementById('accountClose').addEventListener('click', closeAccount);
   accountBackdrop.addEventListener('click', closeAccount);
-  document.querySelectorAll('[aria-label="Account"]').forEach(btn => btn.addEventListener('click', openAccount));
-  document.getElementById('accountSubmit').addEventListener('click', () => {
-    closeAccount();
-    showToast('Demo sign-in — hook this up to real auth');
-  });
+  document.querySelectorAll('[aria-label="Account"]').forEach(btn => btn.addEventListener('click', () => openAccount()));
+  updateAccountUI();
 
   /* ---------- Mega menu for "PC Builds" ---------- */
   const buildsLink = Array.from(document.querySelectorAll('.nav-links a')).find(a => a.getAttribute('href') === 'builds.html');
@@ -338,11 +435,17 @@ document.addEventListener('DOMContentLoaded', () => {
   setCartCount();
   window.RedGearCart = {
     add(item) {
+      if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
+        if (window.openAccount) window.openAccount('Sign in with Google to add items to your cart.');
+        else showToast('Sign in to add items to your cart');
+        return false;
+      }
       const cart = getCart();
       cart.push(item);
       localStorage.setItem('redgear_cart', JSON.stringify(cart));
       setCartCount();
       if (window.__renderCartDrawer) window.__renderCartDrawer();
+      return true;
     },
     removeAt(index) {
       const cart = getCart();
@@ -373,8 +476,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('[data-add-cart]').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.preventDefault();
-      window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price || 0 });
-      showToast(`${btn.dataset.addCart} added to cart`);
+      const added = window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price || 0 });
+      if (added) showToast(`${btn.dataset.addCart} added to cart`);
     });
   });
 
