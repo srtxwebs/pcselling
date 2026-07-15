@@ -160,8 +160,8 @@ if (!items.length) {
 }
 document.querySelectorAll('[data-add-cart]').forEach(btn => {
   btn.addEventListener('click', () => {
-    window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price });
-    showToast(`${btn.dataset.addCart} added to cart`);
+    const added = window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price });
+    if (added) showToast(`${btn.dataset.addCart} added to cart`);
   });
 });
 document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
