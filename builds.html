@@ -91,33 +91,33 @@
 
 <script src="js/script.js"></script>
 <script>
-const HUE = {
-  gaming:  { filter: 'hue-rotate(0deg) saturate(1.1)' },
-  creator: { filter: 'hue-rotate(190deg) saturate(1.3)' },
-  office:  { filter: 'saturate(0.15) brightness(1.05)' },
+const CATEGORY_IMG = {
+  gaming: 'images/category-gaming.jpg',
+  creator: 'images/category-creator.jpg',
+  office: 'images/category-office.jpg',
 };
 
 function pcArt(cat, tier) {
-  const h = HUE[cat] || HUE.gaming;
+  const src = CATEGORY_IMG[cat] || CATEGORY_IMG.gaming;
   const brightness = 0.92 + tier * 0.07;
-  return `<img src="images/pc-cutout.png" alt="${cat} PC build" class="card-photo" style="filter:${h.filter} brightness(${brightness.toFixed(2)}) drop-shadow(0 14px 20px rgba(0,0,0,0.5));">`;
+  return `<img src="${src}" alt="${cat} PC build" class="card-photo" style="filter:brightness(${brightness.toFixed(2)}) drop-shadow(0 14px 20px rgba(0,0,0,0.5));" onerror="this.closest('.build-card-media').classList.add('img-fallback')">`;
 }
 
 const CATALOG = [
-  { cat:'gaming', tier:1, name:'Vortex Gaming Rig', desc:'i5-14600K · RTX 4070 Super · 16GB', price: 1499 },
-  { cat:'gaming', tier:2, name:'Apex Predator', desc:'Ryzen 7 7800X3D · RTX 4080 Super · 32GB', price: 2199 },
-  { cat:'gaming', tier:2, name:'Titan Ultra', desc:'Ryzen 9 7950X · RTX 4090 · 32GB', price: 3299 },
-  { cat:'gaming', tier:0, name:'Skirmish Starter', desc:'Ryzen 5 7600X · RX 7800 XT · 16GB', price: 1199 },
-  { cat:'gaming', tier:1, name:'Frostbyte 1440p', desc:'i5-14600K · RTX 4070 Super · 32GB', price: 1699 },
-  { cat:'gaming', tier:2, name:'Overkill Extreme', desc:'i9-14900K · RTX 4090 · 64GB', price: 3899 },
-  { cat:'creator', tier:1, name:'Studio Pro', desc:'i7-14700K · RTX 4070 Super · 32GB · 2TB', price: 1899 },
-  { cat:'creator', tier:2, name:'Render Master', desc:'Ryzen 9 7950X · RTX 4080 Super · 64GB', price: 2799 },
-  { cat:'creator', tier:2, name:'Motion Graphics X1', desc:'i9-14900K · RTX 4090 · 64GB · 4TB', price: 3999 },
-  { cat:'creator', tier:0, name:'Edit Bay Starter', desc:'Ryzen 5 7600X · RTX 4060 Ti · 32GB', price: 1399 },
-  { cat:'office', tier:0, name:'Workhorse Compact', desc:'i5-14600K · 16GB · 1TB SSD', price: 799 },
-  { cat:'office', tier:1, name:'Office Elite', desc:'Ryzen 7 7800X3D · 32GB · 1TB SSD', price: 1099 },
-  { cat:'office', tier:0, name:'Desk Essential', desc:'Ryzen 5 7600X · 16GB · 500GB SSD', price: 649 },
-  { cat:'office', tier:1, name:'SFF Productivity', desc:'i5-14600K · 32GB · 1TB SSD, small form', price: 949 },
+  { cat:'gaming', tier:1, name:'Vortex Gaming Rig', desc:'i5-14600K · RTX 4070 Super · 16GB', price: 1499, rating: 4.8, reviews: 342 },
+  { cat:'gaming', tier:2, name:'Apex Predator', desc:'Ryzen 7 7800X3D · RTX 4080 Super · 32GB', price: 2199, rating: 4.9, reviews: 218 },
+  { cat:'gaming', tier:2, name:'Titan Ultra', desc:'Ryzen 9 7950X · RTX 4090 · 32GB', price: 3299, rating: 5.0, reviews: 97 },
+  { cat:'gaming', tier:0, name:'Skirmish Starter', desc:'Ryzen 5 7600X · RX 7800 XT · 16GB', price: 1199, rating: 4.6, reviews: 156 },
+  { cat:'gaming', tier:1, name:'Frostbyte 1440p', desc:'i5-14600K · RTX 4070 Super · 32GB', price: 1699, rating: 4.7, reviews: 89 },
+  { cat:'gaming', tier:2, name:'Overkill Extreme', desc:'i9-14900K · RTX 4090 · 64GB', price: 3899, rating: 4.9, reviews: 54 },
+  { cat:'creator', tier:1, name:'Studio Pro', desc:'i7-14700K · RTX 4070 Super · 32GB · 2TB', price: 1899, rating: 4.8, reviews: 176 },
+  { cat:'creator', tier:2, name:'Render Master', desc:'Ryzen 9 7950X · RTX 4080 Super · 64GB', price: 2799, rating: 4.9, reviews: 112 },
+  { cat:'creator', tier:2, name:'Motion Graphics X1', desc:'i9-14900K · RTX 4090 · 64GB · 4TB', price: 3999, rating: 5.0, reviews: 43 },
+  { cat:'creator', tier:0, name:'Edit Bay Starter', desc:'Ryzen 5 7600X · RTX 4060 Ti · 32GB', price: 1399, rating: 4.5, reviews: 68 },
+  { cat:'office', tier:0, name:'Workhorse Compact', desc:'i5-14600K · 16GB · 1TB SSD', price: 799, rating: 4.6, reviews: 203 },
+  { cat:'office', tier:1, name:'Office Elite', desc:'Ryzen 7 7800X3D · 32GB · 1TB SSD', price: 1099, rating: 4.7, reviews: 121 },
+  { cat:'office', tier:0, name:'Desk Essential', desc:'Ryzen 5 7600X · 16GB · 500GB SSD', price: 649, rating: 4.4, reviews: 87 },
+  { cat:'office', tier:1, name:'SFF Productivity', desc:'i5-14600K · 32GB · 1TB SSD, small form', price: 949, rating: 4.6, reviews: 65 },
 ];
 const params = new URLSearchParams(location.search);
 const cat = params.get('cat');
@@ -150,6 +150,11 @@ if (!items.length) {
       <div class="build-card-body">
         <h3>${i.name}</h3>
         <p>${i.desc}</p>
+        <div class="rating-line">
+          ${window.renderStars(i.rating)}
+          <span class="rating-count">${i.rating.toFixed(1)} (${i.reviews})</span>
+          <a href="#" class="write-review-link" data-write-review="${i.name}">Write a review</a>
+        </div>
         <div style="font-family:var(--font-display);font-size:22px;color:var(--red-bright);margin-bottom:14px;">$${i.price.toLocaleString()}</div>
         <button class="build-card-btn" data-add-cart="${i.name}" data-price="${i.price}">Add To Cart
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
