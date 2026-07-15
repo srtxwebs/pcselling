@@ -101,10 +101,16 @@ document.addEventListener('DOMContentLoaded', () => {
           </a>
         </div>`;
     } else {
-      cartBody.innerHTML = cart.map((item, i) => `
+      cartBody.innerHTML = cart.map((item, i) => {
+        const name = (item.name || '').toLowerCase();
+        let filt = 'hue-rotate(0deg) saturate(1.1)';
+        if (name.includes('creator') || name.includes('studio') || name.includes('render') || name.includes('motion') || name.includes('edit')) filt = 'hue-rotate(190deg) saturate(1.3)';
+        else if (name.includes('office') || name.includes('work') || name.includes('desk') || name.includes('sff')) filt = 'saturate(0.15) brightness(1.05)';
+        else if (name.includes('custom')) filt = 'hue-rotate(265deg) saturate(1.4)';
+        return `
         <div class="cart-item">
           <div class="cart-item-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="4" y="4" width="16" height="16" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+            <img src="images/pc-cutout.png" alt="${item.name}" style="width:100%;height:100%;object-fit:contain;filter:${filt};">
           </div>
           <div class="cart-item-info">
             <div class="cart-item-name">${item.name}</div>
@@ -117,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
           </div>
         </div>
-      `).join('') + `
+      `;}).join('') + `
         <div class="cart-promo">
           <input type="text" placeholder="Promo code" id="cartPromoInput">
           <button id="cartPromoApply">Apply</button>
