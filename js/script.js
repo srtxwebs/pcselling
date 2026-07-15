@@ -2,6 +2,21 @@
    REDGEAR — Shared Site Script
    ========================================================================== */
 
+/* Star rating helper — top-level so it's available to inline page scripts
+   that run before DOMContentLoaded fires */
+window.renderStars = function(rating, size) {
+  size = size || 13;
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const fillPct = Math.max(0, Math.min(1, rating - (i - 1))) * 100;
+    html += `<span class="star-wrap" style="width:${size}px;height:${size}px;">
+      <svg class="star-bg" viewBox="0 0 24 24" fill="currentColor" style="width:${size}px;height:${size}px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg>
+      <span class="star-fill" style="width:${fillPct}%;"><svg viewBox="0 0 24 24" fill="currentColor" style="width:${size}px;height:${size}px;"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></span>
+    </span>`;
+  }
+  return `<span class="star-row">${html}</span>`;
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
   /* ---------- Cart drawer (injected on every page) ---------- */
@@ -71,6 +86,52 @@ document.addEventListener('DOMContentLoaded', () => {
     <button class="back-to-top" id="backToTop" aria-label="Back to top">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
     </button>
+
+    <div class="account-backdrop" id="settingsBackdrop"></div>
+    <div class="account-panel settings-panel" id="settingsPanel">
+      <div class="account-panel-head">
+        <h3>Settings</h3>
+        <button class="cart-close" id="settingsClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="account-panel-body">
+        <label class="profile-field-label">Language
+          <select id="settingLanguage">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+            <option value="de">Deutsch</option>
+            <option value="pt">Português</option>
+            <option value="ja">日本語</option>
+          </select>
+        </label>
+        <label class="profile-field-label">Currency
+          <select id="settingCurrency">
+            <option value="USD">USD ($)</option>
+            <option value="EUR">EUR (€)</option>
+            <option value="GBP">GBP (£)</option>
+            <option value="CAD">CAD ($)</option>
+            <option value="MXN">MXN ($)</option>
+          </select>
+        </label>
+        <div class="settings-toggle-row">
+          <div>
+            <div class="settings-toggle-label">Email Notifications</div>
+            <div class="settings-toggle-sub">Order updates &amp; drop alerts</div>
+          </div>
+          <button class="toggle-switch" id="toggleEmail" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="settings-toggle-row">
+          <div>
+            <div class="settings-toggle-label">RGB Preview Animations</div>
+            <div class="settings-toggle-sub">Fan glow &amp; sweep effects</div>
+          </div>
+          <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+        </div>
+        <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;justify-content:center;margin-top:6px;">Save Settings</button>
+        <button class="btn btn-outline" id="clearDataBtn" style="width:100%;justify-content:center;">Clear Local Data</button>
+        <p class="account-footnote">Language & currency preferences are saved to this browser. Full site translation isn't wired up yet — this stores your preference for when it is.</p>
+      </div>
+    </div>
   `;
   document.body.insertAdjacentHTML('beforeend', drawerHTML);
 
@@ -149,6 +210,85 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('cartClose').addEventListener('click', closeCart);
   cartBackdrop.addEventListener('click', closeCart);
   document.querySelectorAll('[aria-label="Cart"]').forEach(btn => btn.addEventListener('click', openCart));
+
+  /* ---------- Settings: inject two-gear icon into every navbar ---------- */
+  document.querySelectorAll('.nav-icons').forEach(navIcons => {
+    const settingsBtn = document.createElement('button');
+    settingsBtn.setAttribute('aria-label', 'Settings');
+    settingsBtn.className = 'settings-gear-btn';
+    settingsBtn.innerHTML = `
+      <svg viewBox="0 0 40 40" fill="none">
+        <g class="gear gear-back">
+          <path fill="currentColor" d="M23 8.5l1.2 3a9 9 0 0 1 2.6 1.5l3.1-.9 2 3.5-2.4 2.2a9 9 0 0 1 0 3l2.4 2.2-2 3.5-3.1-.9a9 9 0 0 1-2.6 1.5l-1.2 3h-4l-1.2-3a9 9 0 0 1-2.6-1.5l-3.1.9-2-3.5 2.4-2.2a9 9 0 0 1 0-3L10.1 15l2-3.5 3.1.9a9 9 0 0 1 2.6-1.5l1.2-3z"/>
+          <circle cx="21" cy="20" r="3.6" fill="var(--near-black)"/>
+        </g>
+        <g class="gear gear-front">
+          <path fill="currentColor" d="M13 21.5l-.9 2.3a7 7 0 0 1-2 1.2l-2.4-.7-1.6 2.7 1.9 1.7a7 7 0 0 1 0 2.3l-1.9 1.7 1.6 2.7 2.4-.7a7 7 0 0 1 2 1.2l.9 2.3h3.1l.9-2.3a7 7 0 0 1 2-1.2l2.4.7 1.6-2.7-1.9-1.7a7 7 0 0 1 0-2.3l1.9-1.7-1.6-2.7-2.4.7a7 7 0 0 1-2-1.2l-.9-2.3z" opacity="0"/>
+        </g>
+        <g class="gear gear-small">
+          <path fill="currentColor" d="M11.5 22.3l.7 1.8a5.5 5.5 0 0 1 1.6 1l1.9-.6 1.3 2.2-1.5 1.4a5.5 5.5 0 0 1 0 1.8l1.5 1.4-1.3 2.2-1.9-.6a5.5 5.5 0 0 1-1.6 1l-.7 1.8H9.9l-.7-1.8a5.5 5.5 0 0 1-1.6-1l-1.9.6-1.3-2.2 1.5-1.4a5.5 5.5 0 0 1 0-1.8L4.4 27l1.3-2.2 1.9.6a5.5 5.5 0 0 1 1.6-1l.7-1.8z"/>
+          <circle cx="10.75" cy="27.2" r="2.2" fill="var(--near-black)"/>
+        </g>
+      </svg>
+    `;
+    const cartBtnRef = navIcons.querySelector('[aria-label="Cart"]');
+    if (cartBtnRef) navIcons.insertBefore(settingsBtn, cartBtnRef);
+    else navIcons.appendChild(settingsBtn);
+  });
+
+  const settingsPanel = document.getElementById('settingsPanel');
+  const settingsBackdrop = document.getElementById('settingsBackdrop');
+  function openSettings() {
+    loadSettingsIntoForm();
+    settingsPanel.classList.add('open');
+    settingsBackdrop.classList.add('open');
+    document.body.classList.add('nav-open');
+  }
+  function closeSettings() {
+    settingsPanel.classList.remove('open');
+    settingsBackdrop.classList.remove('open');
+    document.body.classList.remove('nav-open');
+  }
+  document.querySelectorAll('[aria-label="Settings"]').forEach(btn => btn.addEventListener('click', openSettings));
+  document.getElementById('settingsClose').addEventListener('click', closeSettings);
+  settingsBackdrop.addEventListener('click', closeSettings);
+
+  function getSettings() {
+    try { return JSON.parse(localStorage.getItem('redgear_settings') || '{}'); }
+    catch (e) { return {}; }
+  }
+  function loadSettingsIntoForm() {
+    const s = getSettings();
+    document.getElementById('settingLanguage').value = s.language || 'en';
+    document.getElementById('settingCurrency').value = s.currency || 'USD';
+    document.getElementById('toggleEmail').classList.toggle('active', s.emailNotifs !== false);
+    document.getElementById('toggleAnim').classList.toggle('active', s.animations !== false);
+  }
+  document.querySelectorAll('.toggle-switch').forEach(t => {
+    t.addEventListener('click', () => t.classList.toggle('active'));
+  });
+  document.getElementById('saveSettingsBtn').addEventListener('click', () => {
+    const settings = {
+      language: document.getElementById('settingLanguage').value,
+      currency: document.getElementById('settingCurrency').value,
+      emailNotifs: document.getElementById('toggleEmail').classList.contains('active'),
+      animations: document.getElementById('toggleAnim').classList.contains('active'),
+    };
+    localStorage.setItem('redgear_settings', JSON.stringify(settings));
+    document.body.classList.toggle('anims-off', !settings.animations);
+    closeSettings();
+    showToast('Settings saved');
+  });
+  document.getElementById('clearDataBtn').addEventListener('click', () => {
+    localStorage.removeItem('redgear_cart');
+    localStorage.removeItem('redgear_reviews');
+    localStorage.removeItem('redgear_settings');
+    setCartCount();
+    closeSettings();
+    showToast('Local data cleared');
+  });
+  // Apply saved animation preference on load
+  if (getSettings().animations === false) document.body.classList.add('anims-off');
 
   cartBody.addEventListener('click', (e) => {
     const rm = e.target.closest('[data-remove]');
@@ -239,18 +379,60 @@ document.addEventListener('DOMContentLoaded', () => {
     const title = document.getElementById('accountHeadTitle');
     const body = document.getElementById('accountPanelBody');
     if (auth && auth.signedIn) {
-      title.textContent = 'My Account';
+      title.textContent = 'My Profile';
+      const displayName = auth.displayName || auth.name;
+      const myReviews = (window.RedGearReviews ? window.RedGearReviews.forUser(auth.email) : []);
       body.innerHTML = `
         <div class="account-profile">
-          <img src="${auth.picture || ''}" alt="${auth.name}" onerror="this.style.display='none'">
-          <div><div class="account-profile-name">${auth.name}</div><div class="account-profile-email">${auth.email}</div></div>
+          <img src="${auth.picture || ''}" alt="${displayName}" onerror="this.style.display='none'">
+          <div><div class="account-profile-name">${displayName}</div><div class="account-profile-email">${auth.email}</div></div>
         </div>
+
+        <label class="profile-field-label">Display Name
+          <input type="text" id="displayNameInput" value="${displayName}" maxlength="40">
+        </label>
+        <button class="btn btn-outline" id="saveNameBtn" style="width:100%;justify-content:center;margin-bottom:6px;">Save Name</button>
+
+        <div class="account-divider"><span>my reviews</span></div>
+        <div id="myReviewsList">
+          ${myReviews.length ? myReviews.map((r, i) => `
+            <div class="my-review-item">
+              <div class="my-review-head">
+                <span class="my-review-build">${r.build}</span>
+                ${window.renderStars(r.rating, 11)}
+              </div>
+              ${r.comment ? `<div class="my-review-comment">"${r.comment}"</div>` : ''}
+              <div class="my-review-date">${new Date(r.date).toLocaleDateString()}</div>
+              <a href="#" class="my-review-remove" data-remove-review="${r.date}">Remove</a>
+            </div>
+          `).join('') : '<p class="account-footnote">You haven&#39;t written any reviews yet.</p>'}
+        </div>
+
+        <div class="account-divider"><span>or</span></div>
         <button class="btn btn-outline" id="signOutBtn" style="width:100%;justify-content:center;">Sign Out</button>
       `;
       document.getElementById('signOutBtn').addEventListener('click', () => {
         clearAuth();
         updateAccountUI();
         showToast('Signed out');
+      });
+      document.getElementById('saveNameBtn').addEventListener('click', () => {
+        const val = document.getElementById('displayNameInput').value.trim();
+        if (!val) { showToast('Name cannot be empty'); return; }
+        const a = getAuth();
+        a.displayName = val;
+        setAuth(a);
+        updateAccountUI();
+        showToast('Display name updated');
+      });
+      body.querySelectorAll('[data-remove-review]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const list = window.RedGearReviews.getAll();
+          const idx = list.findIndex(r => r.date === link.dataset.removeReview);
+          if (idx > -1) window.RedGearReviews.removeAt(idx);
+          updateAccountUI();
+        });
       });
     } else {
       title.textContent = 'Sign In';
@@ -460,6 +642,108 @@ document.addEventListener('DOMContentLoaded', () => {
     get: getCart
   };
   window.__renderCartDrawer = renderCartDrawer;
+
+  /* ---------- Reviews system ---------- */
+  function getReviews() {
+    try { return JSON.parse(localStorage.getItem('redgear_reviews') || '[]'); }
+    catch (e) { return []; }
+  }
+  function saveReviews(list) { localStorage.setItem('redgear_reviews', JSON.stringify(list)); }
+
+  window.RedGearReviews = {
+    getAll: getReviews,
+    forBuild(name) { return getReviews().filter(r => r.build === name); },
+    forUser(email) { return getReviews().filter(r => r.userEmail === email); },
+    add(build, rating, comment) {
+      if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
+        window.openAccount && window.openAccount('Sign in with Google to write a review.');
+        return false;
+      }
+      const auth = window.RedGearAuth.get();
+      const list = getReviews();
+      list.unshift({
+        build, rating, comment,
+        userEmail: auth.email,
+        userName: auth.displayName || auth.name,
+        date: new Date().toISOString()
+      });
+      saveReviews(list);
+      return true;
+    },
+    removeAt(idx) {
+      const list = getReviews();
+      list.splice(idx, 1);
+      saveReviews(list);
+    }
+  };
+
+  // Review modal (shared across pages)
+  const reviewModalHTML = `
+    <div class="account-backdrop" id="reviewBackdrop"></div>
+    <div class="account-panel" id="reviewPanel">
+      <div class="account-panel-head">
+        <h3>Write a Review</h3>
+        <button class="cart-close" id="reviewClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="account-panel-body">
+        <p class="review-target-name" id="reviewTargetName"></p>
+        <div class="star-picker" id="starPicker">
+          ${[1,2,3,4,5].map(n => `<button type="button" class="star-pick-btn" data-star="${n}"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/></svg></button>`).join('')}
+        </div>
+        <textarea id="reviewComment" placeholder="What did you think of this build?" rows="4"></textarea>
+        <button class="btn btn-primary" id="reviewSubmit" style="width:100%;justify-content:center;">Submit Review</button>
+      </div>
+    </div>
+  `;
+  document.body.insertAdjacentHTML('beforeend', reviewModalHTML);
+  let currentReviewTarget = null;
+  let currentStarValue = 0;
+  const reviewPanel = document.getElementById('reviewPanel');
+  const reviewBackdrop = document.getElementById('reviewBackdrop');
+  const starPicker = document.getElementById('starPicker');
+
+  window.openReviewModal = (buildName) => {
+    currentReviewTarget = buildName;
+    currentStarValue = 0;
+    document.getElementById('reviewTargetName').textContent = buildName;
+    document.getElementById('reviewComment').value = '';
+    starPicker.querySelectorAll('.star-pick-btn').forEach(b => b.classList.remove('active'));
+    reviewPanel.classList.add('open');
+    reviewBackdrop.classList.add('open');
+    document.body.classList.add('nav-open');
+  };
+  function closeReviewModal() {
+    reviewPanel.classList.remove('open');
+    reviewBackdrop.classList.remove('open');
+    document.body.classList.remove('nav-open');
+  }
+  document.getElementById('reviewClose').addEventListener('click', closeReviewModal);
+  reviewBackdrop.addEventListener('click', closeReviewModal);
+  starPicker.addEventListener('click', (e) => {
+    const btn = e.target.closest('.star-pick-btn');
+    if (!btn) return;
+    currentStarValue = parseInt(btn.dataset.star, 10);
+    starPicker.querySelectorAll('.star-pick-btn').forEach(b =>
+      b.classList.toggle('active', parseInt(b.dataset.star, 10) <= currentStarValue));
+  });
+  document.getElementById('reviewSubmit').addEventListener('click', () => {
+    if (!currentStarValue) { showToast('Pick a star rating first'); return; }
+    if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
+      closeReviewModal();
+      window.openAccount('Sign in with Google to write a review.');
+      return;
+    }
+    const comment = document.getElementById('reviewComment').value.trim();
+    const ok = window.RedGearReviews.add(currentReviewTarget, currentStarValue, comment);
+    if (ok) {
+      closeReviewModal();
+      showToast('Review submitted — thanks!');
+    }
+  });
+  document.addEventListener('click', (e) => {
+    const trigger = e.target.closest('[data-write-review]');
+    if (trigger) { e.preventDefault(); window.openReviewModal(trigger.dataset.writeReview); }
+  });
 
   /* ---------- Toast ---------- */
   const toast = document.getElementById('toast');
