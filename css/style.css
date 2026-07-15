@@ -591,6 +591,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   filter: drop-shadow(0 14px 20px rgba(0,0,0,0.5));
   transition: transform 0.6s var(--ease);
 }
+.img-fallback .card-photo { display: none; }
+
 .build-card:hover .card-photo { transform: scale(1.08); }
 .filter-creator { filter: drop-shadow(0 14px 20px rgba(0,0,0,0.5)) hue-rotate(190deg) saturate(1.3); }
 .filter-office { filter: drop-shadow(0 14px 20px rgba(0,0,0,0.5)) saturate(0.15) brightness(1.05); }
@@ -1587,3 +1589,173 @@ body.nav-open { overflow: hidden; }
 
 .builder-section { padding-top: 60px; }
 @media (max-width: 900px) { .builder-section { padding-top: 30px; } }
+
+/* ==========================================================================
+   Star Ratings & Reviews
+   ========================================================================== */
+
+.star-row { display: inline-flex; gap: 2px; }
+.star-wrap { position: relative; display: inline-block; }
+.star-bg { color: #333338; display: block; }
+.star-fill { position: absolute; top: 0; left: 0; overflow: hidden; display: block; }
+.star-fill svg { color: #ffb020; display: block; }
+
+.rating-line { display: flex; align-items: center; gap: 7px; margin: 4px 0 10px; }
+.rating-count { font-size: 11.5px; color: var(--grey-dim); }
+.write-review-link {
+  font-size: 11px;
+  color: var(--red-bright);
+  font-weight: 600;
+  margin-left: auto;
+  transition: color 0.2s;
+}
+.write-review-link:hover { color: var(--white); }
+
+.star-picker { display: flex; gap: 8px; justify-content: center; margin: 6px 0 16px; }
+.star-pick-btn { width: 32px; height: 32px; color: #333338; transition: color 0.2s, transform 0.2s; }
+.star-pick-btn svg { width: 100%; height: 100%; }
+.star-pick-btn:hover { transform: scale(1.15); }
+.star-pick-btn.active { color: #ffb020; }
+.review-target-name { text-align: center; font-size: 13px; color: var(--grey); margin-bottom: 4px; }
+
+#reviewPanel textarea {
+  width: 100%;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  resize: vertical;
+  margin-bottom: 14px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+#reviewPanel textarea:focus { outline: none; border-color: var(--red-bright); box-shadow: 0 0 0 3px rgba(224,20,31,0.12); }
+
+.my-review-item {
+  padding: 14px;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+.my-review-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.my-review-build { font-size: 12.5px; font-weight: 700; }
+.my-review-date { font-size: 10.5px; color: var(--grey-dim); }
+.my-review-comment { font-size: 12px; color: var(--grey); line-height: 1.5; margin-top: 6px; }
+.my-review-remove { font-size: 10.5px; color: var(--grey-dim); margin-top: 8px; transition: color 0.2s; }
+.my-review-remove:hover { color: var(--red-bright); }
+
+.profile-field-label {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--grey-dim);
+  margin-bottom: 14px;
+}
+.profile-field-label input {
+  width: 100%;
+  margin-top: 7px;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+.profile-field-label input:focus { outline: none; border-color: var(--red-bright); box-shadow: 0 0 0 3px rgba(224,20,31,0.12); }
+#myReviewsList { max-height: 240px; overflow-y: auto; margin-bottom: 4px; }
+
+/* ==========================================================================
+   Settings: two spinning gears icon + panel controls
+   ========================================================================== */
+
+.settings-gear-btn {
+  width: 20px; height: 20px;
+  color: var(--white);
+  position: relative;
+  transition: color 0.25s;
+}
+.settings-gear-btn:hover { color: var(--red-bright); }
+.settings-gear-btn svg { width: 100%; height: 100%; overflow: visible; }
+
+.gear { transform-origin: center; transition: opacity 0.2s; }
+.gear-back {
+  transform-origin: 21px 20px;
+  animation: gearSpinCW 9s linear infinite;
+}
+.gear-small {
+  transform-origin: 10.75px 27.2px;
+  animation: gearSpinCCW 6s linear infinite;
+}
+.gear-front { display: none; }
+
+.settings-gear-btn:hover .gear-back { animation-duration: 2.2s; }
+.settings-gear-btn:hover .gear-small { animation-duration: 1.5s; }
+
+@keyframes gearSpinCW { to { transform: rotate(360deg); } }
+@keyframes gearSpinCCW { to { transform: rotate(-360deg); } }
+
+body.anims-off .pulse-glow,
+body.anims-off .rgb-cycle,
+body.anims-off .glass-sweep,
+body.anims-off .ambient-breathe,
+body.anims-off .fan-spin,
+body.anims-off .gear-back,
+body.anims-off .gear-small {
+  animation: none !important;
+}
+
+.profile-field-label select {
+  width: 100%;
+  margin-top: 7px;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: var(--white);
+  font-family: var(--font-body);
+  font-size: 13px;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+.profile-field-label select:focus { outline: none; border-color: var(--red-bright); }
+
+.settings-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+}
+.settings-toggle-label { font-size: 13px; font-weight: 600; }
+.settings-toggle-sub { font-size: 11px; color: var(--grey-dim); margin-top: 2px; }
+
+.toggle-switch {
+  width: 40px; height: 22px;
+  border-radius: 20px;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.25s, border-color 0.25s;
+}
+.toggle-knob {
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--grey);
+  transition: transform 0.25s var(--ease), background 0.25s;
+}
+.toggle-switch.active { background: rgba(224,20,31,0.25); border-color: var(--red-bright); }
+.toggle-switch.active .toggle-knob { transform: translateX(18px); background: var(--red-bright); }
