@@ -102,9 +102,43 @@ window.applyTranslations = function(lang) {
   document.documentElement.setAttribute('lang', lang);
 };
 
+/* Smart image loader — tries common filename/extension variants before
+   falling back to the styled placeholder. Handles cases like a file saved
+   as "name.jpg.png" or "name.png" when the code expects "name.jpg". */
+window.smartImg = function(imgEl) {
+  const original = imgEl.dataset.src || imgEl.getAttribute('src');
+  if (!imgEl.dataset.src) imgEl.dataset.src = original;
+  const dot = original.lastIndexOf('.');
+  const base = dot > -1 ? original.slice(0, dot) : original;
+  const candidates = [
+    original,
+    original + '.png',
+    original + '.jpg',
+    base + '.png',
+    base + '.jpg',
+    base + '.jpeg',
+    base + '.webp',
+    base + '.PNG',
+    base + '.JPG',
+  ];
+  let idx = 0;
+  imgEl.addEventListener('error', function retry() {
+    idx++;
+    if (idx < candidates.length) {
+      imgEl.src = candidates[idx];
+    } else {
+      imgEl.removeEventListener('error', retry);
+      const media = imgEl.closest('.build-card-media');
+      if (media) media.classList.add('img-fallback');
+    }
+  });
+  imgEl.src = candidates[0];
+};
+
 document.addEventListener('DOMContentLoaded', () => {
 
   window.applyTranslations();
+  document.querySelectorAll('.js-smart-img:not([src])').forEach(img => window.smartImg(img));
 
   /* ---------- Cart drawer (injected on every page) ---------- */
   const drawerHTML = `
