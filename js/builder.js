@@ -227,7 +227,7 @@ const PARTS = [
 ];
 
 const state = {};
-const fmt = (n) => `$${Number(n).toLocaleString('en-US')}`;
+const fmt = (n) => window.formatPrice ? window.formatPrice(Number(n)) : `$${Number(n).toLocaleString('en-US')}`;
 
 /* ---------- Build the step accordion ---------- */
 function buildUI() {
@@ -262,7 +262,7 @@ function buildUI() {
                 </div>
               </div>
               <div class="option-right">
-                <div class="option-price">${opt.price ? '+' + fmt(opt.price) : 'Included'}</div>
+                <div class="option-price" data-usd="${opt.price}">${opt.price ? '+' + fmt(opt.price) : 'Included'}</div>
                 <div class="option-radio"></div>
               </div>
             </div>
@@ -454,6 +454,22 @@ document.addEventListener('DOMContentLoaded', () => {
   buildUI();
   updateSummary();
   renderPreview();
+
+  function refreshPrices() {
+    document.querySelectorAll('.option-price[data-usd]').forEach(el => {
+      const usd = Number(el.dataset.usd);
+      el.textContent = usd ? '+' + fmt(usd) : 'Included';
+    });
+    Object.keys(state).forEach(partKey => {
+      const chosen = state[partKey];
+      const selEl = document.getElementById(`sel-${partKey}`);
+      if (selEl && chosen) {
+        selEl.textContent = `${chosen.name}${chosen.price ? ' — ' + fmt(chosen.price) : ' — Included'}`;
+      }
+    });
+    updateSummary();
+  }
+  window.addEventListener('redgear:settingschange', refreshPrices);
 
   const cta = document.getElementById('summaryCta');
   if (cta) {
