@@ -5,8 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>RedGear PC Builds — Built For Victory</title>
 <meta name="description" content="Custom PC builds designed for gamers, creators, and professionals. Premium quality, max performance, expert support.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta property="og:title" content="RedGear PC Builds — Built For Victory">
+<meta property="og:description" content="Custom PC builds designed for gamers, creators, and professionals. Premium quality, max performance, expert support.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/pc-cutout.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="RedGear PC Builds — Built For Victory">
+<meta name="twitter:description" content="Custom PC builds designed for gamers, creators, and professionals. Premium quality, max performance, expert support.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -38,9 +46,11 @@
   <div class="container">
     <a href="index.html" class="logo">
       <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
-        <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/>
-        <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-        <path d="M24 6 L24 42 M8 6 L24 24 L40 6" stroke="currentColor" stroke-width="1.5"/>
+        <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
+        <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
+        <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
       </svg>
       <span>
         <span class="logo-text">RED<span class="accent">GEAR</span></span>
@@ -49,11 +59,11 @@
     </a>
 
     <nav class="nav-links">
-      <a href="index.html" class="active">Home</a>
-      <a href="builds.html">PC Builds</a>
-      <a href="services.html">Services</a>
-      <a href="about.html">About Us</a>
-      <a href="contact.html">Contact</a>
+      <a href="index.html" class="active" data-i18n="home">Home</a>
+      <a href="builds.html" data-i18n="builds">PC Builds</a>
+      <a href="services.html" data-i18n="services">Services</a>
+      <a href="about.html" data-i18n="about">About Us</a>
+      <a href="contact.html" data-i18n="contact">Contact</a>
     </nav>
 
     <div class="nav-icons">
@@ -78,11 +88,11 @@
   <button class="mobile-nav-close" id="mobileNavClose">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
   </button>
-  <a href="index.html">Home</a>
-  <a href="builds.html">PC Builds</a>
-  <a href="services.html">Services</a>
-  <a href="about.html">About Us</a>
-  <a href="contact.html">Contact</a>
+  <a href="index.html" data-i18n="home">Home</a>
+  <a href="builds.html" data-i18n="builds">PC Builds</a>
+  <a href="services.html" data-i18n="services">Services</a>
+  <a href="about.html" data-i18n="about">About Us</a>
+  <a href="contact.html" data-i18n="contact">Contact</a>
 </div>
 
 <!-- ============ HERO ============ -->
@@ -111,10 +121,10 @@
       </h1>
       <p class="hero-desc">Custom PC builds designed for gamers, creators, and professionals. Unleash the power.</p>
       <div class="hero-actions">
-        <a href="builds.html" class="btn btn-primary">View Builds
+        <a href="builds.html" class="btn btn-primary"><span data-i18n="viewBuilds">View Builds</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
-        <a href="builder.html" class="btn btn-outline">Custom Build
+        <a href="builder.html" class="btn btn-outline"><span data-i18n="customBuild">Custom Build</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       </div>
@@ -199,7 +209,7 @@
         <div class="build-card-body">
           <h3>Gaming PCs</h3>
           <p>Dominate every game.</p>
-          <a href="builds.html?cat=gaming" class="build-card-btn">View Builds
+          <a href="builds.html?cat=gaming" class="build-card-btn"><span data-i18n="viewBuilds">View Builds</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -212,7 +222,7 @@
         <div class="build-card-body">
           <h3>Creator PCs</h3>
           <p>Power your creativity.</p>
-          <a href="builds.html?cat=creator" class="build-card-btn">View Builds
+          <a href="builds.html?cat=creator" class="build-card-btn"><span data-i18n="viewBuilds">View Builds</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -225,7 +235,7 @@
         <div class="build-card-body">
           <h3>Office PCs</h3>
           <p>Reliable. Efficient. Built for work.</p>
-          <a href="builds.html?cat=office" class="build-card-btn">View Builds
+          <a href="builds.html?cat=office" class="build-card-btn"><span data-i18n="viewBuilds">View Builds</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -238,7 +248,7 @@
         <div class="build-card-body">
           <h3>Custom PCs</h3>
           <p>Built exactly how you want.</p>
-          <a href="builder.html" class="build-card-btn">Build Now
+          <a href="builder.html" class="build-card-btn"><span data-i18n="buildNow">Build Now</span>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
           </a>
         </div>
@@ -279,9 +289,12 @@
       <div class="footer-brand">
         <a href="index.html" class="logo">
           <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
-            <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/>
-            <path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/>
-          </svg>
+        <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
+        <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
+        <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
+      </svg>
           <span><span class="logo-text">RED<span class="accent">GEAR</span></span></span>
         </a>
         <p>Custom PC builds engineered for performance, quality, and reliability. Built for victory, built for you.</p>
@@ -292,7 +305,7 @@
         </div>
       </div>
       <div class="footer-col">
-        <h5>Shop</h5>
+        <h5 data-i18n="shop">Shop</h5>
         <ul>
           <li><a href="builds.html?cat=gaming">Gaming PCs</a></li>
           <li><a href="builds.html?cat=creator">Creator PCs</a></li>
@@ -301,16 +314,16 @@
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Company</h5>
+        <h5 data-i18n="company">Company</h5>
         <ul>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="services.html">Services</a></li>
-          <li><a href="contact.html">Contact</a></li>
+          <li><a href="about.html" data-i18n="about">About Us</a></li>
+          <li><a href="services.html" data-i18n="services">Services</a></li>
+          <li><a href="contact.html" data-i18n="contact">Contact</a></li>
           <li><a href="#">Warranty</a></li>
         </ul>
       </div>
       <div class="footer-col">
-        <h5>Newsletter</h5>
+        <h5 data-i18n="newsletter">Newsletter</h5>
         <p style="color:var(--grey-dim);font-size:13.5px;margin-bottom:14px;">Get build guides & drop alerts.</p>
         <div style="display:flex;gap:0;">
           <input type="email" placeholder="Your email" style="background:var(--panel-light);border:1px solid var(--border);border-right:none;padding:12px 14px;color:var(--white);font-size:13px;width:100%;border-radius:4px 0 0 4px;">
