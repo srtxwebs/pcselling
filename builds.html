@@ -4,8 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PC Builds — RedGear PC Builds</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta property="og:title" content="Prebuilt PCs — RedGear PC Builds">
+<meta property="og:description" content="Hand-assembled, stress-tested gaming, creator, and office PCs ready to ship.">
+<meta property="og:type" content="website">
+<meta property="og:image" content="images/pc-cutout.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Prebuilt PCs — RedGear PC Builds">
+<meta name="twitter:description" content="Hand-assembled, stress-tested gaming, creator, and office PCs ready to ship.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -33,15 +41,21 @@
 
 <header class="navbar"><div class="container">
   <a href="index.html" class="logo">
-    <svg class="logo-mark" viewBox="0 0 48 48" fill="none"><path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/><path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/><path d="M24 6 L24 42 M8 6 L24 24 L40 6" stroke="currentColor" stroke-width="1.5"/></svg>
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+        <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
+        <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
+        <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
+      </svg>
     <span><span class="logo-text">RED<span class="accent">GEAR</span></span><span class="logo-sub">PC BUILDS</span></span>
   </a>
   <nav class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="builds.html" class="active">PC Builds</a>
-    <a href="services.html">Services</a>
-    <a href="about.html">About Us</a>
-    <a href="contact.html">Contact</a>
+    <a href="index.html" data-i18n="home">Home</a>
+    <a href="builds.html" class="active" data-i18n="builds">PC Builds</a>
+    <a href="services.html" data-i18n="services">Services</a>
+    <a href="about.html" data-i18n="about">About Us</a>
+    <a href="contact.html" data-i18n="contact">Contact</a>
   </nav>
   <div class="nav-icons">
     <button aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
@@ -53,12 +67,12 @@
 
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-nav-close" id="mobileNavClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-  <a href="index.html">Home</a><a href="builds.html">PC Builds</a><a href="services.html">Services</a><a href="about.html">About Us</a><a href="contact.html">Contact</a>
+  <a href="index.html" data-i18n="home">Home</a><a href="builds.html" data-i18n="builds">PC Builds</a><a href="services.html" data-i18n="services">Services</a><a href="about.html" data-i18n="about">About Us</a><a href="contact.html" data-i18n="contact">Contact</a>
 </div>
 
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="index.html">Home</a><span class="sep">/</span><span>PC Builds</span></div>
+    <div class="breadcrumb"><a href="index.html" data-i18n="home">Home</a><span class="sep">/</span><span>PC Builds</span></div>
     <h1>Prebuilt <span>PCs</span></h1>
     <p>Hand-assembled, stress-tested, and ready to ship. Or start from scratch with our custom builder.</p>
   </div>
@@ -76,12 +90,18 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="logo"><svg class="logo-mark" viewBox="0 0 48 48" fill="none"><path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" fill="currentColor" opacity="0.15"/><path d="M8 6 L40 6 L40 20 L24 42 L8 20 Z" stroke="currentColor" stroke-width="2" fill="none"/></svg><span><span class="logo-text">RED<span class="accent">GEAR</span></span></span></a>
+        <a href="index.html" class="logo"><svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+        <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
+        <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
+        <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
+        <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
+      </svg><span><span class="logo-text">RED<span class="accent">GEAR</span></span></span></a>
         <p>Custom PC builds engineered for performance, quality, and reliability.</p>
       </div>
-      <div class="footer-col"><h5>Shop</h5><ul><li><a href="builds.html?cat=gaming">Gaming PCs</a></li><li><a href="builds.html?cat=creator">Creator PCs</a></li><li><a href="builds.html?cat=office">Office PCs</a></li><li><a href="builder.html">Custom Build</a></li></ul></div>
-      <div class="footer-col"><h5>Company</h5><ul><li><a href="about.html">About Us</a></li><li><a href="services.html">Services</a></li><li><a href="contact.html">Contact</a></li></ul></div>
-      <div class="footer-col"><h5>Support</h5><ul><li><a href="tel:+15551234567">+1 (555) 123-4567</a></li><li><a href="mailto:support@redgear.com">support@redgear.com</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="shop">Shop</h5><ul><li><a href="builds.html?cat=gaming">Gaming PCs</a></li><li><a href="builds.html?cat=creator">Creator PCs</a></li><li><a href="builds.html?cat=office">Office PCs</a></li><li><a href="builder.html">Custom Build</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="company">Company</h5><ul><li><a href="about.html" data-i18n="about">About Us</a></li><li><a href="services.html" data-i18n="services">Services</a></li><li><a href="contact.html" data-i18n="contact">Contact</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="support">Support</h5><ul><li><a href="tel:+15551234567">+1 (555) 123-4567</a></li><li><a href="mailto:support@redgear.com">support@redgear.com</a></li></ul></div>
     </div>
     <div class="footer-bottom"><span>© 2026 RedGear PC Builds. All rights reserved.</span><span>Privacy Policy · Terms of Service</span></div>
   </div>
@@ -137,14 +157,17 @@ if (search) {
   const sub = document.querySelector('.page-hero p');
   if (sub) sub.textContent = items.length ? `${items.length} build${items.length===1?'':'s'} found.` : 'No matches — try a different search, or start a custom build.';
 }
-if (!items.length) {
-  grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grey-dim);">
-    <p style="font-size:16px;color:var(--grey);margin-bottom:14px;">No builds match that search.</p>
-    <a href="builder.html" class="btn btn-primary">Start a Custom Build</a>
-  </div>`;
-} else {
+
+function renderCatalog() {
+  if (!items.length) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--grey-dim);">
+      <p style="font-size:16px;color:var(--grey);margin-bottom:14px;">No builds match that search.</p>
+      <a href="builder.html" class="btn btn-primary">Start a Custom Build</a>
+    </div>`;
+    return;
+  }
   grid.innerHTML = items.map(i => `
-    <div class="build-card reveal">
+    <div class="build-card reveal is-visible">
       <div class="build-card-media">${pcArt(i.cat, i.tier)}</div>
       <div class="build-card-tag"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/></svg></div>
       <div class="build-card-body">
@@ -155,30 +178,33 @@ if (!items.length) {
           <span class="rating-count">${i.rating.toFixed(1)} (${i.reviews})</span>
           <a href="#" class="write-review-link" data-write-review="${i.name}">Write a review</a>
         </div>
-        <div style="font-family:var(--font-display);font-size:22px;color:var(--red-bright);margin-bottom:14px;">$${i.price.toLocaleString()}</div>
-        <button class="build-card-btn" data-add-cart="${i.name}" data-price="${i.price}">Add To Cart
+        <div style="font-family:var(--font-display);font-size:22px;color:var(--red-bright);margin-bottom:14px;">${window.formatPrice(i.price)}</div>
+        <button class="build-card-btn" data-add-cart="${i.name}" data-price="${i.price}"><span data-i18n="addToCart">Add To Cart</span>
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
     </div>
   `).join('');
+  document.querySelectorAll('[data-add-cart]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const added = window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price });
+      if (added) showToast(`${btn.dataset.addCart} added to cart`);
+    });
+  });
+  document.querySelectorAll('.build-card').forEach(el => {
+    el.addEventListener('mousemove', (e) => {
+      const r = el.getBoundingClientRect();
+      const px = (e.clientX - r.left) / r.width - 0.5;
+      const py = (e.clientY - r.top) / r.height - 0.5;
+      el.style.transform = `perspective(800px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg) translateY(-6px)`;
+    });
+    el.addEventListener('mouseleave', () => { el.style.transform = ''; });
+  });
+  if (window.applyTranslations) window.applyTranslations();
 }
-document.querySelectorAll('[data-add-cart]').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const added = window.RedGearCart.add({ name: btn.dataset.addCart, price: btn.dataset.price });
-    if (added) showToast(`${btn.dataset.addCart} added to cart`);
-  });
-});
+renderCatalog();
+window.addEventListener('redgear:settingschange', renderCatalog);
 document.querySelectorAll('.reveal').forEach(el => el.classList.add('is-visible'));
-document.querySelectorAll('.build-card').forEach(el => {
-  el.addEventListener('mousemove', (e) => {
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width - 0.5;
-    const py = (e.clientY - r.top) / r.height - 0.5;
-    el.style.transform = `perspective(800px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg) translateY(-6px)`;
-  });
-  el.addEventListener('mouseleave', () => { el.style.transform = ''; });
-});
 </script>
 </body>
 </html>
