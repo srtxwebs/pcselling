@@ -120,7 +120,7 @@ const CATEGORY_IMG = {
 function pcArt(cat, tier) {
   const src = CATEGORY_IMG[cat] || CATEGORY_IMG.gaming;
   const brightness = 0.92 + tier * 0.07;
-  return `<img src="${src}" alt="${cat} PC build" class="card-photo" style="filter:brightness(${brightness.toFixed(2)}) drop-shadow(0 14px 20px rgba(0,0,0,0.5));" onerror="this.closest('.build-card-media').classList.add('img-fallback')">`;
+  return `<img data-src="${src}" alt="${cat} PC build" class="card-photo js-smart-img" style="filter:brightness(${brightness.toFixed(2)}) drop-shadow(0 14px 20px rgba(0,0,0,0.5));">`;
 }
 
 const CATALOG = [
@@ -201,6 +201,7 @@ function renderCatalog() {
     el.addEventListener('mouseleave', () => { el.style.transform = ''; });
   });
   if (window.applyTranslations) window.applyTranslations();
+  if (window.smartImg) grid.querySelectorAll('.js-smart-img:not([src])').forEach(img => window.smartImg(img));
 }
 renderCatalog();
 window.addEventListener('redgear:settingschange', renderCatalog);
