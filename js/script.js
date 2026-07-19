@@ -17,23 +17,110 @@ window.renderStars = function(rating, size) {
   return `<span class="star-row">${html}</span>`;
 };
 
+/* Currency conversion — top-level so inline page scripts can use it immediately */
+window.CURRENCY_RATES = {
+  USD: { rate: 1,     symbol: '$' },
+  EUR: { rate: 0.92,  symbol: '€' },
+  GBP: { rate: 0.79,  symbol: '£' },
+  CAD: { rate: 1.36,  symbol: '$' },
+  MXN: { rate: 18.5,  symbol: '$' },
+};
+window.getCurrency = function() {
+  try { return (JSON.parse(localStorage.getItem('redgear_settings') || '{}').currency) || 'USD'; }
+  catch (e) { return 'USD'; }
+};
+window.formatPrice = function(usd) {
+  const code = window.getCurrency();
+  const info = window.CURRENCY_RATES[code] || window.CURRENCY_RATES.USD;
+  const converted = usd * info.rate;
+  const decimals = converted >= 100 ? 0 : 2;
+  return info.symbol + converted.toLocaleString(undefined, { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+};
+
+/* ---------- Translations (site chrome: nav, buttons, footer, hero) ---------- */
+window.TRANSLATIONS = {
+  en: { home:'Home', builds:'PC Builds', services:'Services', about:'About Us', contact:'Contact',
+    shop:'Shop', company:'Company', support:'Support', newsletter:'Newsletter', rights:'All rights reserved.',
+    viewBuilds:'View Builds', customBuild:'Custom Build', addToCart:'Add To Cart', buildNow:'Build Now',
+    signIn:'Sign In', continueGuest:'Continue as Guest', cartTitle:'Your Cart', cartEmpty:'Your cart is empty',
+    checkout:'Checkout', subtotal:'Subtotal', total:'Total',
+    heroEyebrow:'Performance • Quality • Reliability', heroTitle1:'Built', heroTitle2:'For', heroTitle3:'Victory',
+    heroDesc:'Custom PC builds designed for gamers, creators, and professionals. Unleash the power.',
+    chooseBuild:'Choose Your Build' },
+  es: { home:'Inicio', builds:'PCs Armadas', services:'Servicios', about:'Nosotros', contact:'Contacto',
+    shop:'Tienda', company:'Empresa', support:'Soporte', newsletter:'Boletín', rights:'Todos los derechos reservados.',
+    viewBuilds:'Ver Modelos', customBuild:'Armar PC', addToCart:'Añadir al Carrito', buildNow:'Armar Ahora',
+    signIn:'Iniciar Sesión', continueGuest:'Continuar como Invitado', cartTitle:'Tu Carrito', cartEmpty:'Tu carrito está vacío',
+    checkout:'Pagar', subtotal:'Subtotal', total:'Total',
+    heroEyebrow:'Rendimiento • Calidad • Confiabilidad', heroTitle1:'Hecho', heroTitle2:'Para', heroTitle3:'Vencer',
+    heroDesc:'PCs a medida diseñadas para gamers, creadores y profesionales. Libera el poder.',
+    chooseBuild:'Elige Tu PC' },
+  fr: { home:'Accueil', builds:'PC Prêts', services:'Services', about:'À Propos', contact:'Contact',
+    shop:'Boutique', company:'Entreprise', support:'Support', newsletter:'Newsletter', rights:'Tous droits réservés.',
+    viewBuilds:'Voir les PC', customBuild:'PC Personnalisé', addToCart:'Ajouter au Panier', buildNow:'Créer Maintenant',
+    signIn:'Se Connecter', continueGuest:'Continuer en Invité', cartTitle:'Votre Panier', cartEmpty:'Votre panier est vide',
+    checkout:'Paiement', subtotal:'Sous-total', total:'Total',
+    heroEyebrow:'Performance • Qualité • Fiabilité', heroTitle1:'Conçu', heroTitle2:'Pour', heroTitle3:'Vaincre',
+    heroDesc:'PC sur mesure conçus pour les joueurs, créateurs et professionnels. Libérez la puissance.',
+    chooseBuild:'Choisissez Votre PC' },
+  de: { home:'Startseite', builds:'Fertig-PCs', services:'Dienstleistungen', about:'Über Uns', contact:'Kontakt',
+    shop:'Shop', company:'Unternehmen', support:'Support', newsletter:'Newsletter', rights:'Alle Rechte vorbehalten.',
+    viewBuilds:'PCs Ansehen', customBuild:'PC Konfigurieren', addToCart:'In den Warenkorb', buildNow:'Jetzt Bauen',
+    signIn:'Anmelden', continueGuest:'Als Gast Fortfahren', cartTitle:'Dein Warenkorb', cartEmpty:'Dein Warenkorb ist leer',
+    checkout:'Zur Kasse', subtotal:'Zwischensumme', total:'Gesamt',
+    heroEyebrow:'Leistung • Qualität • Zuverlässigkeit', heroTitle1:'Gebaut', heroTitle2:'Für', heroTitle3:'Den Sieg',
+    heroDesc:'Individuelle PCs für Gamer, Kreative und Profis. Entfessle die Power.',
+    chooseBuild:'Wähle Deinen PC' },
+  pt: { home:'Início', builds:'PCs Prontos', services:'Serviços', about:'Sobre Nós', contact:'Contato',
+    shop:'Loja', company:'Empresa', support:'Suporte', newsletter:'Newsletter', rights:'Todos os direitos reservados.',
+    viewBuilds:'Ver PCs', customBuild:'PC Personalizado', addToCart:'Adicionar ao Carrinho', buildNow:'Montar Agora',
+    signIn:'Entrar', continueGuest:'Continuar como Convidado', cartTitle:'Seu Carrinho', cartEmpty:'Seu carrinho está vazio',
+    checkout:'Finalizar Compra', subtotal:'Subtotal', total:'Total',
+    heroEyebrow:'Desempenho • Qualidade • Confiabilidade', heroTitle1:'Feito', heroTitle2:'Para', heroTitle3:'Vencer',
+    heroDesc:'PCs personalizados para gamers, criadores e profissionais. Liberte o poder.',
+    chooseBuild:'Escolha Seu PC' },
+  ja: { home:'ホーム', builds:'PCビルド', services:'サービス', about:'会社概要', contact:'お問い合わせ',
+    shop:'ショップ', company:'会社', support:'サポート', newsletter:'ニュースレター', rights:'全著作権所有。',
+    viewBuilds:'ビルドを見る', customBuild:'カスタムビルド', addToCart:'カートに追加', buildNow:'今すぐ作る',
+    signIn:'サインイン', continueGuest:'ゲストとして続ける', cartTitle:'カート', cartEmpty:'カートは空です',
+    checkout:'レジに進む', subtotal:'小計', total:'合計',
+    heroEyebrow:'性能・品質・信頼性', heroTitle1:'勝利のために', heroTitle2:'造られた', heroTitle3:'マシン',
+    heroDesc:'ゲーマー、クリエイター、プロフェッショナルのためのカスタムPC。力を解き放て。',
+    chooseBuild:'あなたのPCを選ぶ' },
+};
+window.getLanguage = function() {
+  try { return (JSON.parse(localStorage.getItem('redgear_settings') || '{}').language) || 'en'; }
+  catch (e) { return 'en'; }
+};
+window.applyTranslations = function(lang) {
+  lang = lang || window.getLanguage();
+  const dict = window.TRANSLATIONS[lang] || window.TRANSLATIONS.en;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if (dict[key]) el.textContent = dict[key];
+  });
+  document.documentElement.setAttribute('lang', lang);
+};
+
 document.addEventListener('DOMContentLoaded', () => {
+
+  window.applyTranslations();
 
   /* ---------- Cart drawer (injected on every page) ---------- */
   const drawerHTML = `
     <div class="cart-backdrop" id="cartBackdrop"></div>
     <aside class="cart-drawer" id="cartDrawer">
       <div class="cart-drawer-head">
-        <h3>Your Cart <span class="cart-item-count" id="cartItemCount">0 items</span></h3>
+        <h3><span data-i18n="cartTitle">Your Cart</span> <span class="cart-item-count" id="cartItemCount">0 items</span></h3>
         <button class="cart-close" id="cartClose" aria-label="Close cart">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
         </button>
       </div>
       <div class="cart-drawer-body" id="cartBody"></div>
       <div class="cart-drawer-foot" id="cartFoot">
-        <div class="cart-summary-row"><span>Subtotal</span><span class="val" id="cartSubtotal">$0</span></div>
+        <div class="cart-summary-row"><span data-i18n="subtotal">Subtotal</span><span class="val" id="cartSubtotal">$0</span></div>
         <div class="cart-summary-row"><span>Estimated shipping</span><span class="val" id="cartShipping">Free</span></div>
-        <div class="cart-total-row"><span>Total</span><span id="cartTotalAmount">$0</span></div>
+        <div class="cart-total-row"><span data-i18n="total">Total</span><span id="cartTotalAmount">$0</span></div>
         <button class="btn btn-primary" id="cartCheckout" style="width:100%;justify-content:center;">
           Checkout
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -77,7 +164,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <p class="account-gate-msg" id="accountGateMsg" style="display:none;"></p>
         <div id="googleSignInBtn" class="google-btn-mount"></div>
         <div class="account-divider"><span>or</span></div>
-        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;">Continue as Guest</button>
+        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;"><span data-i18n="continueGuest">Continue as Guest</span></button>
         <p class="account-footnote" id="guestFootnote">Guests can browse freely, but need to sign in to add items to cart or check out.</p>
       </div>
     </div>
@@ -154,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="cart-empty-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
           </div>
-          <p>Your cart is empty</p>
+          <p data-i18n="cartEmpty">Your cart is empty</p>
           <span>Add a prebuilt PC or design your own from scratch</span>
           <a href="builder.html" class="btn btn-primary">Start a Custom Build
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
@@ -176,7 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="cart-item-name">${item.name}</div>
             ${item.parts ? `<div class="cart-item-parts">${Object.values(item.parts).slice(0,3).join(' · ')}${Object.values(item.parts).length > 3 ? '…' : ''}</div>` : ''}
             <div class="cart-item-bottom">
-              <div class="cart-item-price">$${Number(item.price).toLocaleString()}</div>
+              <div class="cart-item-price">${window.formatPrice(Number(item.price))}</div>
               <button class="cart-item-remove" data-remove="${i}" aria-label="Remove">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
               </button>
@@ -191,8 +278,9 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
     }
     const total = cart.reduce((sum, i) => sum + Number(i.price || 0), 0);
-    cartSubtotal.textContent = `$${total.toLocaleString()}`;
-    cartTotalAmount.textContent = `$${total.toLocaleString()}`;
+    cartSubtotal.textContent = window.formatPrice(total);
+    cartTotalAmount.textContent = window.formatPrice(total);
+    window.applyTranslations();
   }
 
   window.openCart = () => {
@@ -219,15 +307,12 @@ document.addEventListener('DOMContentLoaded', () => {
     settingsBtn.innerHTML = `
       <svg viewBox="0 0 40 40" fill="none">
         <g class="gear gear-back">
-          <path fill="currentColor" d="M23 8.5l1.2 3a9 9 0 0 1 2.6 1.5l3.1-.9 2 3.5-2.4 2.2a9 9 0 0 1 0 3l2.4 2.2-2 3.5-3.1-.9a9 9 0 0 1-2.6 1.5l-1.2 3h-4l-1.2-3a9 9 0 0 1-2.6-1.5l-3.1.9-2-3.5 2.4-2.2a9 9 0 0 1 0-3L10.1 15l2-3.5 3.1.9a9 9 0 0 1 2.6-1.5l1.2-3z"/>
-          <circle cx="21" cy="20" r="3.6" fill="var(--near-black)"/>
-        </g>
-        <g class="gear gear-front">
-          <path fill="currentColor" d="M13 21.5l-.9 2.3a7 7 0 0 1-2 1.2l-2.4-.7-1.6 2.7 1.9 1.7a7 7 0 0 1 0 2.3l-1.9 1.7 1.6 2.7 2.4-.7a7 7 0 0 1 2 1.2l.9 2.3h3.1l.9-2.3a7 7 0 0 1 2-1.2l2.4.7 1.6-2.7-1.9-1.7a7 7 0 0 1 0-2.3l1.9-1.7-1.6-2.7-2.4.7a7 7 0 0 1-2-1.2l-.9-2.3z" opacity="0"/>
+          <path fill="currentColor" d="M18.1 8.58 L19.71 5.2 L24.29 5.2 L25.9 8.58 L25.9 8.58 L29.43 7.33 L32.67 10.57 L31.42 14.1 L31.42 14.1 L34.8 15.71 L34.8 20.29 L31.42 21.9 L31.42 21.9 L32.67 25.43 L29.43 28.67 L25.9 27.42 L25.9 27.42 L24.29 30.8 L19.71 30.8 L18.1 27.42 L18.1 27.42 L14.57 28.67 L11.33 25.43 L12.58 21.9 L12.58 21.9 L9.2 20.29 L9.2 15.71 L12.58 14.1 L12.58 14.1 L11.33 10.57 L14.57 7.33 L18.1 8.58 Z"/>
+          <circle cx="22" cy="18" r="4.2" fill="var(--near-black)"/>
         </g>
         <g class="gear gear-small">
-          <path fill="currentColor" d="M11.5 22.3l.7 1.8a5.5 5.5 0 0 1 1.6 1l1.9-.6 1.3 2.2-1.5 1.4a5.5 5.5 0 0 1 0 1.8l1.5 1.4-1.3 2.2-1.9-.6a5.5 5.5 0 0 1-1.6 1l-.7 1.8H9.9l-.7-1.8a5.5 5.5 0 0 1-1.6-1l-1.9.6-1.3-2.2 1.5-1.4a5.5 5.5 0 0 1 0-1.8L4.4 27l1.3-2.2 1.9.6a5.5 5.5 0 0 1 1.6-1l.7-1.8z"/>
-          <circle cx="10.75" cy="27.2" r="2.2" fill="var(--near-black)"/>
+          <path fill="currentColor" d="M8.9 23.59 L9.9 21.16 L13.1 21.16 L14.1 23.59 L14.1 23.59 L16.63 22.86 L18.63 25.37 L17.35 27.66 L17.35 27.66 L19.5 29.18 L18.78 32.31 L16.19 32.74 L16.19 32.74 L16.35 35.36 L13.45 36.76 L11.5 35.0 L11.5 35.0 L9.55 36.76 L6.65 35.36 L6.81 32.74 L6.81 32.74 L4.22 32.31 L3.5 29.18 L5.65 27.66 L5.65 27.66 L4.37 25.37 L6.37 22.86 L8.9 23.59 Z"/>
+          <circle cx="11.5" cy="29" r="2.6" fill="var(--near-black)"/>
         </g>
       </svg>
     `;
@@ -276,6 +361,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     localStorage.setItem('redgear_settings', JSON.stringify(settings));
     document.body.classList.toggle('anims-off', !settings.animations);
+    if (window.applyTranslations) window.applyTranslations(settings.language);
+    window.dispatchEvent(new CustomEvent('redgear:settingschange', { detail: settings }));
     closeSettings();
     showToast('Settings saved');
   });
@@ -435,12 +522,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       });
     } else {
-      title.textContent = 'Sign In';
+      title.textContent = (window.TRANSLATIONS[window.getLanguage()] || window.TRANSLATIONS.en).signIn;
       body.innerHTML = `
         <p class="account-gate-msg" id="accountGateMsg" style="display:none;"></p>
         <div id="googleSignInBtn" class="google-btn-mount"></div>
         <div class="account-divider"><span>or</span></div>
-        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;">Continue as Guest</button>
+        <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;"><span data-i18n="continueGuest">Continue as Guest</span></button>
         <p class="account-footnote" id="guestFootnote">Guests can browse freely, but need to sign in to add items to cart or check out.</p>
       `;
       document.getElementById('guestBtn').addEventListener('click', () => {
@@ -450,6 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
       renderGoogleButton();
     }
+    window.applyTranslations();
   }
 
   function renderGoogleButton() {
@@ -642,6 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
     get: getCart
   };
   window.__renderCartDrawer = renderCartDrawer;
+  window.addEventListener('redgear:settingschange', () => renderCartDrawer());
 
   /* ---------- Reviews system ---------- */
   function getReviews() {
