@@ -215,42 +215,54 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="cart-close" id="settingsClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
       <div class="account-panel-body">
-        <label class="profile-field-label">Language
-          <select id="settingLanguage">
-            <option value="en">English</option>
-            <option value="es">Español</option>
-            <option value="fr">Français</option>
-            <option value="de">Deutsch</option>
-            <option value="pt">Português</option>
-            <option value="ja">日本語</option>
-          </select>
-        </label>
-        <label class="profile-field-label">Currency
-          <select id="settingCurrency">
-            <option value="USD">USD ($)</option>
-            <option value="EUR">EUR (€)</option>
-            <option value="GBP">GBP (£)</option>
-            <option value="CAD">CAD ($)</option>
-            <option value="MXN">MXN ($)</option>
-          </select>
-        </label>
+        <div class="settings-field-row">
+          <div class="settings-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+          <label class="profile-field-label">Language
+            <select id="settingLanguage">
+              <option value="en">English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="pt">Português</option>
+              <option value="ja">日本語</option>
+            </select>
+          </label>
+        </div>
+        <div class="settings-field-row">
+          <div class="settings-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c0-1.4-1.3-2.5-3-2.5s-3 1-3 2.3c0 3 6 1.4 6 4.3 0 1.3-1.3 2.4-3 2.4s-3-1-3-2.4"/></svg></div>
+          <label class="profile-field-label">Currency
+            <select id="settingCurrency">
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+              <option value="CAD">CAD ($)</option>
+              <option value="MXN">MXN ($)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="account-divider"><span>preferences</span></div>
+
         <div class="settings-toggle-row">
-          <div>
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
+          <div class="settings-toggle-text">
             <div class="settings-toggle-label">Email Notifications</div>
             <div class="settings-toggle-sub">Order updates &amp; drop alerts</div>
           </div>
-          <button class="toggle-switch" id="toggleEmail" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+          <button class="toggle-switch active" id="toggleEmail" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
         </div>
         <div class="settings-toggle-row">
-          <div>
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+          <div class="settings-toggle-text">
             <div class="settings-toggle-label">RGB Preview Animations</div>
             <div class="settings-toggle-sub">Fan glow &amp; sweep effects</div>
           </div>
           <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
         </div>
-        <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;justify-content:center;margin-top:6px;">Save Settings</button>
+
+        <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;justify-content:center;margin-top:14px;">Save Settings</button>
         <button class="btn btn-outline" id="clearDataBtn" style="width:100%;justify-content:center;">Clear Local Data</button>
-        <p class="account-footnote">Language & currency preferences are saved to this browser. Full site translation isn't wired up yet — this stores your preference for when it is.</p>
+        <p class="account-footnote">Language and currency changes apply instantly across the site. Preferences are saved to this browser.</p>
       </div>
     </div>
   `;
