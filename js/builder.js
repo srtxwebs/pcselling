@@ -377,39 +377,32 @@ function updateSummary() {
 }
 
 /* ---------- Live assembled preview ---------- */
-/* ---------- Photo-based progressive reveal ---------- */
-/* Regions are fractional (objectBoundingBox) rects mapped to real areas of the photo */
-const PHOTO_REGIONS = {
-  case: [
-    { x: 0.698, y: 0,     w: 0.302, h: 1.0 },   // side panel + fans
-    { x: 0.155, y: 0.782, w: 0.31,  h: 0.129 }, // bottom logo plate
-    { x: 0.202, y: 0.287, w: 0.217, h: 0.238 }, // big front intake fan
-  ],
-  cpu: [
-    { x: 0.364, y: 0.356, w: 0.085, h: 0.139 }, // chip/socket area
-  ],
-  motherboard: [
-    { x: 0.364, y: 0.307, w: 0.171, h: 0.218 }, // board outline
-  ],
-  gpu: [
-    { x: 0.225, y: 0.535, w: 0.418, h: 0.148 }, // graphics card
-  ],
-  ram: [
-    { x: 0.504, y: 0.287, w: 0.124, h: 0.178 }, // memory sticks
-  ],
-  cooling: [
-    { x: 0.295, y: 0.149, w: 0.333, h: 0.188 }, // top radiator fans
-    { x: 0.388, y: 0.337, w: 0.124, h: 0.158 }, // pump
-  ],
-  fans: [
-    { x: 0.698, y: 0, w: 0.302, h: 1.0 },       // side panel fans (reinforces case)
-  ],
-  psu: [
-    { x: 0.512, y: 0.356, w: 0.155, h: 0.238 }, // cable routing area
-  ],
-  storage: [],
-  os: [],
-};
+/* Staged build photos — a different real image at each build milestone.
+   Progress is based on how many non-OS parts are filled (order-independent),
+   not on which specific category was picked last. */
+const BUILD_STAGE_IMAGES = [
+  null,                                     // 0 parts: dim placeholder silhouette
+  'images/build-stage-1-case.jpg',          // first part(s): case going in
+  'images/build-stage-2-motherboard.jpg',   // motherboard + CPU installed
+  'images/build-stage-3-memory.jpg',        // + RAM installed
+  'images/build-stage-4-cooling.jpg',       // + cooler/AIO installed
+  'images/build-stage-5-gpu.jpg',           // + graphics card installed
+  'images/pc-cutout.png',                   // complete build — same photo used everywhere else
+];
+const STAGE_CATEGORIES = ['case', 'cpu', 'motherboard', 'gpu', 'ram', 'storage', 'cooling', 'fans', 'psu']; // excludes "os"
+
+function getBuildStageIndex() {
+  const filledCount = STAGE_CATEGORIES.filter(k => state[k]).length;
+  const total = STAGE_CATEGORIES.length;
+  if (filledCount === 0) return 0;
+  if (filledCount >= total) return 6;
+  return Math.min(5, Math.ceil((filledCount / total) * 5));
+}
+
+function getBuildStageImage() {
+  const stageIdx = getBuildStageIndex();
+  return BUILD_STAGE_IMAGES[stageIdx];
+}
 
 function renderPreview() {
   const mount = document.getElementById('buildPreview');
@@ -418,29 +411,30 @@ function renderPreview() {
 
   const filledKeys = Object.keys(state);
   const totalParts = PARTS.length;
+  const stageImg = getBuildStageImage();
+  const stageIdx = getBuildStageIndex();
 
-  const rects = [];
-  filledKeys.forEach(key => {
-    (PHOTO_REGIONS[key] || []).forEach(r => rects.push(r));
+  if (!stageImg) {
+    mount.innerHTML = `
+      <div class="photo-reveal-wrap">
+        <img class="photo-base" src="images/pc-cutout-grey.png" alt="Empty case outline">
+      </div>
+    `;
+  } else {
+    mount.innerHTML = `
+      <div class="photo-reveal-wrap">
+        <img class="photo-color stage-fade" src="${stageImg}" alt="Your build in progress" data-src="${stageImg}">
+      </div>
+    `;
+    const img = mount.querySelector('.stage-fade');
+    if (window.smartImg) window.smartImg(img);
+  }
+
+  document.querySelectorAll('.stage-dot').forEach(dot => {
+    const dotStage = Number(dot.dataset.stage);
+    dot.classList.toggle('current', dotStage === stageIdx);
+    dot.classList.toggle('reached', dotStage < stageIdx);
   });
-
-  const clipRects = rects.map(r =>
-    `<rect x="${r.x}" y="${r.y}" width="${r.w}" height="${r.h}" rx="0.01"/>`
-  ).join('');
-
-  mount.innerHTML = `
-    <div class="photo-reveal-wrap">
-      <img class="photo-base" src="images/pc-cutout-grey.png" alt="Case outline">
-      <svg width="0" height="0" style="position:absolute;">
-        <defs>
-          <clipPath id="partsClip" clipPathUnits="objectBoundingBox">
-            ${clipRects}
-          </clipPath>
-        </defs>
-      </svg>
-      <img class="photo-color" src="images/pc-cutout.png" alt="Your build" style="clip-path:url(#partsClip);">
-    </div>
-  `;
 
   const parts = [];
   if (state.case) parts.push(state.case.name.replace('RedGear ',''));
