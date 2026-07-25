@@ -1473,6 +1473,58 @@ body.nav-open { overflow: hidden; }
 .account-footnote { text-align: center; font-size: 12.5px; color: var(--grey-dim); margin-top: 4px; line-height: 1.6; }
 
 .google-btn-mount { display: flex; justify-content: center; min-height: 44px; }
+
+.auth-tabs {
+  display: flex;
+  gap: 4px;
+  background: var(--panel-light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 4px;
+  margin-bottom: 18px;
+}
+.auth-tab {
+  flex: 1;
+  padding: 9px 0;
+  font-size: 12.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  color: var(--grey-dim);
+  border-radius: 7px;
+  transition: color 0.25s, background 0.25s;
+}
+.auth-tab.active { color: var(--white); background: linear-gradient(135deg, var(--red-bright), var(--red-dark)); box-shadow: 0 4px 12px rgba(224,20,31,0.25); }
+.auth-tab:not(.active):hover { color: var(--white); }
+
+.auth-form { display: grid; gap: 14px; margin-bottom: 4px; }
+.auth-form .profile-field-label { margin-bottom: 0; }
+.auth-error {
+  font-size: 12px;
+  color: var(--red-bright);
+  background: rgba(224,20,31,0.08);
+  border: 1px solid rgba(224,20,31,0.25);
+  border-radius: 7px;
+  padding: 9px 12px;
+}
+
+.settings-swatch-row { margin-bottom: 16px; }
+.accent-swatches { display: flex; gap: 12px; }
+.accent-swatch {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  background: var(--sw);
+  border: 2px solid transparent;
+  position: relative;
+  transition: transform 0.25s var(--ease-snap), box-shadow 0.25s;
+}
+.accent-swatch:hover { transform: scale(1.1); }
+.accent-swatch.active { border-color: var(--white); box-shadow: 0 0 0 3px var(--sw), 0 4px 12px rgba(0,0,0,0.4); transform: scale(1.08); }
+.accent-swatch.active::after {
+  content: '';
+  position: absolute; inset: 0;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 2px rgba(0,0,0,0.3);
+}
 .google-btn-mount iframe { border-radius: 20px !important; }
 
 .account-gate-msg {
