@@ -214,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>Settings</h3>
         <button class="cart-close" id="settingsClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
-      <div class="account-panel-body">
+      <div class="account-panel-body" id="settingsPanelBody">
         <div class="settings-field-row">
           <div class="settings-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
           <label class="profile-field-label">Language
@@ -241,7 +241,28 @@ document.addEventListener('DOMContentLoaded', () => {
           </label>
         </div>
 
-        <div class="account-divider"><span>preferences</span></div>
+        <div class="account-divider"><span>appearance</span></div>
+
+        <div class="settings-swatch-row">
+          <div class="settings-toggle-label" style="margin-bottom:10px;">Accent Color</div>
+          <div class="accent-swatches" id="accentSwatches">
+            <button class="accent-swatch active" data-accent="red" style="--sw:#ff2530;" aria-label="Red"></button>
+            <button class="accent-swatch" data-accent="blue" style="--sw:#3b6bff;" aria-label="Blue"></button>
+            <button class="accent-swatch" data-accent="purple" style="--sw:#a855ff;" aria-label="Purple"></button>
+            <button class="accent-swatch" data-accent="green" style="--sw:#22c55e;" aria-label="Green"></button>
+            <button class="accent-swatch" data-accent="orange" style="--sw:#ff9433;" aria-label="Orange"></button>
+          </div>
+        </div>
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+          <div class="settings-toggle-text">
+            <div class="settings-toggle-label">RGB Preview Animations</div>
+            <div class="settings-toggle-sub">Fan glow &amp; sweep effects</div>
+          </div>
+          <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+        </div>
+
+        <div class="account-divider"><span>notifications</span></div>
 
         <div class="settings-toggle-row">
           <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
@@ -252,13 +273,42 @@ document.addEventListener('DOMContentLoaded', () => {
           <button class="toggle-switch active" id="toggleEmail" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
         </div>
         <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
           <div class="settings-toggle-text">
-            <div class="settings-toggle-label">RGB Preview Animations</div>
-            <div class="settings-toggle-sub">Fan glow &amp; sweep effects</div>
+            <div class="settings-toggle-label">Push Notifications</div>
+            <div class="settings-toggle-sub">Browser alerts for order status</div>
           </div>
-          <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+          <button class="toggle-switch" id="togglePush" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
         </div>
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+          <div class="settings-toggle-text">
+            <div class="settings-toggle-label">SMS Notifications</div>
+            <div class="settings-toggle-sub">Text alerts for shipping updates</div>
+          </div>
+          <button class="toggle-switch" id="toggleSms" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+          <div class="settings-toggle-text">
+            <div class="settings-toggle-label">Marketing Emails</div>
+            <div class="settings-toggle-sub">New builds, sales &amp; promos</div>
+          </div>
+          <button class="toggle-switch" id="toggleMarketing" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
+        </div>
+
+        <div class="account-divider"><span>privacy</span></div>
+
+        <div class="settings-toggle-row">
+          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+          <div class="settings-toggle-text">
+            <div class="settings-toggle-label">Remember My Cart</div>
+            <div class="settings-toggle-sub">Keep items saved between visits</div>
+          </div>
+          <button class="toggle-switch active" id="toggleRememberCart" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+        </div>
+
+        <div id="accountManageSection"></div>
 
         <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;justify-content:center;margin-top:14px;">Save Settings</button>
         <button class="btn btn-outline" id="clearDataBtn" style="width:100%;justify-content:center;">Clear Local Data</button>
@@ -371,6 +421,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const settingsBackdrop = document.getElementById('settingsBackdrop');
   function openSettings() {
     loadSettingsIntoForm();
+    renderAccountManageSection();
     settingsPanel.classList.add('open');
     settingsBackdrop.classList.add('open');
     document.body.classList.add('nav-open');
@@ -384,6 +435,30 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('settingsClose').addEventListener('click', closeSettings);
   settingsBackdrop.addEventListener('click', closeSettings);
 
+  /* ---------- Accent color theming ---------- */
+  const ACCENT_THEMES = {
+    red:    { red: '#e0141f', bright: '#ff2530', dark: '#8c0d14', glow: 'rgba(224,20,31,0.45)' },
+    blue:   { red: '#1450e0', bright: '#3b6bff', dark: '#0d2f8c', glow: 'rgba(59,107,255,0.45)' },
+    purple: { red: '#7c14e0', bright: '#a855ff', dark: '#4a0d8c', glow: 'rgba(168,85,255,0.45)' },
+    green:  { red: '#149a48', bright: '#22c55e', dark: '#0d5c2a', glow: 'rgba(34,197,94,0.45)' },
+    orange: { red: '#c95a0f', bright: '#ff9433', dark: '#8c470d', glow: 'rgba(255,148,51,0.45)' },
+  };
+  function applyAccent(name) {
+    const theme = ACCENT_THEMES[name] || ACCENT_THEMES.red;
+    const root = document.documentElement.style;
+    root.setProperty('--red', theme.red);
+    root.setProperty('--red-bright', theme.bright);
+    root.setProperty('--red-dark', theme.dark);
+    root.setProperty('--red-glow', theme.glow);
+  }
+  document.getElementById('accentSwatches').addEventListener('click', (e) => {
+    const btn = e.target.closest('.accent-swatch');
+    if (!btn) return;
+    document.querySelectorAll('.accent-swatch').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    applyAccent(btn.dataset.accent);
+  });
+
   function getSettings() {
     try { return JSON.parse(localStorage.getItem('redgear_settings') || '{}'); }
     catch (e) { return {}; }
@@ -393,20 +468,72 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settingLanguage').value = s.language || 'en';
     document.getElementById('settingCurrency').value = s.currency || 'USD';
     document.getElementById('toggleEmail').classList.toggle('active', s.emailNotifs !== false);
+    document.getElementById('togglePush').classList.toggle('active', !!s.pushNotifs);
+    document.getElementById('toggleSms').classList.toggle('active', !!s.smsNotifs);
+    document.getElementById('toggleMarketing').classList.toggle('active', !!s.marketing);
+    document.getElementById('toggleRememberCart').classList.toggle('active', s.rememberCart !== false);
     document.getElementById('toggleAnim').classList.toggle('active', s.animations !== false);
+    document.querySelectorAll('.accent-swatch').forEach(sw => sw.classList.toggle('active', sw.dataset.accent === (s.accent || 'red')));
+    applyAccent(s.accent || 'red');
   }
   document.querySelectorAll('.toggle-switch').forEach(t => {
     t.addEventListener('click', () => t.classList.toggle('active'));
   });
+
+  function renderAccountManageSection() {
+    const mount = document.getElementById('accountManageSection');
+    const auth = getAuth();
+    const isLocalAccount = auth && auth.signedIn && !auth.picture; // Google accounts have a picture URL; local ones don't
+    if (!auth || !auth.signedIn) {
+      mount.innerHTML = '';
+      return;
+    }
+    mount.innerHTML = `
+      <div class="account-divider"><span>account</span></div>
+      ${isLocalAccount ? `
+        <label class="profile-field-label">New Password
+          <input type="password" id="newPasswordInput" placeholder="At least 6 characters">
+        </label>
+        <button class="btn btn-outline" id="changePasswordBtn" style="width:100%;justify-content:center;margin-bottom:10px;">Change Password</button>
+      ` : `
+        <p class="account-footnote" style="margin-bottom:10px;">Signed in with Google — password is managed by your Google account.</p>
+      `}
+      <button class="btn btn-outline" id="deleteAccountBtn" style="width:100%;justify-content:center;color:var(--red-bright);border-color:var(--red-dark);">Delete Account</button>
+    `;
+    if (isLocalAccount) {
+      document.getElementById('changePasswordBtn').addEventListener('click', () => {
+        const pw = document.getElementById('newPasswordInput').value;
+        if (!pw || pw.length < 6) { showToast('Password must be at least 6 characters'); return; }
+        const result = window.RedGearLocalAuth.changePassword(auth.email, pw);
+        showToast(result.ok ? 'Password updated' : result.error);
+      });
+    }
+    document.getElementById('deleteAccountBtn').addEventListener('click', () => {
+      if (!confirm('Delete your account? This cannot be undone.')) return;
+      if (isLocalAccount) window.RedGearLocalAuth.deleteAccount(auth.email);
+      clearAuth();
+      closeSettings();
+      if (window.updateAccountUIExternal) window.updateAccountUIExternal();
+      showToast('Account deleted');
+    });
+  }
+
   document.getElementById('saveSettingsBtn').addEventListener('click', () => {
     const settings = {
       language: document.getElementById('settingLanguage').value,
       currency: document.getElementById('settingCurrency').value,
+      accent: document.querySelector('.accent-swatch.active')?.dataset.accent || 'red',
       emailNotifs: document.getElementById('toggleEmail').classList.contains('active'),
+      pushNotifs: document.getElementById('togglePush').classList.contains('active'),
+      smsNotifs: document.getElementById('toggleSms').classList.contains('active'),
+      marketing: document.getElementById('toggleMarketing').classList.contains('active'),
+      rememberCart: document.getElementById('toggleRememberCart').classList.contains('active'),
       animations: document.getElementById('toggleAnim').classList.contains('active'),
     };
     localStorage.setItem('redgear_settings', JSON.stringify(settings));
     document.body.classList.toggle('anims-off', !settings.animations);
+    applyAccent(settings.accent);
+    if (!settings.rememberCart) { window.RedGearCart.clear(); }
     if (window.applyTranslations) window.applyTranslations(settings.language);
     window.dispatchEvent(new CustomEvent('redgear:settingschange', { detail: settings }));
     closeSettings();
@@ -488,6 +615,59 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function setAuth(data) { localStorage.setItem('redgear_auth', JSON.stringify(data)); }
   function clearAuth() { localStorage.removeItem('redgear_auth'); }
+
+  /* ---------- Local email/password accounts ---------- */
+  /* NOTE: this is a front-end-only demo account system. Passwords are stored
+     lightly obfuscated in localStorage, NOT securely hashed server-side.
+     Wire this up to a real backend (with proper password hashing) before
+     using it for real user data. */
+  function getUsers() {
+    try { return JSON.parse(localStorage.getItem('redgear_users') || '[]'); }
+    catch (e) { return []; }
+  }
+  function saveUsers(list) { localStorage.setItem('redgear_users', JSON.stringify(list)); }
+  function obfuscate(pw) { return btoa(unescape(encodeURIComponent('rg_' + pw))); }
+  function isValidEmail(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email); }
+
+  window.RedGearLocalAuth = {
+    createAccount(name, email, password) {
+      name = (name || '').trim();
+      email = (email || '').trim();
+      if (!name) return { ok: false, error: 'Enter your name.' };
+      if (!isValidEmail(email)) return { ok: false, error: 'Enter a valid email address.' };
+      if (!password || password.length < 6) return { ok: false, error: 'Password must be at least 6 characters.' };
+      const users = getUsers();
+      if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+        return { ok: false, error: 'An account with this email already exists.' };
+      }
+      users.push({ name, email, password: obfuscate(password), createdAt: new Date().toISOString() });
+      saveUsers(users);
+      return { ok: true, user: { name, email } };
+    },
+    login(email, password) {
+      email = (email || '').trim();
+      if (!isValidEmail(email)) return { ok: false, error: 'Enter a valid email address.' };
+      const users = getUsers();
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (!user) return { ok: false, error: 'No account found with that email.' };
+      if (user.password !== obfuscate(password || '')) return { ok: false, error: 'Incorrect password.' };
+      return { ok: true, user: { name: user.name, email: user.email } };
+    },
+    changePassword(email, newPassword) {
+      if (!newPassword || newPassword.length < 6) return { ok: false, error: 'Password must be at least 6 characters.' };
+      const users = getUsers();
+      const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+      if (!user) return { ok: false, error: 'Account not found.' };
+      user.password = obfuscate(newPassword);
+      saveUsers(users);
+      return { ok: true };
+    },
+    deleteAccount(email) {
+      const users = getUsers().filter(u => u.email.toLowerCase() !== email.toLowerCase());
+      saveUsers(users);
+      return { ok: true };
+    }
+  };
 
   function decodeJwt(token) {
     try {
@@ -571,11 +751,92 @@ document.addEventListener('DOMContentLoaded', () => {
       title.textContent = (window.TRANSLATIONS[window.getLanguage()] || window.TRANSLATIONS.en).signIn;
       body.innerHTML = `
         <p class="account-gate-msg" id="accountGateMsg" style="display:none;"></p>
+
+        <div class="auth-tabs">
+          <button class="auth-tab active" id="tabSignIn" type="button">Sign In</button>
+          <button class="auth-tab" id="tabCreate" type="button">Create Account</button>
+        </div>
+
+        <form class="auth-form" id="signInForm">
+          <label class="profile-field-label">Email
+            <input type="email" id="siEmail" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="profile-field-label">Password
+            <input type="password" id="siPassword" placeholder="••••••••" autocomplete="current-password">
+          </label>
+          <p class="auth-error" id="signInError" style="display:none;"></p>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Sign In</button>
+        </form>
+
+        <form class="auth-form" id="createForm" style="display:none;">
+          <label class="profile-field-label">Name
+            <input type="text" id="caName" placeholder="Jane Doe" autocomplete="name">
+          </label>
+          <label class="profile-field-label">Email
+            <input type="email" id="caEmail" placeholder="you@example.com" autocomplete="email">
+          </label>
+          <label class="profile-field-label">Password
+            <input type="password" id="caPassword" placeholder="At least 6 characters" autocomplete="new-password">
+          </label>
+          <label class="profile-field-label">Confirm Password
+            <input type="password" id="caPassword2" placeholder="••••••••" autocomplete="new-password">
+          </label>
+          <p class="auth-error" id="createError" style="display:none;"></p>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Create Account</button>
+        </form>
+
+        <div class="account-divider"><span>or</span></div>
         <div id="googleSignInBtn" class="google-btn-mount"></div>
         <div class="account-divider"><span>or</span></div>
         <button class="btn btn-outline" id="guestBtn" style="width:100%;justify-content:center;"><span data-i18n="continueGuest">Continue as Guest</span></button>
         <p class="account-footnote" id="guestFootnote">Guests can browse freely, but need to sign in to add items to cart or check out.</p>
       `;
+
+      const tabSignIn = document.getElementById('tabSignIn');
+      const tabCreate = document.getElementById('tabCreate');
+      const signInForm = document.getElementById('signInForm');
+      const createForm = document.getElementById('createForm');
+      tabSignIn.addEventListener('click', () => {
+        tabSignIn.classList.add('active'); tabCreate.classList.remove('active');
+        signInForm.style.display = ''; createForm.style.display = 'none';
+      });
+      tabCreate.addEventListener('click', () => {
+        tabCreate.classList.add('active'); tabSignIn.classList.remove('active');
+        createForm.style.display = ''; signInForm.style.display = 'none';
+      });
+
+      signInForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById('signInError');
+        const result = window.RedGearLocalAuth.login(
+          document.getElementById('siEmail').value,
+          document.getElementById('siPassword').value
+        );
+        if (!result.ok) { errEl.textContent = result.error; errEl.style.display = 'block'; return; }
+        setAuth({ signedIn: true, guest: false, name: result.user.name, email: result.user.email, picture: '' });
+        updateAccountUI();
+        closeAccount();
+        showToast(`Welcome back, ${result.user.name.split(' ')[0]}!`);
+      });
+
+      createForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const errEl = document.getElementById('createError');
+        const pw = document.getElementById('caPassword').value;
+        const pw2 = document.getElementById('caPassword2').value;
+        if (pw !== pw2) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; return; }
+        const result = window.RedGearLocalAuth.createAccount(
+          document.getElementById('caName').value,
+          document.getElementById('caEmail').value,
+          pw
+        );
+        if (!result.ok) { errEl.textContent = result.error; errEl.style.display = 'block'; return; }
+        setAuth({ signedIn: true, guest: false, name: result.user.name, email: result.user.email, picture: '' });
+        updateAccountUI();
+        closeAccount();
+        showToast(`Account created — welcome, ${result.user.name.split(' ')[0]}!`);
+      });
+
       document.getElementById('guestBtn').addEventListener('click', () => {
         setAuth({ signedIn: false, guest: true });
         closeAccount();
@@ -585,6 +846,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     window.applyTranslations();
   }
+  window.updateAccountUIExternal = updateAccountUI;
 
   function renderGoogleButton() {
     const mount = document.getElementById('googleSignInBtn');
