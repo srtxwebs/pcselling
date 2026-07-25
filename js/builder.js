@@ -322,7 +322,11 @@ function buildUI() {
 
       const idx = PARTS.findIndex(p => p.key === partKey);
       const next = PARTS[idx + 1];
-      if (next && !state[next.key]) {
+      // Only auto-advance when the user is moving forward in natural order
+      // (every earlier category already filled). Re-picking an earlier
+      // category to change your mind should never yank the page around.
+      const isProgressingForward = PARTS.slice(0, idx + 1).every(p => state[p.key]);
+      if (next && !state[next.key] && isProgressingForward) {
         setTimeout(() => {
           document.querySelectorAll('.part-card.open').forEach(c => {
             c.classList.remove('open');
@@ -332,7 +336,13 @@ function buildUI() {
           nextCard.classList.add('open');
           const nb = nextCard.querySelector('.part-card-body');
           nb.style.maxHeight = nb.scrollHeight + 'px';
-          nextCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          // Gently bring the next card into view only if it's actually off-screen —
+          // never force-scroll when it's already visible.
+          const rect = nextCard.getBoundingClientRect();
+          const outOfView = rect.top < 70 || rect.bottom > window.innerHeight;
+          if (outOfView) {
+            nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
         }, 300);
       }
     }
