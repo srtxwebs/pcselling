@@ -319,6 +319,7 @@ function buildUI() {
 
       updateSummary();
       renderPreview();
+      updateStepperState();
 
       const idx = PARTS.findIndex(p => p.key === partKey);
       const next = PARTS[idx + 1];
@@ -387,31 +388,29 @@ function updateSummary() {
 }
 
 /* ---------- Live assembled preview ---------- */
-/* Staged build photos — a different real image at each build milestone.
-   Progress is based on how many non-OS parts are filled (order-independent),
-   not on which specific category was picked last. */
+/* Staged build photos — a different real image at each build milestone,
+   in this exact order: case, motherboard, cpu, ram, storage, psu, gpu, os.
+   Progress is order-independent (based on how many of these 8 categories
+   are filled), so it works no matter which order you actually pick parts in. */
+const STAGE_CATEGORIES = ['case', 'motherboard', 'cpu', 'ram', 'storage', 'psu', 'gpu', 'os'];
 const BUILD_STAGE_IMAGES = [
-  null,                                     // 0 parts: dim placeholder silhouette
-  'images/build-stage-1-case.jpg',          // first part(s): case going in
-  'images/build-stage-2-motherboard.jpg',   // motherboard + CPU installed
-  'images/build-stage-3-memory.jpg',        // + RAM installed
-  'images/build-stage-4-cooling.jpg',       // + cooler/AIO installed
-  'images/build-stage-5-gpu.jpg',           // + graphics card installed
-  'images/pc-cutout.png',                   // complete build — same photo used everywhere else
+  null,                                      // 0 filled: dim placeholder silhouette
+  'images/build-stage-1-case.jpg',
+  'images/build-stage-2-motherboard.jpg',
+  'images/build-stage-3-cpu.jpg',
+  'images/build-stage-4-ram.jpg',
+  'images/build-stage-5-storage.jpg',
+  'images/build-stage-6-psu.jpg',
+  'images/build-stage-7-gpu.jpg',
+  'images/pc-cutout.png',                    // all 8 filled: finished build — same photo used everywhere else
 ];
-const STAGE_CATEGORIES = ['case', 'cpu', 'motherboard', 'gpu', 'ram', 'storage', 'cooling', 'fans', 'psu']; // excludes "os"
 
 function getBuildStageIndex() {
-  const filledCount = STAGE_CATEGORIES.filter(k => state[k]).length;
-  const total = STAGE_CATEGORIES.length;
-  if (filledCount === 0) return 0;
-  if (filledCount >= total) return 6;
-  return Math.min(5, Math.ceil((filledCount / total) * 5));
+  return STAGE_CATEGORIES.filter(k => state[k]).length; // 0..8, maps 1:1 into BUILD_STAGE_IMAGES
 }
 
 function getBuildStageImage() {
-  const stageIdx = getBuildStageIndex();
-  return BUILD_STAGE_IMAGES[stageIdx];
+  return BUILD_STAGE_IMAGES[getBuildStageIndex()];
 }
 
 function renderPreview() {
@@ -454,10 +453,55 @@ function renderPreview() {
 }
 
 /* ---------- Init ---------- */
+/* ---------- Category stepper (icons row, click to jump) ---------- */
+function buildCategoryStepper() {
+  const stepper = document.getElementById('categoryStepper');
+  if (!stepper) return;
+  stepper.innerHTML = PARTS.map((part, idx) => `
+    <button class="stepper-item" data-jump="${part.key}" title="${part.title}">
+      <span class="stepper-icon" id="stepper-icon-${part.key}">${partIcon(part.key, Math.floor(part.options.length/2), part.options.length)}</span>
+      <span class="stepper-label">${part.title}</span>
+    </button>
+  `).join('');
+  stepper.addEventListener('click', (e) => {
+    const btn = e.target.closest('.stepper-item');
+    if (!btn) return;
+    const key = btn.dataset.jump;
+    document.querySelectorAll('.part-card.open').forEach(c => {
+      c.classList.remove('open');
+      c.querySelector('.part-card-body').style.maxHeight = null;
+    });
+    const card = document.getElementById(`card-${key}`);
+    if (!card) return;
+    card.classList.add('open');
+    const body = card.querySelector('.part-card-body');
+    body.style.maxHeight = body.scrollHeight + 'px';
+    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+}
+function updateStepperState() {
+  PARTS.forEach(part => {
+    const btn = document.querySelector(`.stepper-item[data-jump="${part.key}"]`);
+    if (btn) btn.classList.toggle('done', !!state[part.key]);
+  });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildUI();
+  buildCategoryStepper();
   updateSummary();
   renderPreview();
+  updateStepperState();
+
+  /* ---------- Sticky bottom bar: details toggle ---------- */
+  const detailsBtn = document.getElementById('viewDetailsBtn');
+  const detailsPanel = document.getElementById('buildDetailsPanel');
+  if (detailsBtn && detailsPanel) {
+    detailsBtn.addEventListener('click', () => {
+      const isOpen = detailsPanel.classList.toggle('open');
+      detailsBtn.classList.toggle('open', isOpen);
+    });
+  }
 
   function refreshPrices() {
     document.querySelectorAll('.option-price[data-usd]').forEach(el => {
@@ -503,6 +547,7 @@ document.addEventListener('DOMContentLoaded', () => {
       document.querySelectorAll('[id^="sel-"]').forEach(el => el.textContent = 'Not selected yet');
       updateSummary();
       renderPreview();
+      updateStepperState();
     });
   }
 });
