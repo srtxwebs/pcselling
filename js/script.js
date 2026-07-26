@@ -214,9 +214,8 @@ document.addEventListener('DOMContentLoaded', () => {
         <h3>Settings</h3>
         <button class="cart-close" id="settingsClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
-      <div class="account-panel-body" id="settingsPanelBody">
-        <div class="settings-field-row">
-          <div class="settings-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+      <div class="account-panel-body settings-scroll" id="settingsPanelBody">
+        <div class="settings-field-row-2col">
           <label class="profile-field-label">Language
             <select id="settingLanguage">
               <option value="en">English</option>
@@ -227,9 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
               <option value="ja">日本語</option>
             </select>
           </label>
-        </div>
-        <div class="settings-field-row">
-          <div class="settings-field-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M15 9.5c0-1.4-1.3-2.5-3-2.5s-3 1-3 2.3c0 3 6 1.4 6 4.3 0 1.3-1.3 2.4-3 2.4s-3-1-3-2.4"/></svg></div>
           <label class="profile-field-label">Currency
             <select id="settingCurrency">
               <option value="USD">USD ($)</option>
@@ -241,78 +237,37 @@ document.addEventListener('DOMContentLoaded', () => {
           </label>
         </div>
 
-        <div class="account-divider"><span>appearance</span></div>
-
-        <div class="settings-swatch-row">
-          <div class="settings-toggle-label" style="margin-bottom:10px;">Accent Color</div>
-          <div class="accent-swatches" id="accentSwatches">
-            <button class="accent-swatch active" data-accent="red" style="--sw:#ff2530;" aria-label="Red"></button>
-            <button class="accent-swatch" data-accent="blue" style="--sw:#3b6bff;" aria-label="Blue"></button>
-            <button class="accent-swatch" data-accent="purple" style="--sw:#a855ff;" aria-label="Purple"></button>
-            <button class="accent-swatch" data-accent="green" style="--sw:#22c55e;" aria-label="Green"></button>
-            <button class="accent-swatch" data-accent="orange" style="--sw:#ff9433;" aria-label="Orange"></button>
-          </div>
-        </div>
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8"/></svg></div>
-          <div class="settings-toggle-text">
-            <div class="settings-toggle-label">RGB Preview Animations</div>
-            <div class="settings-toggle-sub">Fan glow &amp; sweep effects</div>
-          </div>
-          <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
-        </div>
-
         <div class="account-divider"><span>notifications</span></div>
 
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg></div>
+        <div class="settings-toggle-row compact">
           <div class="settings-toggle-text">
             <div class="settings-toggle-label">Email Notifications</div>
-            <div class="settings-toggle-sub">Order updates &amp; drop alerts</div>
           </div>
           <button class="toggle-switch active" id="toggleEmail" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
         </div>
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
-          <div class="settings-toggle-text">
-            <div class="settings-toggle-label">Push Notifications</div>
-            <div class="settings-toggle-sub">Browser alerts for order status</div>
-          </div>
-          <button class="toggle-switch" id="togglePush" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
-        </div>
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
-          <div class="settings-toggle-text">
-            <div class="settings-toggle-label">SMS Notifications</div>
-            <div class="settings-toggle-sub">Text alerts for shipping updates</div>
-          </div>
-          <button class="toggle-switch" id="toggleSms" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
-        </div>
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg></div>
+        <div class="settings-toggle-row compact">
           <div class="settings-toggle-text">
             <div class="settings-toggle-label">Marketing Emails</div>
-            <div class="settings-toggle-sub">New builds, sales &amp; promos</div>
           </div>
           <button class="toggle-switch" id="toggleMarketing" role="switch" aria-checked="false"><span class="toggle-knob"></span></button>
         </div>
-
-        <div class="account-divider"><span>privacy</span></div>
-
-        <div class="settings-toggle-row">
-          <div class="settings-toggle-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div class="settings-toggle-row compact">
           <div class="settings-toggle-text">
             <div class="settings-toggle-label">Remember My Cart</div>
-            <div class="settings-toggle-sub">Keep items saved between visits</div>
           </div>
           <button class="toggle-switch active" id="toggleRememberCart" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
+        </div>
+        <div class="settings-toggle-row compact">
+          <div class="settings-toggle-text">
+            <div class="settings-toggle-label">RGB Preview Animations</div>
+          </div>
+          <button class="toggle-switch active" id="toggleAnim" role="switch" aria-checked="true"><span class="toggle-knob"></span></button>
         </div>
 
         <div id="accountManageSection"></div>
 
         <button class="btn btn-primary" id="saveSettingsBtn" style="width:100%;justify-content:center;margin-top:14px;">Save Settings</button>
         <button class="btn btn-outline" id="clearDataBtn" style="width:100%;justify-content:center;">Clear Local Data</button>
-        <p class="account-footnote">Language and currency changes apply instantly across the site. Preferences are saved to this browser.</p>
       </div>
     </div>
   `;
@@ -435,30 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('settingsClose').addEventListener('click', closeSettings);
   settingsBackdrop.addEventListener('click', closeSettings);
 
-  /* ---------- Accent color theming ---------- */
-  const ACCENT_THEMES = {
-    red:    { red: '#e0141f', bright: '#ff2530', dark: '#8c0d14', glow: 'rgba(224,20,31,0.45)' },
-    blue:   { red: '#1450e0', bright: '#3b6bff', dark: '#0d2f8c', glow: 'rgba(59,107,255,0.45)' },
-    purple: { red: '#7c14e0', bright: '#a855ff', dark: '#4a0d8c', glow: 'rgba(168,85,255,0.45)' },
-    green:  { red: '#149a48', bright: '#22c55e', dark: '#0d5c2a', glow: 'rgba(34,197,94,0.45)' },
-    orange: { red: '#c95a0f', bright: '#ff9433', dark: '#8c470d', glow: 'rgba(255,148,51,0.45)' },
-  };
-  function applyAccent(name) {
-    const theme = ACCENT_THEMES[name] || ACCENT_THEMES.red;
-    const root = document.documentElement.style;
-    root.setProperty('--red', theme.red);
-    root.setProperty('--red-bright', theme.bright);
-    root.setProperty('--red-dark', theme.dark);
-    root.setProperty('--red-glow', theme.glow);
-  }
-  document.getElementById('accentSwatches').addEventListener('click', (e) => {
-    const btn = e.target.closest('.accent-swatch');
-    if (!btn) return;
-    document.querySelectorAll('.accent-swatch').forEach(s => s.classList.remove('active'));
-    btn.classList.add('active');
-    applyAccent(btn.dataset.accent);
-  });
-
   function getSettings() {
     try { return JSON.parse(localStorage.getItem('redgear_settings') || '{}'); }
     catch (e) { return {}; }
@@ -468,13 +399,9 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('settingLanguage').value = s.language || 'en';
     document.getElementById('settingCurrency').value = s.currency || 'USD';
     document.getElementById('toggleEmail').classList.toggle('active', s.emailNotifs !== false);
-    document.getElementById('togglePush').classList.toggle('active', !!s.pushNotifs);
-    document.getElementById('toggleSms').classList.toggle('active', !!s.smsNotifs);
     document.getElementById('toggleMarketing').classList.toggle('active', !!s.marketing);
     document.getElementById('toggleRememberCart').classList.toggle('active', s.rememberCart !== false);
     document.getElementById('toggleAnim').classList.toggle('active', s.animations !== false);
-    document.querySelectorAll('.accent-swatch').forEach(sw => sw.classList.toggle('active', sw.dataset.accent === (s.accent || 'red')));
-    applyAccent(s.accent || 'red');
   }
   document.querySelectorAll('.toggle-switch').forEach(t => {
     t.addEventListener('click', () => t.classList.toggle('active'));
@@ -522,17 +449,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const settings = {
       language: document.getElementById('settingLanguage').value,
       currency: document.getElementById('settingCurrency').value,
-      accent: document.querySelector('.accent-swatch.active')?.dataset.accent || 'red',
       emailNotifs: document.getElementById('toggleEmail').classList.contains('active'),
-      pushNotifs: document.getElementById('togglePush').classList.contains('active'),
-      smsNotifs: document.getElementById('toggleSms').classList.contains('active'),
       marketing: document.getElementById('toggleMarketing').classList.contains('active'),
       rememberCart: document.getElementById('toggleRememberCart').classList.contains('active'),
       animations: document.getElementById('toggleAnim').classList.contains('active'),
     };
     localStorage.setItem('redgear_settings', JSON.stringify(settings));
     document.body.classList.toggle('anims-off', !settings.animations);
-    applyAccent(settings.accent);
     if (!settings.rememberCart) { window.RedGearCart.clear(); }
     if (window.applyTranslations) window.applyTranslations(settings.language);
     window.dispatchEvent(new CustomEvent('redgear:settingschange', { detail: settings }));
