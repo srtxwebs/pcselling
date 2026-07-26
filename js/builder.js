@@ -63,63 +63,69 @@ const PARTS = [
   },
   {
     key: 'cpu', title: 'Processor (CPU)',
+    filterType: 'brand',
+    filterOptions: [ { value: 'intel', label: 'Intel' }, { value: 'amd', label: 'AMD' } ],
     options: [
-      { id: 'cpu1', name: 'Intel Core i3-14100', desc: '4 cores, up to 4.7GHz, entry-level', price: 139 },
-      { id: 'cpu2', name: 'AMD Ryzen 5 5600', desc: '6 cores, up to 4.4GHz, AM4 value', price: 129 },
-      { id: 'cpu3', name: 'Intel Core i5-13400F', desc: '10 cores, up to 4.6GHz', price: 189 },
-      { id: 'cpu4', name: 'AMD Ryzen 5 7500F', desc: '6 cores, up to 5.0GHz', price: 159 },
-      { id: 'cpu5', name: 'AMD Ryzen 5 7600X', desc: '6 cores, up to 5.3GHz, great value', price: 249 },
-      { id: 'cpu6', name: 'Intel Core i5-14600K', desc: '14 cores, up to 5.3GHz', price: 319 },
-      { id: 'cpu7', name: 'Intel Core i5-14600KF', desc: '14 cores, up to 5.3GHz, no iGPU', price: 299 },
-      { id: 'cpu8', name: 'AMD Ryzen 7 5800X3D', desc: '8 cores, 3D V-Cache, AM4', price: 299 },
-      { id: 'cpu9', name: 'AMD Ryzen 7 7700X', desc: '8 cores, up to 5.4GHz', price: 349 },
-      { id: 'cpu10', name: 'Intel Core i7-14700K', desc: '20 cores, up to 5.6GHz', price: 419 },
-      { id: 'cpu11', name: 'Intel Core i7-14700KF', desc: '20 cores, up to 5.6GHz, no iGPU', price: 399 },
-      { id: 'cpu12', name: 'AMD Ryzen 7 7800X3D', desc: '8 cores, 3D V-Cache gaming beast', price: 449 },
-      { id: 'cpu13', name: 'AMD Ryzen 9 7900X', desc: '12 cores, up to 5.6GHz', price: 429 },
-      { id: 'cpu14', name: 'Intel Core i9-14900K', desc: '24 cores, up to 6.0GHz', price: 589 },
-      { id: 'cpu15', name: 'AMD Ryzen 9 7950X', desc: '16 cores, up to 5.7GHz', price: 599 },
-      { id: 'cpu16', name: 'Intel Core i9-14900KS', desc: '24 cores, up to 6.2GHz, flagship', price: 699 },
+      { id: 'cpu1', name: 'Intel Core i3-14100', desc: '4 cores, up to 4.7GHz, entry-level', price: 139, brand: 'intel' },
+      { id: 'cpu2', name: 'AMD Ryzen 5 5600', desc: '6 cores, up to 4.4GHz, AM4 value', price: 129, brand: 'amd' },
+      { id: 'cpu3', name: 'Intel Core i5-13400F', desc: '10 cores, up to 4.6GHz', price: 189, brand: 'intel' },
+      { id: 'cpu4', name: 'AMD Ryzen 5 7500F', desc: '6 cores, up to 5.0GHz', price: 159, brand: 'amd' },
+      { id: 'cpu5', name: 'AMD Ryzen 5 7600X', desc: '6 cores, up to 5.3GHz, great value', price: 249, brand: 'amd' },
+      { id: 'cpu6', name: 'Intel Core i5-14600K', desc: '14 cores, up to 5.3GHz', price: 319, brand: 'intel' },
+      { id: 'cpu7', name: 'Intel Core i5-14600KF', desc: '14 cores, up to 5.3GHz, no iGPU', price: 299, brand: 'intel' },
+      { id: 'cpu8', name: 'AMD Ryzen 7 5800X3D', desc: '8 cores, 3D V-Cache, AM4', price: 299, brand: 'amd' },
+      { id: 'cpu9', name: 'AMD Ryzen 7 7700X', desc: '8 cores, up to 5.4GHz', price: 349, brand: 'amd' },
+      { id: 'cpu10', name: 'Intel Core i7-14700K', desc: '20 cores, up to 5.6GHz', price: 419, brand: 'intel' },
+      { id: 'cpu11', name: 'Intel Core i7-14700KF', desc: '20 cores, up to 5.6GHz, no iGPU', price: 399, brand: 'intel' },
+      { id: 'cpu12', name: 'AMD Ryzen 7 7800X3D', desc: '8 cores, 3D V-Cache gaming beast', price: 449, brand: 'amd' },
+      { id: 'cpu13', name: 'AMD Ryzen 9 7900X', desc: '12 cores, up to 5.6GHz', price: 429, brand: 'amd' },
+      { id: 'cpu14', name: 'Intel Core i9-14900K', desc: '24 cores, up to 6.0GHz', price: 589, brand: 'intel' },
+      { id: 'cpu15', name: 'AMD Ryzen 9 7950X', desc: '16 cores, up to 5.7GHz', price: 599, brand: 'amd' },
+      { id: 'cpu16', name: 'Intel Core i9-14900KS', desc: '24 cores, up to 6.2GHz, flagship', price: 699, brand: 'intel' },
     ]
   },
   {
     key: 'motherboard', title: 'Motherboard',
+    filterType: 'brand',
+    filterOptions: [ { value: 'intel', label: 'Intel' }, { value: 'amd', label: 'AMD' } ],
     options: [
-      { id: 'mobo1', name: 'RedGear H610 Basic', desc: 'LGA1700, DDR4, entry level', price: 99 },
-      { id: 'mobo2', name: 'RedGear A620 Value', desc: 'AM5, DDR5, budget board', price: 109 },
-      { id: 'mobo3', name: 'RedGear B760 Pulse', desc: 'LGA1700, DDR5, PCIe 4.0', price: 149 },
-      { id: 'mobo4', name: 'RedGear B650 Strike', desc: 'AM5, DDR5, PCIe 4.0', price: 159 },
-      { id: 'mobo5', name: 'RedGear B760 Vanguard', desc: 'LGA1700, DDR5, Wi-Fi 6', price: 179 },
-      { id: 'mobo6', name: 'RedGear ITX-Mini B650', desc: 'AM5, DDR5, compact ITX', price: 199 },
-      { id: 'mobo7', name: 'RedGear ITX-Mini B760', desc: 'LGA1700, DDR5, compact ITX', price: 189 },
-      { id: 'mobo8', name: 'RedGear B650E Raider', desc: 'AM5, DDR5, PCIe 5.0', price: 189 },
-      { id: 'mobo9', name: 'RedGear Z790 Vanguard', desc: 'LGA1700, DDR5, PCIe 5.0', price: 219 },
-      { id: 'mobo10', name: 'RedGear X670 Vanguard', desc: 'AM5, DDR5, PCIe 5.0', price: 259 },
-      { id: 'mobo11', name: 'RedGear X670E Apex', desc: 'AM5, DDR5, PCIe 5.0, Wi-Fi 6E', price: 329 },
-      { id: 'mobo12', name: 'RedGear Z790 Apex Encore', desc: 'LGA1700, extreme overclocking', price: 349 },
-      { id: 'mobo13', name: 'RedGear X870E Nova', desc: 'AM5, DDR5, next-gen PCIe 5.0', price: 359 },
-      { id: 'mobo14', name: 'RedGear TRX50 Workstation', desc: 'Threadripper, quad-channel DDR5', price: 499 },
-      { id: 'mobo15', name: 'RedGear WRX90 Pro', desc: 'Threadripper Pro, 8-channel DDR5', price: 799 },
+      { id: 'mobo1', name: 'RedGear H610 Basic', desc: 'LGA1700, DDR4, entry level', price: 99, brand: 'intel' },
+      { id: 'mobo2', name: 'RedGear A620 Value', desc: 'AM5, DDR5, budget board', price: 109, brand: 'amd' },
+      { id: 'mobo3', name: 'RedGear B760 Pulse', desc: 'LGA1700, DDR5, PCIe 4.0', price: 149, brand: 'intel' },
+      { id: 'mobo4', name: 'RedGear B650 Strike', desc: 'AM5, DDR5, PCIe 4.0', price: 159, brand: 'amd' },
+      { id: 'mobo5', name: 'RedGear B760 Vanguard', desc: 'LGA1700, DDR5, Wi-Fi 6', price: 179, brand: 'intel' },
+      { id: 'mobo6', name: 'RedGear ITX-Mini B650', desc: 'AM5, DDR5, compact ITX', price: 199, brand: 'amd' },
+      { id: 'mobo7', name: 'RedGear ITX-Mini B760', desc: 'LGA1700, DDR5, compact ITX', price: 189, brand: 'intel' },
+      { id: 'mobo8', name: 'RedGear B650E Raider', desc: 'AM5, DDR5, PCIe 5.0', price: 189, brand: 'amd' },
+      { id: 'mobo9', name: 'RedGear Z790 Vanguard', desc: 'LGA1700, DDR5, PCIe 5.0', price: 219, brand: 'intel' },
+      { id: 'mobo10', name: 'RedGear X670 Vanguard', desc: 'AM5, DDR5, PCIe 5.0', price: 259, brand: 'amd' },
+      { id: 'mobo11', name: 'RedGear X670E Apex', desc: 'AM5, DDR5, PCIe 5.0, Wi-Fi 6E', price: 329, brand: 'amd' },
+      { id: 'mobo12', name: 'RedGear Z790 Apex Encore', desc: 'LGA1700, extreme overclocking', price: 349, brand: 'intel' },
+      { id: 'mobo13', name: 'RedGear X870E Nova', desc: 'AM5, DDR5, next-gen PCIe 5.0', price: 359, brand: 'amd' },
+      { id: 'mobo14', name: 'RedGear TRX50 Workstation', desc: 'Threadripper, quad-channel DDR5', price: 499, brand: 'amd' },
+      { id: 'mobo15', name: 'RedGear WRX90 Pro', desc: 'Threadripper Pro, 8-channel DDR5', price: 799, brand: 'amd' },
     ]
   },
   {
     key: 'gpu', title: 'Graphics Card (GPU)',
+    filterType: 'brand',
+    filterOptions: [ { value: 'nvidia', label: 'NVIDIA' }, { value: 'amd', label: 'AMD' } ],
     options: [
-      { id: 'gpu1', name: 'GTX 1660 Super 6GB', desc: 'Budget 1080p gaming', price: 189 },
-      { id: 'gpu2', name: 'RTX 3050 8GB', desc: 'Entry ray tracing at 1080p', price: 229 },
-      { id: 'gpu3', name: 'RX 6600 8GB', desc: 'Solid 1080p performance', price: 199 },
-      { id: 'gpu4', name: 'RX 7600 8GB', desc: 'Efficient 1080p/1440p', price: 269 },
-      { id: 'gpu5', name: 'RTX 4060 8GB', desc: 'Smooth 1080p/1440p gaming', price: 299 },
-      { id: 'gpu6', name: 'RTX 4060 Ti 8GB', desc: 'Strong 1440p performance', price: 399 },
-      { id: 'gpu7', name: 'RX 7700 XT 12GB', desc: 'Great 1440p value', price: 449 },
-      { id: 'gpu8', name: 'RTX 4070 12GB', desc: 'Excellent 1440p ray tracing', price: 549 },
-      { id: 'gpu9', name: 'RX 7800 XT 16GB', desc: 'Excellent 1440p value', price: 499 },
-      { id: 'gpu10', name: 'RTX 4070 Super 12GB', desc: 'Great 1440p+ ray tracing', price: 599 },
-      { id: 'gpu11', name: 'RTX 4070 Ti Super 16GB', desc: 'High-end 1440p/4K', price: 799 },
-      { id: 'gpu12', name: 'RX 7900 XT 20GB', desc: 'High-end 4K performance', price: 749 },
-      { id: 'gpu13', name: 'RTX 4080 Super 16GB', desc: 'Elite 4K gaming performance', price: 999 },
-      { id: 'gpu14', name: 'RX 7900 XTX 24GB', desc: 'AMD flagship, 4K ready', price: 949 },
-      { id: 'gpu15', name: 'RTX 4090 24GB', desc: 'Uncompromising flagship power', price: 1599 },
+      { id: 'gpu1', name: 'GTX 1660 Super 6GB', desc: 'Budget 1080p gaming', price: 189, brand: 'nvidia' },
+      { id: 'gpu2', name: 'RTX 3050 8GB', desc: 'Entry ray tracing at 1080p', price: 229, brand: 'nvidia' },
+      { id: 'gpu3', name: 'RX 6600 8GB', desc: 'Solid 1080p performance', price: 199, brand: 'amd' },
+      { id: 'gpu4', name: 'RX 7600 8GB', desc: 'Efficient 1080p/1440p', price: 269, brand: 'amd' },
+      { id: 'gpu5', name: 'RTX 4060 8GB', desc: 'Smooth 1080p/1440p gaming', price: 299, brand: 'nvidia' },
+      { id: 'gpu6', name: 'RTX 4060 Ti 8GB', desc: 'Strong 1440p performance', price: 399, brand: 'nvidia' },
+      { id: 'gpu7', name: 'RX 7700 XT 12GB', desc: 'Great 1440p value', price: 449, brand: 'amd' },
+      { id: 'gpu8', name: 'RTX 4070 12GB', desc: 'Excellent 1440p ray tracing', price: 549, brand: 'nvidia' },
+      { id: 'gpu9', name: 'RX 7800 XT 16GB', desc: 'Excellent 1440p value', price: 499, brand: 'amd' },
+      { id: 'gpu10', name: 'RTX 4070 Super 12GB', desc: 'Great 1440p+ ray tracing', price: 599, brand: 'nvidia' },
+      { id: 'gpu11', name: 'RTX 4070 Ti Super 16GB', desc: 'High-end 1440p/4K', price: 799, brand: 'nvidia' },
+      { id: 'gpu12', name: 'RX 7900 XT 20GB', desc: 'High-end 4K performance', price: 749, brand: 'amd' },
+      { id: 'gpu13', name: 'RTX 4080 Super 16GB', desc: 'Elite 4K gaming performance', price: 999, brand: 'nvidia' },
+      { id: 'gpu14', name: 'RX 7900 XTX 24GB', desc: 'AMD flagship, 4K ready', price: 949, brand: 'amd' },
+      { id: 'gpu15', name: 'RTX 4090 24GB', desc: 'Uncompromising flagship power', price: 1599, brand: 'nvidia' },
     ]
   },
   {
@@ -251,9 +257,15 @@ function buildUI() {
         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
       </div>
       <div class="part-card-body">
+        ${part.filterType === 'brand' ? `
+        <div class="brand-filter" data-filter-for="${part.key}">
+          <button class="brand-filter-btn active" data-filter="all">All</button>
+          ${part.filterOptions.map(f => `<button class="brand-filter-btn" data-filter="${f.value}">${f.label}</button>`).join('')}
+        </div>
+        ` : ''}
         <div class="option-list">
           ${part.options.map((opt, i) => `
-            <div class="option" data-part="${part.key}" data-opt="${opt.id}">
+            <div class="option" data-part="${part.key}" data-opt="${opt.id}" ${opt.brand ? `data-brand="${opt.brand}"` : ''}>
               <div class="option-info">
                 <div class="option-icon">${partIcon(part.key, i, part.options.length)}</div>
                 <div>
@@ -281,6 +293,25 @@ function buildUI() {
   }
 
   wrap.addEventListener('click', (e) => {
+    const filterBtn = e.target.closest('.brand-filter-btn');
+    if (filterBtn) {
+      const filterRow = filterBtn.closest('.brand-filter');
+      const partKey = filterRow.dataset.filterFor;
+      const filterVal = filterBtn.dataset.filter;
+      filterRow.querySelectorAll('.brand-filter-btn').forEach(b => b.classList.remove('active'));
+      filterBtn.classList.add('active');
+      const card = document.getElementById(`card-${partKey}`);
+      card.querySelectorAll('.option').forEach(o => {
+        const matches = filterVal === 'all' || o.dataset.brand === filterVal;
+        o.classList.toggle('filtered-out', !matches);
+      });
+      if (card.classList.contains('open')) {
+        const body = card.querySelector('.part-card-body');
+        body.style.maxHeight = body.scrollHeight + 'px';
+      }
+      return;
+    }
+
     const head = e.target.closest('[data-toggle]');
     if (head) {
       const card = head.closest('.part-card');
@@ -320,32 +351,8 @@ function buildUI() {
       updateSummary();
       renderPreview();
       updateStepperState();
-
-      const idx = PARTS.findIndex(p => p.key === partKey);
-      const next = PARTS[idx + 1];
-      // Only auto-advance when the user is moving forward in natural order
-      // (every earlier category already filled). Re-picking an earlier
-      // category to change your mind should never yank the page around.
-      const isProgressingForward = PARTS.slice(0, idx + 1).every(p => state[p.key]);
-      if (next && !state[next.key] && isProgressingForward) {
-        setTimeout(() => {
-          document.querySelectorAll('.part-card.open').forEach(c => {
-            c.classList.remove('open');
-            c.querySelector('.part-card-body').style.maxHeight = null;
-          });
-          const nextCard = document.getElementById(`card-${next.key}`);
-          nextCard.classList.add('open');
-          const nb = nextCard.querySelector('.part-card-body');
-          nb.style.maxHeight = nb.scrollHeight + 'px';
-          // Gently bring the next card into view only if it's actually off-screen —
-          // never force-scroll when it's already visible.
-          const rect = nextCard.getBoundingClientRect();
-          const outOfView = rect.top < 70 || rect.bottom > window.innerHeight;
-          if (outOfView) {
-            nextCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-          }
-        }, 300);
-      }
+      // Selecting a part never auto-opens another section or moves the page —
+      // use the category stepper above, or click a section header, to navigate.
     }
   });
 }
