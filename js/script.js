@@ -617,12 +617,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (auth && auth.signedIn) {
       title.textContent = 'My Profile';
       const displayName = auth.displayName || auth.name;
+      const customPic = auth.customPicture || auth.picture || '';
+      const initials = displayName.split(' ').map(w => w[0]).slice(0,2).join('').toUpperCase();
       const myReviews = (window.RedGearReviews ? window.RedGearReviews.forUser(auth.email) : []);
       body.innerHTML = `
-        <div class="account-profile">
-          <img src="${auth.picture || ''}" alt="${displayName}" onerror="this.style.display='none'">
+        <div class="account-profile account-profile-editable">
+          <div class="avatar-upload-wrap" id="avatarUploadWrap">
+            ${customPic
+              ? `<img src="${customPic}" alt="${displayName}" class="avatar-img" id="avatarImg">`
+              : `<div class="avatar-initials" id="avatarImg">${initials}</div>`}
+            <div class="avatar-upload-overlay">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            </div>
+            <input type="file" id="avatarFileInput" accept="image/*" style="display:none;">
+          </div>
           <div><div class="account-profile-name">${displayName}</div><div class="account-profile-email">${auth.email}</div></div>
         </div>
+        ${customPic ? '<button class="avatar-remove-btn" id="removeAvatarBtn">Remove photo</button>' : ''}
 
         <label class="profile-field-label">Display Name
           <input type="text" id="displayNameInput" value="${displayName}" maxlength="40">
@@ -661,6 +672,37 @@ document.addEventListener('DOMContentLoaded', () => {
         updateAccountUI();
         showToast('Display name updated');
       });
+
+      /* Profile picture upload */
+      const avatarWrap = document.getElementById('avatarUploadWrap');
+      const avatarFileInput = document.getElementById('avatarFileInput');
+      avatarWrap.addEventListener('click', () => avatarFileInput.click());
+      avatarFileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        if (!file.type.startsWith('image/')) { showToast('Please choose an image file'); return; }
+        if (file.size > 2 * 1024 * 1024) { showToast('Image must be under 2MB'); return; }
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const a = getAuth();
+          a.customPicture = ev.target.result;
+          setAuth(a);
+          updateAccountUI();
+          showToast('Profile picture updated');
+        };
+        reader.readAsDataURL(file);
+      });
+      const removeAvatarBtn = document.getElementById('removeAvatarBtn');
+      if (removeAvatarBtn) {
+        removeAvatarBtn.addEventListener('click', () => {
+          const a = getAuth();
+          delete a.customPicture;
+          setAuth(a);
+          updateAccountUI();
+          showToast('Profile picture removed');
+        });
+      }
+
       body.querySelectorAll('[data-remove-review]').forEach(link => {
         link.addEventListener('click', (e) => {
           e.preventDefault();
