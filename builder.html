@@ -93,63 +93,65 @@
 
 <section class="content-section builder-section">
   <div class="container">
+    <div class="builder-layout">
 
-    <div class="build-preview-hero reveal">
-      <div class="preview-hero-media" id="buildPreview"></div>
-      <div class="preview-hero-info">
-        <span class="preview-hero-label" id="previewLabel">No parts selected yet</span>
-        <div class="stage-dots" id="stageDots">
-          <span class="stage-dot" data-stage="0"></span>
-          <span class="stage-dot" data-stage="1"></span>
-          <span class="stage-dot" data-stage="2"></span>
-          <span class="stage-dot" data-stage="3"></span>
-          <span class="stage-dot" data-stage="4"></span>
-          <span class="stage-dot" data-stage="5"></span>
-          <span class="stage-dot" data-stage="6"></span>
-          <span class="stage-dot" data-stage="7"></span>
-          <span class="stage-dot" data-stage="8"></span>
+      <div class="builder-main">
+        <div class="category-stepper" id="categoryStepper">
+          <!-- populated by js/builder.js -->
+        </div>
+
+        <div class="builder-steps" id="builderSteps">
+          <!-- populated by js/builder.js -->
         </div>
       </div>
-    </div>
 
-    <div class="category-stepper" id="categoryStepper">
-      <!-- populated by js/builder.js -->
-    </div>
+      <aside class="builder-sidebar">
+        <div class="preview-card reveal">
+          <div class="preview-card-head">
+            <h3>Your Rig</h3>
+            <span class="preview-label" id="previewLabel">No parts selected yet</span>
+          </div>
+          <div class="preview-mount" id="buildPreview"></div>
+          <div class="stage-dots" id="stageDots">
+            <span class="stage-dot" data-stage="0"></span>
+            <span class="stage-dot" data-stage="1"></span>
+            <span class="stage-dot" data-stage="2"></span>
+            <span class="stage-dot" data-stage="3"></span>
+            <span class="stage-dot" data-stage="4"></span>
+            <span class="stage-dot" data-stage="5"></span>
+            <span class="stage-dot" data-stage="6"></span>
+            <span class="stage-dot" data-stage="7"></span>
+            <span class="stage-dot" data-stage="8"></span>
+          </div>
+        </div>
 
-    <div class="builder-steps" id="builderSteps">
-      <!-- populated by js/builder.js -->
-    </div>
+        <div class="summary-card">
+          <h3>Your Build</h3>
+          <div id="summaryLines"></div>
 
-    <div class="builder-bottom-spacer"></div>
+          <div class="summary-progress">
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <div class="progress-label" id="progressLabel">0 of 10 parts selected</div>
+          </div>
+
+          <div class="summary-total">
+            <span class="label">Total</span>
+            <span class="amount" id="summaryTotal">$0</span>
+          </div>
+
+          <button class="btn btn-primary summary-cta disabled" id="summaryCta" disabled>
+            Add Build To Cart
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </button>
+          <button class="btn btn-outline summary-cta" id="resetBuild" style="margin-top:10px;">
+            Reset Selections
+          </button>
+        </div>
+      </aside>
+
+    </div>
   </div>
 </section>
-
-<div class="builder-sticky-bar" id="builderStickyBar">
-  <div class="container sticky-bar-inner">
-    <div class="sticky-bar-progress">
-      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-      <span class="progress-label" id="progressLabel">0 of 10 parts selected</span>
-    </div>
-    <button class="sticky-bar-details-btn" id="viewDetailsBtn">
-      <span>Details</span>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 15l-6-6-6 6"/></svg>
-    </button>
-    <div class="sticky-bar-total">
-      <span class="label">Total</span>
-      <span class="amount" id="summaryTotal">$0</span>
-    </div>
-    <button class="btn btn-outline" id="resetBuild">Reset</button>
-    <button class="btn btn-primary summary-cta disabled" id="summaryCta" disabled>
-      Add Build To Cart
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </button>
-  </div>
-  <div class="build-details-panel" id="buildDetailsPanel">
-    <div class="container">
-      <div id="summaryLines"></div>
-    </div>
-  </div>
-</div>
 
 <footer class="footer">
   <div class="container">
