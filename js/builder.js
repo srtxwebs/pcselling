@@ -664,7 +664,7 @@ function buildAdvisorUI() {
     <div class="advisor-head">
       <div>
         <h4>Build Advisor</h4>
-        <span>Budget-based part recommendations</span>
+        <span>Ask what to buy for your budget</span>
       </div>
       <button class="advisor-close" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -672,29 +672,43 @@ function buildAdvisorUI() {
     </div>
     <div class="advisor-body" id="advisorBody">
       <div class="advisor-msg advisor-msg-bot">
-        <p>Tell me your budget and I'll put together the best build I can from our real catalog — e.g. try <strong>$450</strong> or <strong>$1500</strong>.</p>
+        <p>Ask me things like <strong>"what should I buy for 450 dollars?"</strong> or <strong>"I have $1500 to spend"</strong> and I'll build the best rig I can from our real catalog.</p>
       </div>
     </div>
     <form class="advisor-input-row" id="advisorForm">
-      <span class="advisor-dollar">$</span>
-      <input type="number" id="advisorBudget" placeholder="450" min="1" step="1">
+      <input type="text" id="advisorBudget" placeholder="What should I buy for $450?" autocomplete="off">
       <button type="submit" class="btn btn-primary">Ask</button>
     </form>
   `;
   document.body.appendChild(panel);
 
-  fab.addEventListener('click', () => { panel.classList.add('open'); fab.classList.add('hide'); });
+  fab.addEventListener('click', () => { panel.classList.add('open'); fab.classList.add('hide'); document.getElementById('advisorBudget').focus(); });
   panel.querySelector('.advisor-close').addEventListener('click', () => { panel.classList.remove('open'); fab.classList.remove('hide'); });
+
+  function extractBudget(text) {
+    // Matches "$450", "450 dollars", "450 bucks", "1,500", "1.5k", plain "450", etc.
+    const kMatch = text.match(/(\d+(?:\.\d+)?)\s*k\b/i);
+    if (kMatch) return Math.round(parseFloat(kMatch[1]) * 1000);
+    const match = text.replace(/,/g, '').match(/\$?\s*(\d+(?:\.\d+)?)/);
+    return match ? Math.round(parseFloat(match[1])) : null;
+  }
 
   const body = document.getElementById('advisorBody');
   document.getElementById('advisorForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const input = document.getElementById('advisorBudget');
-    const budget = Number(input.value);
-    if (!budget || budget <= 0) return;
-
-    body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-user"><p>What should I buy for $${budget.toLocaleString()}?</p></div>`);
+    const text = input.value.trim();
+    if (!text) return;
+    body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-user"><p>${text.replace(/</g,'&lt;')}</p></div>`);
     input.value = '';
+    body.scrollTop = body.scrollHeight;
+
+    const budget = extractBudget(text);
+    if (!budget || budget <= 0) {
+      body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-bot"><p>I didn't catch a dollar amount there — try something like "what should I buy for $450?"</p></div>`);
+      body.scrollTop = body.scrollHeight;
+      return;
+    }
 
     const { picks, total, overBudget } = recommendBuild(budget);
     const rows = PARTS.map(p => `<div class="advisor-row"><span>${p.title}</span><span>${picks[p.key].name}</span></div>`).join('');
@@ -702,7 +716,7 @@ function buildAdvisorUI() {
 
     body.insertAdjacentHTML('beforeend', `
       <div class="advisor-msg advisor-msg-bot">
-        <p>${overBudget ? "Closest I can get you is this:" : `Here's what I'd build for $${budget.toLocaleString()}:`}</p>
+        <p>${overBudget ? "Closest I can get you is this:" : `For $${budget.toLocaleString()}, here's what I'd build:`}</p>
         <div class="advisor-build-card">
           ${rows}
           <div class="advisor-row advisor-row-total"><span>Total</span><span>${fmt(total)}</span></div>
