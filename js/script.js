@@ -491,13 +491,19 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   document.getElementById('cartCheckout').addEventListener('click', () => {
-    if (!window.RedGearCart.get().length) return;
+    const cart = window.RedGearCart.get();
+    if (!cart.length) return;
     if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
       closeCart();
       window.openAccount('Sign in with Google to complete checkout.');
       return;
     }
-    showToast('Demo checkout — hook this up to a real payment provider');
+    const auth = window.RedGearAuth.get();
+    const itemNames = cart.map(i => i.name);
+    window.RedGearOrders.recordPurchase(auth.email, itemNames);
+    window.RedGearCart.clear();
+    closeCart();
+    showToast(`Order placed! You can now review: ${itemNames.join(', ')}`);
   });
 
   /* ---------- Search overlay ---------- */
@@ -1005,6 +1011,26 @@ document.addEventListener('DOMContentLoaded', () => {
   window.__renderCartDrawer = renderCartDrawer;
   window.addEventListener('redgear:settingschange', () => renderCartDrawer());
 
+  /* ---------- Orders / purchase history ---------- */
+  function getOrders() {
+    try { return JSON.parse(localStorage.getItem('redgear_orders') || '[]'); }
+    catch (e) { return []; }
+  }
+  function saveOrders(list) { localStorage.setItem('redgear_orders', JSON.stringify(list)); }
+
+  window.RedGearOrders = {
+    getAll: getOrders,
+    forUser(email) { return getOrders().filter(o => o.userEmail === email); },
+    hasPurchased(email, buildName) {
+      return getOrders().some(o => o.userEmail === email && o.items.includes(buildName));
+    },
+    recordPurchase(email, itemNames) {
+      const list = getOrders();
+      list.unshift({ userEmail: email, items: itemNames, date: new Date().toISOString() });
+      saveOrders(list);
+    }
+  };
+
   /* ---------- Reviews system ---------- */
   function getReviews() {
     try { return JSON.parse(localStorage.getItem('redgear_reviews') || '[]'); }
@@ -1016,18 +1042,29 @@ document.addEventListener('DOMContentLoaded', () => {
     getAll: getReviews,
     forBuild(name) { return getReviews().filter(r => r.build === name); },
     forUser(email) { return getReviews().filter(r => r.userEmail === email); },
+    canReview(build) {
+      if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) return { ok: false, reason: 'signin' };
+      const auth = window.RedGearAuth.get();
+      if (!window.RedGearOrders.hasPurchased(auth.email, build)) return { ok: false, reason: 'unpurchased' };
+      return { ok: true };
+    },
     add(build, rating, comment) {
       if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
         window.openAccount && window.openAccount('Sign in with Google to write a review.');
         return false;
       }
       const auth = window.RedGearAuth.get();
+      if (!window.RedGearOrders.hasPurchased(auth.email, build)) {
+        showToast(`Only verified buyers can review "${build}" — purchase it first`);
+        return false;
+      }
       const list = getReviews();
       list.unshift({
         build, rating, comment,
         userEmail: auth.email,
         userName: auth.displayName || auth.name,
-        date: new Date().toISOString()
+        date: new Date().toISOString(),
+        verified: true
       });
       saveReviews(list);
       return true;
@@ -1090,9 +1127,14 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('reviewSubmit').addEventListener('click', () => {
     if (!currentStarValue) { showToast('Pick a star rating first'); return; }
-    if (!(window.RedGearAuth && window.RedGearAuth.isSignedIn())) {
+    const check = window.RedGearReviews.canReview(currentReviewTarget);
+    if (!check.ok) {
       closeReviewModal();
-      window.openAccount('Sign in with Google to write a review.');
+      if (check.reason === 'signin') {
+        window.openAccount('Sign in with Google to write a review.');
+      } else {
+        showToast(`Only verified buyers can review "${currentReviewTarget}" — purchase it first`);
+      }
       return;
     }
     const comment = document.getElementById('reviewComment').value.trim();
