@@ -500,16 +500,6 @@ document.addEventListener('DOMContentLoaded', () => {
   renderPreview();
   updateStepperState();
 
-  /* ---------- Sticky bottom bar: details toggle ---------- */
-  const detailsBtn = document.getElementById('viewDetailsBtn');
-  const detailsPanel = document.getElementById('buildDetailsPanel');
-  if (detailsBtn && detailsPanel) {
-    detailsBtn.addEventListener('click', () => {
-      const isOpen = detailsPanel.classList.toggle('open');
-      detailsBtn.classList.toggle('open', isOpen);
-    });
-  }
-
   function refreshPrices() {
     document.querySelectorAll('.option-price[data-usd]').forEach(el => {
       const usd = Number(el.dataset.usd);
