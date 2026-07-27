@@ -351,13 +351,64 @@ function buildUI() {
       updateSummary();
       renderPreview();
       updateStepperState();
-      // Selecting a part never auto-opens another section or moves the page —
-      // use the category stepper above, or click a section header, to navigate.
+
+      // Close the current section and open the next unfilled one — purely a
+      // convenience so you don't have to click each header yourself. This
+      // NEVER scrolls or moves the page; the sidebar preview stays fixed and
+      // the section swap happens entirely within the current viewport.
+      const idx = PARTS.findIndex(p => p.key === partKey);
+      const next = PARTS[idx + 1];
+      if (next && !state[next.key]) {
+        setTimeout(() => {
+          document.querySelectorAll('.part-card.open').forEach(c => {
+            c.classList.remove('open');
+            c.querySelector('.part-card-body').style.maxHeight = null;
+          });
+          const nextCard = document.getElementById(`card-${next.key}`);
+          nextCard.classList.add('open');
+          const nb = nextCard.querySelector('.part-card-body');
+          nb.style.maxHeight = nb.scrollHeight + 'px';
+          applyCompatibilityFilter(partKey, chosen);
+        }, 280);
+      } else {
+        applyCompatibilityFilter(partKey, chosen);
+      }
     }
   });
 }
 
-/* ---------- Summary sidebar ---------- */
+/* ---------- Compatibility filtering ---------- */
+/* Selecting a CPU auto-filters the motherboard list to matching brand, and
+   vice versa, so the "next" component shown is only ones that actually fit. */
+const COMPAT_PAIRS = { cpu: 'motherboard', motherboard: 'cpu' };
+function applyCompatibilityFilter(partKey, chosen) {
+  const pairedKey = COMPAT_PAIRS[partKey];
+  if (!pairedKey || !chosen.brand) return;
+  const pairedCard = document.getElementById(`card-${pairedKey}`);
+  if (!pairedCard) return;
+  const filterRow = pairedCard.querySelector('.brand-filter');
+  if (!filterRow) return;
+  const targetBtn = filterRow.querySelector(`.brand-filter-btn[data-filter="${chosen.brand}"]`);
+  if (!targetBtn || targetBtn.classList.contains('active')) return;
+  filterRow.querySelectorAll('.brand-filter-btn').forEach(b => b.classList.remove('active'));
+  targetBtn.classList.add('active');
+  pairedCard.querySelectorAll('.option').forEach(o => {
+    o.classList.toggle('filtered-out', o.dataset.brand !== chosen.brand);
+  });
+  const badge = pairedCard.querySelector('.compat-badge') || (() => {
+    const b = document.createElement('span');
+    b.className = 'compat-badge';
+    pairedCard.querySelector('.part-card-selected').after(b);
+    return b;
+  })();
+  badge.textContent = `Showing ${chosen.brand === 'amd' ? 'AMD' : chosen.brand === 'nvidia' ? 'NVIDIA' : 'Intel'}-compatible only`;
+  if (pairedCard.classList.contains('open')) {
+    const body = pairedCard.querySelector('.part-card-body');
+    body.style.maxHeight = body.scrollHeight + 'px';
+  }
+}
+
+
 function updateSummary() {
   const linesWrap = document.getElementById('summaryLines');
   const totalEl = document.getElementById('summaryTotal');
@@ -547,4 +598,151 @@ document.addEventListener('DOMContentLoaded', () => {
       updateStepperState();
     });
   }
+
+  buildAdvisorUI();
 });
+
+/* ==========================================================================
+   Build Advisor — a rules-based budget recommender over the real parts
+   catalog. NOTE: this is NOT a live conversational AI model — there's no
+   backend here to safely call one from (that needs an API key on a server,
+   not in front-end JS). This is a genuine budget-allocation algorithm that
+   picks real parts from the PARTS catalog above, upgrading piece by piece
+   until your budget runs out. Framed as a simple assistant so it's easy to
+   use, but honestly: it's an optimizer, not a chatbot.
+   ========================================================================== */
+
+const ADVISOR_WEIGHTS = {
+  case: 0.06, cpu: 0.18, motherboard: 0.10, gpu: 0.30, ram: 0.08,
+  storage: 0.08, cooling: 0.06, fans: 0.03, psu: 0.07, os: 0.04
+};
+const ADVISOR_UPGRADE_PRIORITY = ['gpu','cpu','ram','storage','cooling','motherboard','psu','case','fans'];
+
+function recommendBuild(budget) {
+  const picks = {};
+  PARTS.forEach(part => {
+    const allocated = budget * (ADVISOR_WEIGHTS[part.key] || 0.05);
+    const sorted = [...part.options].sort((a, b) => a.price - b.price);
+    let best = sorted[0];
+    for (const opt of sorted) { if (opt.price <= allocated) best = opt; }
+    picks[part.key] = best;
+  });
+  let spent = PARTS.reduce((sum, p) => sum + picks[p.key].price, 0);
+  let leftover = budget - spent;
+  let improved = true;
+  while (improved && leftover > 0) {
+    improved = false;
+    for (const key of ADVISOR_UPGRADE_PRIORITY) {
+      const part = PARTS.find(p => p.key === key);
+      const sorted = [...part.options].sort((a, b) => a.price - b.price);
+      const currentIdx = sorted.findIndex(o => o.id === picks[key].id);
+      if (currentIdx > -1 && currentIdx < sorted.length - 1) {
+        const next = sorted[currentIdx + 1];
+        const diff = next.price - picks[key].price;
+        if (diff <= leftover) {
+          picks[key] = next;
+          leftover -= diff;
+          improved = true;
+        }
+      }
+    }
+  }
+  const total = PARTS.reduce((sum, p) => sum + picks[p.key].price, 0);
+  return { picks, total, overBudget: total > budget };
+}
+
+function buildAdvisorUI() {
+  const fab = document.createElement('button');
+  fab.className = 'advisor-fab';
+  fab.setAttribute('aria-label', 'Build Advisor');
+  fab.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>`;
+  document.body.appendChild(fab);
+
+  const panel = document.createElement('div');
+  panel.className = 'advisor-panel';
+  panel.innerHTML = `
+    <div class="advisor-head">
+      <div>
+        <h4>Build Advisor</h4>
+        <span>Budget-based part recommendations</span>
+      </div>
+      <button class="advisor-close" aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="advisor-body" id="advisorBody">
+      <div class="advisor-msg advisor-msg-bot">
+        <p>Tell me your budget and I'll put together the best build I can from our real catalog — e.g. try <strong>$450</strong> or <strong>$1500</strong>.</p>
+      </div>
+    </div>
+    <form class="advisor-input-row" id="advisorForm">
+      <span class="advisor-dollar">$</span>
+      <input type="number" id="advisorBudget" placeholder="450" min="1" step="1">
+      <button type="submit" class="btn btn-primary">Ask</button>
+    </form>
+  `;
+  document.body.appendChild(panel);
+
+  fab.addEventListener('click', () => { panel.classList.add('open'); fab.classList.add('hide'); });
+  panel.querySelector('.advisor-close').addEventListener('click', () => { panel.classList.remove('open'); fab.classList.remove('hide'); });
+
+  const body = document.getElementById('advisorBody');
+  document.getElementById('advisorForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('advisorBudget');
+    const budget = Number(input.value);
+    if (!budget || budget <= 0) return;
+
+    body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-user"><p>What should I buy for $${budget.toLocaleString()}?</p></div>`);
+    input.value = '';
+
+    const { picks, total, overBudget } = recommendBuild(budget);
+    const rows = PARTS.map(p => `<div class="advisor-row"><span>${p.title}</span><span>${picks[p.key].name}</span></div>`).join('');
+    const overNote = overBudget ? `<p class="advisor-over-note">Heads up — even the leanest parts I have come to ${fmt(total)}, a bit over your budget.</p>` : '';
+
+    body.insertAdjacentHTML('beforeend', `
+      <div class="advisor-msg advisor-msg-bot">
+        <p>${overBudget ? "Closest I can get you is this:" : `Here's what I'd build for $${budget.toLocaleString()}:`}</p>
+        <div class="advisor-build-card">
+          ${rows}
+          <div class="advisor-row advisor-row-total"><span>Total</span><span>${fmt(total)}</span></div>
+        </div>
+        ${overNote}
+        <button class="btn btn-outline advisor-apply-btn" data-apply='${JSON.stringify(Object.fromEntries(Object.entries(picks).map(([k,v]) => [k, v.id])))}'>
+          Fill My Builder With This
+        </button>
+      </div>
+    `);
+    body.scrollTop = body.scrollHeight;
+  });
+
+  body.addEventListener('click', (e) => {
+    const btn = e.target.closest('.advisor-apply-btn');
+    if (!btn) return;
+    const idsByKey = JSON.parse(btn.dataset.apply);
+    Object.entries(idsByKey).forEach(([key, id]) => {
+      const part = PARTS.find(p => p.key === key);
+      const opt = part.options.find(o => o.id === id);
+      if (opt) state[key] = opt;
+    });
+    document.querySelectorAll('.option').forEach(o => {
+      o.classList.toggle('selected', state[o.dataset.part] && state[o.dataset.part].id === o.dataset.opt);
+    });
+    PARTS.forEach(part => {
+      const card = document.getElementById(`card-${part.key}`);
+      const chosen = state[part.key];
+      if (chosen) {
+        card.classList.add('done');
+        const numEl = card.querySelector('.part-num');
+        if (numEl) numEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:14px;height:14px;"><path d="M20 6L9 17l-5-5"/></svg>';
+        document.getElementById(`sel-${part.key}`).textContent = `${chosen.name}${chosen.price ? ' — ' + fmt(chosen.price) : ' — Included'}`;
+      }
+    });
+    updateSummary();
+    renderPreview();
+    updateStepperState();
+    panel.classList.remove('open');
+    fab.classList.remove('hide');
+    if (window.showToast) showToast('Builder filled with recommended parts');
+  });
+}
