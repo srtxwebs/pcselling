@@ -20,7 +20,7 @@
 
 <div class="topbar">
   <div class="container topbar-inner">
-    <div class="topbar-tagline">High Performance. Premium Quality. <span>Built for Victory.</span></div>
+    <div class="topbar-tagline"><span data-i18n="taglinePrefix">High Performance. Premium Quality.</span> <span data-i18n="tagline">Built for Victory.</span></div>
     <div class="topbar-right">
       <a href="tel:+15551234567">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
@@ -54,10 +54,10 @@
     <a href="index.html" data-i18n="home">Home</a><a href="builds.html" data-i18n="builds">PC Builds</a><a href="services.html" class="active" data-i18n="services">Services</a><a href="about.html" data-i18n="about">About Us</a><a href="contact.html" data-i18n="contact">Contact</a>
   </nav>
   <div class="nav-icons">
-    <button aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
-    <button aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
-    <button aria-label="Cart" style="position:relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count" id="cartCount">0</span></button>
-    <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button aria-label="Search" data-i18n-title="navSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button aria-label="Account" data-i18n-title="navAccount"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+    <button aria-label="Cart" data-i18n-title="navCart" style="position:relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count" id="cartCount">0</span></button>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" data-i18n-title="navMenu"><span></span><span></span><span></span></button>
   </div>
 </div></header>
 
@@ -68,38 +68,38 @@
 
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="index.html" data-i18n="home">Home</a><span class="sep">/</span><span>Services</span></div>
-    <h1>What We <span>Do</span></h1>
-    <p>From custom builds to upgrades and repairs — our technicians treat every rig like their own.</p>
+    <div class="breadcrumb"><a href="index.html" data-i18n="breadcrumbHome">Home</a><span class="sep">/</span><span data-i18n="services">Services</span></div>
+    <h1 data-i18n="servicesPageTitle">What We Do</h1>
+    <p data-i18n="servicesPageDesc">From custom builds to upgrades and repairs — our technicians treat every rig like their own.</p>
   </div>
 </section>
 
 <section class="content-section" style="padding-bottom:30px;">
   <div class="container">
     <div class="section-head reveal" style="margin-bottom:50px;">
-      <h2 class="section-title" style="text-align:center;">HOW IT <span>WORKS</span></h2>
+      <h2 class="section-title" style="text-align:center;" data-i18n="servicesHowTitle">HOW IT WORKS</h2>
       <div class="section-kicker"></div>
     </div>
     <div class="process-steps">
       <div class="process-step reveal">
         <div class="process-step-num">1</div>
-        <h4>Consult</h4>
-        <p>Tell us your budget, use case, and must-haves. We'll spec the right parts for the job.</p>
+        <h4 data-i18n="servicesStep1Title">Consult</h4>
+        <p data-i18n="servicesStep1Desc">Tell us your budget, use case, and must-haves. We'll spec the right parts for the job.</p>
       </div>
       <div class="process-step reveal reveal-delay-1">
         <div class="process-step-num">2</div>
-        <h4>Build</h4>
-        <p>A dedicated technician assembles your rig by hand with meticulous cable management.</p>
+        <h4 data-i18n="servicesStep2Title">Build</h4>
+        <p data-i18n="servicesStep2Desc">A dedicated technician assembles your rig by hand with meticulous cable management.</p>
       </div>
       <div class="process-step reveal reveal-delay-2">
         <div class="process-step-num">3</div>
-        <h4>Test</h4>
-        <p>Every build gets a 48-hour burn-in stress test before it's cleared to ship.</p>
+        <h4 data-i18n="servicesStep3Title">Test</h4>
+        <p data-i18n="servicesStep3Desc">Every build gets a 48-hour burn-in stress test before it's cleared to ship.</p>
       </div>
       <div class="process-step reveal reveal-delay-3">
         <div class="process-step-num">4</div>
-        <h4>Ship</h4>
-        <p>Securely packed and shipped with a full build sheet and multi-year warranty.</p>
+        <h4 data-i18n="servicesStep4Title">Ship</h4>
+        <p data-i18n="servicesStep4Desc">Securely packed and shipped with a full build sheet and multi-year warranty.</p>
       </div>
     </div>
   </div>
@@ -110,33 +110,33 @@
     <div class="grid-3">
       <div class="info-card reveal">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
-        <h4>Custom Builds</h4>
-        <p>Tell us your budget and use case — we'll spec, build, and stress-test a rig made exactly for you.</p>
+        <h4 data-i18n="servicesCard1Title">Custom Builds</h4>
+        <p data-i18n="servicesCard1Desc">Tell us your budget and use case — we'll spec, build, and stress-test a rig made exactly for you.</p>
       </div>
       <div class="info-card reveal reveal-delay-1">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2a10 10 0 1 0 10 10"/><path d="M12 12l6-4"/></svg></div>
-        <h4>Upgrades</h4>
-        <p>GPU, RAM, storage, or a full platform swap — we upgrade existing systems without the guesswork.</p>
+        <h4 data-i18n="servicesCard2Title">Upgrades</h4>
+        <p data-i18n="servicesCard2Desc">GPU, RAM, storage, or a full platform swap — we upgrade existing systems without the guesswork.</p>
       </div>
       <div class="info-card reveal reveal-delay-2">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-        <h4>Diagnostics & Repair</h4>
-        <p>Boot loops, thermal issues, artifacting — our bench techs find the root cause and fix it fast.</p>
+        <h4 data-i18n="servicesCard3Title">Diagnostics & Repair</h4>
+        <p data-i18n="servicesCard3Desc">Boot loops, thermal issues, artifacting — our bench techs find the root cause and fix it fast.</p>
       </div>
       <div class="info-card reveal">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l8 4v6c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6z"/></svg></div>
-        <h4>Cable Management & Cleaning</h4>
-        <p>Full teardown, dust removal, thermal paste refresh, and a cable job that looks as good as it runs.</p>
+        <h4 data-i18n="servicesCard4Title">Cable Management & Cleaning</h4>
+        <p data-i18n="servicesCard4Desc">Full teardown, dust removal, thermal paste refresh, and a cable job that looks as good as it runs.</p>
       </div>
       <div class="info-card reveal reveal-delay-1">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-        <h4>Data Migration</h4>
-        <p>Moving to a new rig? We clone your drive and get every file, save, and setting exactly where it was.</p>
+        <h4 data-i18n="servicesCard5Title">Data Migration</h4>
+        <p data-i18n="servicesCard5Desc">Moving to a new rig? We clone your drive and get every file, save, and setting exactly where it was.</p>
       </div>
       <div class="info-card reveal reveal-delay-2">
         <div class="info-icon-badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="6"/><path d="M9 14L6.5 22 12 19l5.5 3L15 14"/></svg></div>
-        <h4>Overclocking & Tuning</h4>
-        <p>Safe, stability-tested overclocks on CPU, GPU, and memory to squeeze out every last frame.</p>
+        <h4 data-i18n="servicesCard6Title">Overclocking & Tuning</h4>
+        <p data-i18n="servicesCard6Desc">Safe, stability-tested overclocks on CPU, GPU, and memory to squeeze out every last frame.</p>
       </div>
     </div>
   </div>
@@ -153,17 +153,17 @@
         <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
         <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
       </svg><span><span class="logo-text">RED<span class="accent">GEAR</span></span></span></a>
-        <p>Custom PC builds engineered for performance, quality, and reliability.</p>
+        <p data-i18n="footerBrandDesc">Custom PC builds engineered for performance, quality, and reliability.</p>
       </div>
-      <div class="footer-col"><h5 data-i18n="shop">Shop</h5><ul><li><a href="builds.html?cat=gaming">Gaming PCs</a></li><li><a href="builds.html?cat=creator">Creator PCs</a></li><li><a href="builds.html?cat=office">Office PCs</a></li><li><a href="builder.html">Custom Build</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="shop">Shop</h5><ul><li><a href="builds.html?cat=gaming" data-i18n="catGamingTitle">Gaming PCs</a></li><li><a href="builds.html?cat=creator" data-i18n="catCreatorTitle">Creator PCs</a></li><li><a href="builds.html?cat=office" data-i18n="catOfficeTitle">Office PCs</a></li><li><a href="builder.html" data-i18n="customBuild">Custom Build</a></li></ul></div>
       <div class="footer-col"><h5 data-i18n="company">Company</h5><ul><li><a href="about.html" data-i18n="about">About Us</a></li><li><a href="services.html" data-i18n="services">Services</a></li><li><a href="contact.html" data-i18n="contact">Contact</a></li></ul></div>
       <div class="footer-col"><h5 data-i18n="support">Support</h5><ul><li><a href="tel:+15551234567">+1 (555) 123-4567</a></li><li><a href="mailto:support@redgear.com">support@redgear.com</a></li></ul></div>
     </div>
-    <div class="footer-bottom"><span>© 2026 RedGear PC Builds. All rights reserved.</span><span>Privacy Policy · Terms of Service</span></div>
+    <div class="footer-bottom"><span>© 2026 <span data-i18n="footerRightsLine">RedGear PC Builds. All rights reserved.</span></span><span data-i18n="footerLegal">Privacy Policy · Terms of Service</span></div>
   </div>
 </footer>
 
-<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span id="toastMsg">Added to cart</span></div>
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span id="toastMsg" data-i18n="toastAdded">Added to cart</span></div>
 
 <script src="js/script.js"></script>
 </body>
