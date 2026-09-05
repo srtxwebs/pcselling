@@ -1,7 +1,32 @@
 /* ==========================================================================
-   REDGEAR — Custom PC Builder Logic (v2)
+   REDGEAR — Custom PC Builder Logic (v3 — full i18n for UI chrome)
    Expanded parts catalog + per-option icons + live assembled preview
+
+   i18n note: the PARTS catalog below (case/CPU/GPU names & spec blurbs) is
+   product data — hundreds of real part names and specs — not UI copy, so
+   it is intentionally left in English (translating a live parts catalog
+   accurately is a content/localization project of its own, not a string
+   table). Every other piece of builder UI chrome — category labels,
+   "Not selected yet", filters, the compatibility badge, progress text,
+   and the whole Build Advisor panel — is now fully translated via the
+   PART_TITLES table and window.t() below, and re-renders live when the
+   language changes.
    ========================================================================== */
+
+// Category titles ARE UI chrome (not product data), so they get their own
+// small translation table, keyed the same way as window.TRANSLATIONS.
+const PART_TITLES = {
+  en: { case:'Case', cpu:'Processor (CPU)', motherboard:'Motherboard', gpu:'Graphics Card (GPU)', ram:'Memory (RAM)', storage:'Storage', cooling:'Cooling', fans:'Extra Case Fans', psu:'Power Supply (PSU)', os:'Operating System' },
+  es: { case:'Gabinete', cpu:'Procesador (CPU)', motherboard:'Placa Madre', gpu:'Tarjeta Gráfica (GPU)', ram:'Memoria (RAM)', storage:'Almacenamiento', cooling:'Refrigeración', fans:'Ventiladores Extra', psu:'Fuente de Poder (PSU)', os:'Sistema Operativo' },
+  fr: { case:'Boîtier', cpu:'Processeur (CPU)', motherboard:'Carte Mère', gpu:'Carte Graphique (GPU)', ram:'Mémoire (RAM)', storage:'Stockage', cooling:'Refroidissement', fans:'Ventilateurs Supplémentaires', psu:'Alimentation (PSU)', os:'Système d\u2019Exploitation' },
+  de: { case:'Gehäuse', cpu:'Prozessor (CPU)', motherboard:'Mainboard', gpu:'Grafikkarte (GPU)', ram:'Arbeitsspeicher (RAM)', storage:'Speicher', cooling:'Kühlung', fans:'Zusätzliche Gehäuselüfter', psu:'Netzteil (PSU)', os:'Betriebssystem' },
+  pt: { case:'Gabinete', cpu:'Processador (CPU)', motherboard:'Placa-mãe', gpu:'Placa de Vídeo (GPU)', ram:'Memória (RAM)', storage:'Armazenamento', cooling:'Refrigeração', fans:'Ventoinhas Extras', psu:'Fonte de Alimentação (PSU)', os:'Sistema Operacional' },
+  ja: { case:'ケース', cpu:'プロセッサー（CPU）', motherboard:'マザーボード', gpu:'グラフィックカード（GPU）', ram:'メモリ（RAM）', storage:'ストレージ', cooling:'冷却', fans:'追加ケースファン', psu:'電源ユニット（PSU）', os:'オペレーティングシステム' },
+};
+function partTitle(key) {
+  const lang = window.getLanguage ? window.getLanguage() : 'en';
+  return (PART_TITLES[lang] && PART_TITLES[lang][key]) || PART_TITLES.en[key] || key;
+}
 
 function tierColor(i, total) {
   const t = total <= 1 ? 0 : i / (total - 1);
@@ -239,19 +264,21 @@ const fmt = (n) => window.formatPrice ? window.formatPrice(Number(n)) : `$${Numb
 function buildUI() {
   const wrap = document.getElementById('builderSteps');
   if (!wrap) return;
+  wrap.innerHTML = '';
 
   PARTS.forEach((part, idx) => {
     const card = document.createElement('div');
     card.className = 'part-card';
     card.id = `card-${part.key}`;
+    const isDone = !!state[part.key];
 
     card.innerHTML = `
       <div class="part-card-head" data-toggle="${part.key}">
         <div class="part-card-head-left">
-          <div class="part-num">${idx + 1}</div>
+          <div class="part-num">${isDone ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:14px;height:14px;"><path d="M20 6L9 17l-5-5"/></svg>' : idx + 1}</div>
           <div>
-            <div class="part-card-title">${part.title}</div>
-            <div class="part-card-selected" id="sel-${part.key}">Not selected yet</div>
+            <div class="part-card-title">${partTitle(part.key)}</div>
+            <div class="part-card-selected" id="sel-${part.key}">${isDone ? `${state[part.key].name}${state[part.key].price ? ' — ' + fmt(state[part.key].price) : ' — Included'}` : window.t('notSelected')}</div>
           </div>
         </div>
         <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
@@ -259,13 +286,13 @@ function buildUI() {
       <div class="part-card-body">
         ${part.filterType === 'brand' ? `
         <div class="brand-filter" data-filter-for="${part.key}">
-          <button class="brand-filter-btn active" data-filter="all">All</button>
+          <button class="brand-filter-btn active" data-filter="all">${window.t('filterAll')}</button>
           ${part.filterOptions.map(f => `<button class="brand-filter-btn" data-filter="${f.value}">${f.label}</button>`).join('')}
         </div>
         ` : ''}
         <div class="option-list">
           ${part.options.map((opt, i) => `
-            <div class="option" data-part="${part.key}" data-opt="${opt.id}" ${opt.brand ? `data-brand="${opt.brand}"` : ''}>
+            <div class="option ${state[part.key] && state[part.key].id === opt.id ? 'selected' : ''}" data-part="${part.key}" data-opt="${opt.id}" ${opt.brand ? `data-brand="${opt.brand}"` : ''}>
               <div class="option-info">
                 <div class="option-icon">${partIcon(part.key, i, part.options.length)}</div>
                 <div>
@@ -282,6 +309,7 @@ function buildUI() {
         </div>
       </div>
     `;
+    if (isDone) card.classList.add('done');
     wrap.appendChild(card);
   });
 
@@ -292,7 +320,10 @@ function buildUI() {
     firstBody.style.maxHeight = firstBody.scrollHeight + 'px';
   }
 
-  wrap.addEventListener('click', (e) => {
+  wrap.addEventListener('click', builderClickHandler);
+}
+
+function builderClickHandler(e) {
     const filterBtn = e.target.closest('.brand-filter-btn');
     if (filterBtn) {
       const filterRow = filterBtn.closest('.brand-filter');
@@ -374,7 +405,6 @@ function buildUI() {
         applyCompatibilityFilter(partKey, chosen);
       }
     }
-  });
 }
 
 /* ---------- Compatibility filtering ---------- */
@@ -401,7 +431,8 @@ function applyCompatibilityFilter(partKey, chosen) {
     pairedCard.querySelector('.part-card-selected').after(b);
     return b;
   })();
-  badge.textContent = `Showing ${chosen.brand === 'amd' ? 'AMD' : chosen.brand === 'nvidia' ? 'NVIDIA' : 'Intel'}-compatible only`;
+  const brandLabel = chosen.brand === 'amd' ? 'AMD' : chosen.brand === 'nvidia' ? 'NVIDIA' : 'Intel';
+  badge.textContent = `${window.t('showingCompatible')} ${brandLabel} ${window.t('compatibleOnly')}`.trim();
   if (pairedCard.classList.contains('open')) {
     const body = pairedCard.querySelector('.part-card-body');
     body.style.maxHeight = body.scrollHeight + 'px';
@@ -425,7 +456,7 @@ function updateSummary() {
     if (chosen) { total += chosen.price; filled++; }
     return `
       <div class="summary-line ${chosen ? '' : 'empty'}">
-        <span>${part.title}</span>
+        <span>${partTitle(part.key)}</span>
         <span class="val">${chosen ? chosen.name : '—'}</span>
       </div>
     `;
@@ -434,7 +465,7 @@ function updateSummary() {
   totalEl.textContent = fmt(total);
   const pct = Math.round((filled / PARTS.length) * 100);
   progressFill.style.width = pct + '%';
-  progressLabel.textContent = `${filled} of ${PARTS.length} parts selected`;
+  progressLabel.textContent = `${filled} ${window.t('partsSelectedOf')} ${PARTS.length} ${window.t('partsSelected')}`;
 
   if (filled === PARTS.length) {
     cta.classList.remove('disabled');
@@ -443,6 +474,8 @@ function updateSummary() {
     cta.classList.add('disabled');
     cta.setAttribute('disabled', 'true');
   }
+  const ctaLabel = cta.querySelector('span');
+  if (ctaLabel) ctaLabel.textContent = window.t('addBuildToCart');
 }
 
 /* ---------- Live assembled preview ---------- */
@@ -507,7 +540,7 @@ function renderPreview() {
   if (state.case) parts.push(state.case.name.replace('RedGear ',''));
   if (state.cpu) parts.push(state.cpu.name.split(' ').slice(-1)[0]);
   if (state.gpu) parts.push(state.gpu.name.split(' ').slice(0,2).join(' '));
-  if (label) label.textContent = parts.length ? parts.join(' · ') : `${filledKeys.length} of ${totalParts} parts placed`;
+  if (label) label.textContent = parts.length ? parts.join(' · ') : `${filledKeys.length} ${window.t('partsSelectedOf')} ${totalParts} ${window.t('partsSelected')}`;
 }
 
 /* ---------- Init ---------- */
@@ -516,9 +549,9 @@ function buildCategoryStepper() {
   const stepper = document.getElementById('categoryStepper');
   if (!stepper) return;
   stepper.innerHTML = PARTS.map((part, idx) => `
-    <button class="stepper-item" data-jump="${part.key}" title="${part.title}">
+    <button class="stepper-item ${state[part.key] ? 'done' : ''}" data-jump="${part.key}" title="${partTitle(part.key)}">
       <span class="stepper-icon" id="stepper-icon-${part.key}">${partIcon(part.key, Math.floor(part.options.length/2), part.options.length)}</span>
-      <span class="stepper-label">${part.title}</span>
+      <span class="stepper-label">${partTitle(part.key)}</span>
     </button>
   `).join('');
   stepper.addEventListener('click', (e) => {
@@ -544,6 +577,24 @@ function updateStepperState() {
   });
 }
 
+/* Re-render everything that has translated text whenever the language
+   changes, so the builder page updates fully live — not just on reload. */
+function rerenderBuilderTranslations() {
+  buildUI();
+  buildCategoryStepper();
+  updateSummary();
+  renderPreview();
+  updateStepperState();
+  const resetLabel = document.querySelector('#resetBuild');
+  if (resetLabel) resetLabel.textContent = window.t('resetSelections');
+  const rigTitle = document.querySelector('.preview-card-head h3');
+  if (rigTitle) rigTitle.textContent = window.t('yourRig');
+  const buildTitle = document.querySelector('.summary-card h3');
+  if (buildTitle) buildTitle.textContent = window.t('yourBuild');
+  const label = document.getElementById('previewLabel');
+  if (label && !Object.keys(state).length) label.textContent = window.t('noPartsYet');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildUI();
   buildCategoryStepper();
@@ -566,6 +617,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSummary();
   }
   window.addEventListener('redgear:settingschange', refreshPrices);
+  window.addEventListener('redgear:languagechange', rerenderBuilderTranslations);
 
   const cta = document.getElementById('summaryCta');
   if (cta) {
@@ -578,7 +630,7 @@ document.addEventListener('DOMContentLoaded', () => {
         parts: Object.fromEntries(Object.entries(state).map(([k, v]) => [k, v.name]))
       };
       const added = window.RedGearCart && window.RedGearCart.add(build);
-      if (added && window.showToast) showToast(`Custom build added — ${fmt(total)}`);
+      if (added && window.showToast) showToast(`${window.t('addBuildToCart')} — ${fmt(total)}`);
     });
   }
 
@@ -586,13 +638,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (resetBtn) {
     resetBtn.addEventListener('click', () => {
       Object.keys(state).forEach(k => delete state[k]);
-      document.querySelectorAll('.option.selected').forEach(o => o.classList.remove('selected'));
-      document.querySelectorAll('.part-card.done').forEach((c, idx) => {
-        c.classList.remove('done');
-        const numEl = c.querySelector('.part-num');
-        if (numEl) numEl.textContent = PARTS.findIndex(p => `card-${p.key}` === c.id) + 1;
-      });
-      document.querySelectorAll('[id^="sel-"]').forEach(el => el.textContent = 'Not selected yet');
+      buildUI();
       updateSummary();
       renderPreview();
       updateStepperState();
@@ -663,8 +709,8 @@ function buildAdvisorUI() {
   panel.innerHTML = `
     <div class="advisor-head">
       <div>
-        <h4>Build Advisor</h4>
-        <span>Ask what to buy for your budget</span>
+        <h4 id="advisorTitle">${window.t('advisorTitle')}</h4>
+        <span id="advisorSub">${window.t('advisorSub')}</span>
       </div>
       <button class="advisor-close" aria-label="Close">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -677,10 +723,16 @@ function buildAdvisorUI() {
     </div>
     <form class="advisor-input-row" id="advisorForm">
       <input type="text" id="advisorBudget" placeholder="What should I buy for $450?" autocomplete="off">
-      <button type="submit" class="btn btn-primary">Ask</button>
+      <button type="submit" class="btn btn-primary" id="advisorAskBtn">${window.t('advisorAsk')}</button>
     </form>
   `;
   document.body.appendChild(panel);
+
+  window.addEventListener('redgear:languagechange', () => {
+    document.getElementById('advisorTitle').textContent = window.t('advisorTitle');
+    document.getElementById('advisorSub').textContent = window.t('advisorSub');
+    document.getElementById('advisorAskBtn').textContent = window.t('advisorAsk');
+  });
 
   fab.addEventListener('click', () => { panel.classList.add('open'); fab.classList.add('hide'); document.getElementById('advisorBudget').focus(); });
   panel.querySelector('.advisor-close').addEventListener('click', () => { panel.classList.remove('open'); fab.classList.remove('hide'); });
@@ -711,7 +763,7 @@ function buildAdvisorUI() {
     }
 
     const { picks, total, overBudget } = recommendBuild(budget);
-    const rows = PARTS.map(p => `<div class="advisor-row"><span>${p.title}</span><span>${picks[p.key].name}</span></div>`).join('');
+    const rows = PARTS.map(p => `<div class="advisor-row"><span>${partTitle(p.key)}</span><span>${picks[p.key].name}</span></div>`).join('');
     const overNote = overBudget ? `<p class="advisor-over-note">Heads up — even the leanest parts I have come to ${fmt(total)}, a bit over your budget.</p>` : '';
 
     body.insertAdjacentHTML('beforeend', `
@@ -719,11 +771,11 @@ function buildAdvisorUI() {
         <p>${overBudget ? "Closest I can get you is this:" : `For $${budget.toLocaleString()}, here's what I'd build:`}</p>
         <div class="advisor-build-card">
           ${rows}
-          <div class="advisor-row advisor-row-total"><span>Total</span><span>${fmt(total)}</span></div>
+          <div class="advisor-row advisor-row-total"><span>${window.t('total')}</span><span>${fmt(total)}</span></div>
         </div>
         ${overNote}
         <button class="btn btn-outline advisor-apply-btn" data-apply='${JSON.stringify(Object.fromEntries(Object.entries(picks).map(([k,v]) => [k, v.id])))}'>
-          Fill My Builder With This
+          ${window.t('advisorFillBtn')}
         </button>
       </div>
     `);
@@ -739,24 +791,12 @@ function buildAdvisorUI() {
       const opt = part.options.find(o => o.id === id);
       if (opt) state[key] = opt;
     });
-    document.querySelectorAll('.option').forEach(o => {
-      o.classList.toggle('selected', state[o.dataset.part] && state[o.dataset.part].id === o.dataset.opt);
-    });
-    PARTS.forEach(part => {
-      const card = document.getElementById(`card-${part.key}`);
-      const chosen = state[part.key];
-      if (chosen) {
-        card.classList.add('done');
-        const numEl = card.querySelector('.part-num');
-        if (numEl) numEl.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" style="width:14px;height:14px;"><path d="M20 6L9 17l-5-5"/></svg>';
-        document.getElementById(`sel-${part.key}`).textContent = `${chosen.name}${chosen.price ? ' — ' + fmt(chosen.price) : ' — Included'}`;
-      }
-    });
+    buildUI();
     updateSummary();
     renderPreview();
     updateStepperState();
     panel.classList.remove('open');
     fab.classList.remove('hide');
-    if (window.showToast) showToast('Builder filled with recommended parts');
+    if (window.showToast) showToast(window.t('advisorFilled'));
   });
 }
