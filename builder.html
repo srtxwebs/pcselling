@@ -3,153 +3,83 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Custom PC Builder — RedGear PC Builds</title>
-<meta name="description" content="Configure your own custom PC — pick your case, CPU, GPU, RAM, storage, cooling and PSU with live pricing.">
+<title>Build Your Own PC — RedGear PC Builds</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<meta property="og:title" content="Build Your Own PC — RedGear PC Builds">
-<meta property="og:description" content="Configure your own custom PC — pick your case, CPU, GPU, RAM, and more with live pricing.">
-<meta property="og:type" content="website">
-<meta property="og:image" content="images/pc-cutout.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Build Your Own PC — RedGear PC Builds">
-<meta name="twitter:description" content="Configure your own custom PC — pick your case, CPU, GPU, RAM, and more with live pricing.">
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
-<div class="topbar">
-  <div class="container topbar-inner">
-    <div class="topbar-tagline">High Performance. Premium Quality. <span>Built for Victory.</span></div>
-    <div class="topbar-right">
-      <a href="tel:+15551234567">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-        +1 (555) 123-4567
-      </a>
-      <a href="mailto:support@redgear.com">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z" opacity="0"/><path d="M22 6l-10 7L2 6"/><path d="M2 6h20v12H2z"/></svg>
-        support@redgear.com
-      </a>
-      <div class="topbar-social">
-        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 4.4A19.7 19.7 0 0 0 15.6 3l-.3.5a14 14 0 0 1 4.1 1.7 15.6 15.6 0 0 0-13 0A14 14 0 0 1 10.6 3.5L10.3 3a19.7 19.7 0 0 0-4.7 1.4C2.9 8.4 2.2 12.3 2.5 16.1a19.9 19.9 0 0 0 5.4 2.5l.7-1.1a12 12 0 0 1-1.9-.8l.5-.4a14.5 14.5 0 0 0 11.6 0l.5.4a12 12 0 0 1-1.9.8l.7 1.1a19.8 19.8 0 0 0 5.4-2.5c.4-4.4-.6-8.3-2.7-11.7zM9.3 13.7c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7c0 .9-.7 1.7-1.6 1.7zm5.4 0c-.9 0-1.6-.8-1.6-1.7 0-1 .7-1.7 1.6-1.7s1.6.8 1.6 1.7c0 .9-.7 1.7-1.6 1.7z"/></svg></a>
-        <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></a>
-        <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22.5 6.2a2.8 2.8 0 0 0-2-2C18.9 3.7 12 3.7 12 3.7s-6.9 0-8.5.5a2.8 2.8 0 0 0-2 2A29 29 0 0 0 1 12a29 29 0 0 0 .5 5.8 2.8 2.8 0 0 0 2 2c1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5a2.8 2.8 0 0 0 2-2A29 29 0 0 0 23 12a29 29 0 0 0-.5-5.8z"/><path d="M9.7 15.5l6-3.5-6-3.5z"/></svg></a>
-      </div>
-    </div>
-  </div>
-</div>
-
-<header class="navbar">
-  <div class="container">
-    <a href="index.html" class="logo">
-      <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+<header class="navbar"><div class="container">
+  <a href="index.html" class="logo">
+    <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
         <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
         <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
         <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
         <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
         <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
       </svg>
-      <span>
-        <span class="logo-text">RED<span class="accent">GEAR</span></span>
-        <span class="logo-sub">PC BUILDS</span>
-      </span>
-    </a>
-    <nav class="nav-links">
-      <a href="index.html" data-i18n="home">Home</a>
-      <a href="builds.html" data-i18n="builds">PC Builds</a>
-      <a href="services.html" data-i18n="services">Services</a>
-      <a href="about.html" data-i18n="about">About Us</a>
-      <a href="contact.html" data-i18n="contact">Contact</a>
-    </nav>
-    <div class="nav-icons">
-      <button aria-label="Search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
-      <button aria-label="Account"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
-      <button aria-label="Cart" style="position:relative;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-        <span class="cart-count" id="cartCount">0</span>
-      </button>
-      <button class="nav-toggle" id="navToggle" aria-label="Menu"><span></span><span></span><span></span></button>
-    </div>
+    <span><span class="logo-text">RED<span class="accent">GEAR</span></span><span class="logo-sub">PC BUILDS</span></span>
+  </a>
+  <nav class="nav-links">
+    <a href="index.html" data-i18n="home">Home</a><a href="builds.html" data-i18n="builds">PC Builds</a><a href="services.html" data-i18n="services">Services</a><a href="about.html" data-i18n="about">About Us</a><a href="contact.html" data-i18n="contact">Contact</a>
+  </nav>
+  <div class="nav-icons">
+    <button aria-label="Search" data-i18n-title="navSearch"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg></button>
+    <button aria-label="Account" data-i18n-title="navAccount"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
+    <button aria-label="Cart" data-i18n-title="navCart" style="position:relative;"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg><span class="cart-count" id="cartCount">0</span></button>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu" data-i18n-title="navMenu"><span></span><span></span><span></span></button>
   </div>
-</header>
+</div></header>
 
 <div class="mobile-nav" id="mobileNav">
   <button class="mobile-nav-close" id="mobileNavClose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-  <a href="index.html" data-i18n="home">Home</a>
-  <a href="builds.html" data-i18n="builds">PC Builds</a>
-  <a href="services.html" data-i18n="services">Services</a>
-  <a href="about.html" data-i18n="about">About Us</a>
-  <a href="contact.html" data-i18n="contact">Contact</a>
+  <a href="index.html" data-i18n="home">Home</a><a href="builds.html" data-i18n="builds">PC Builds</a><a href="services.html" data-i18n="services">Services</a><a href="about.html" data-i18n="about">About Us</a><a href="contact.html" data-i18n="contact">Contact</a>
 </div>
 
 <section class="page-hero">
   <div class="container">
-    <div class="breadcrumb"><a href="index.html" data-i18n="home">Home</a><span class="sep">/</span><span>Custom Build</span></div>
-    <h1>Build Your <span>Own PC</span></h1>
-    <p>Pick every part yourself. Real-time pricing, compatibility-checked components, built by our experts and shipped to your door.</p>
+    <div class="breadcrumb"><a href="index.html" data-i18n="breadcrumbHome">Home</a><span class="sep">/</span><span data-i18n="customBuild">Custom Build</span></div>
+    <h1 data-i18n="builderPageTitle">Build Your Own PC</h1>
+    <p data-i18n="builderPageDesc">Pick every part yourself. Real-time pricing, compatibility-checked components, built by our experts and shipped to your door.</p>
   </div>
 </section>
 
-<section class="content-section builder-section">
+<section class="content-section builder-section" style="padding-top:10px;">
   <div class="container">
+
+    <div class="category-stepper" id="categoryStepper"></div>
+
     <div class="builder-layout">
-
-      <div class="builder-main">
-        <div class="category-stepper" id="categoryStepper">
-          <!-- populated by js/builder.js -->
-        </div>
-
-        <div class="builder-steps" id="builderSteps">
-          <!-- populated by js/builder.js -->
-        </div>
-      </div>
+      <div class="builder-steps" id="builderSteps"></div>
 
       <aside class="builder-sidebar">
-        <div class="preview-card reveal">
-          <div class="preview-card-head">
-            <h3>Your Rig</h3>
-            <span class="preview-label" id="previewLabel">No parts selected yet</span>
-          </div>
-          <div class="preview-mount" id="buildPreview"></div>
-          <div class="stage-dots" id="stageDots">
-            <span class="stage-dot" data-stage="0"></span>
-            <span class="stage-dot" data-stage="1"></span>
-            <span class="stage-dot" data-stage="2"></span>
-            <span class="stage-dot" data-stage="3"></span>
-            <span class="stage-dot" data-stage="4"></span>
-            <span class="stage-dot" data-stage="5"></span>
-            <span class="stage-dot" data-stage="6"></span>
-            <span class="stage-dot" data-stage="7"></span>
-            <span class="stage-dot" data-stage="8"></span>
-          </div>
+        <div class="preview-card">
+          <div class="preview-card-head"><h3 data-i18n="yourRig">Your Rig</h3></div>
+          <div class="build-preview" id="buildPreview"></div>
+          <p class="preview-label" id="previewLabel" data-i18n="noPartsYet">No parts selected yet</p>
         </div>
 
         <div class="summary-card">
-          <h3>Your Build</h3>
-          <div id="summaryLines"></div>
-
+          <h3 data-i18n="yourBuild">Your Build</h3>
+          <div id="summaryLines" class="summary-lines"></div>
           <div class="summary-progress">
-            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-            <div class="progress-label" id="progressLabel">0 of 10 parts selected</div>
+            <div class="summary-progress-track"><div class="summary-progress-fill" id="progressFill"></div></div>
+            <span id="progressLabel">0 of 10 parts selected</span>
           </div>
-
-          <div class="summary-total">
-            <span class="label">Total</span>
-            <span class="amount" id="summaryTotal">$0</span>
+          <div class="summary-total-row">
+            <span data-i18n="total">Total</span>
+            <span id="summaryTotal">$0</span>
           </div>
-
-          <button class="btn btn-primary summary-cta disabled" id="summaryCta" disabled>
-            Add Build To Cart
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          <button class="btn btn-primary disabled" id="summaryCta" disabled style="width:100%;justify-content:center;">
+            <span data-i18n="addBuildToCart">Add Build To Cart</span>
           </button>
-          <button class="btn btn-outline summary-cta" id="resetBuild" style="margin-top:10px;">
-            Reset Selections
-          </button>
+          <button class="btn btn-outline" id="resetBuild" style="width:100%;justify-content:center;margin-top:8px;" data-i18n="resetSelections">Reset Selections</button>
         </div>
       </aside>
-
     </div>
+
   </div>
 </section>
 
@@ -157,55 +87,24 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="logo">
-          <svg class="logo-mark" viewBox="0 0 48 48" fill="none">
+        <a href="index.html" class="logo"><svg class="logo-mark" viewBox="0 0 48 48" fill="none">
         <defs><linearGradient id="lgGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ff4545"/><stop offset="100%" stop-color="#8c0d14"/></linearGradient></defs>
         <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" fill="url(#lgGrad)" opacity="0.14"/>
         <path d="M24 2 L45 12.5 L41.5 29 L24 46 L6.5 29 L3 12.5 Z" stroke="url(#lgGrad)" stroke-width="1.6"/>
         <path d="M24 9 L36 15.5 L31 27 L24 40 L17 27 L12 15.5 Z" fill="url(#lgGrad)"/>
         <path d="M24 9 L24 40" stroke="#0a0a0c" stroke-width="1.1"/>
-      </svg>
-          <span><span class="logo-text">RED<span class="accent">GEAR</span></span></span>
-        </a>
-        <p>Custom PC builds engineered for performance, quality, and reliability. Built for victory, built for you.</p>
+      </svg><span><span class="logo-text">RED<span class="accent">GEAR</span></span></span></a>
+        <p data-i18n="footerBrandDesc">Custom PC builds engineered for performance, quality, and reliability.</p>
       </div>
-      <div class="footer-col">
-        <h5 data-i18n="shop">Shop</h5>
-        <ul>
-          <li><a href="builds.html?cat=gaming">Gaming PCs</a></li>
-          <li><a href="builds.html?cat=creator">Creator PCs</a></li>
-          <li><a href="builds.html?cat=office">Office PCs</a></li>
-          <li><a href="builder.html">Custom Build</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5 data-i18n="company">Company</h5>
-        <ul>
-          <li><a href="about.html" data-i18n="about">About Us</a></li>
-          <li><a href="services.html" data-i18n="services">Services</a></li>
-          <li><a href="contact.html" data-i18n="contact">Contact</a></li>
-          <li><a href="#">Warranty</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h5 data-i18n="support">Support</h5>
-        <ul>
-          <li><a href="tel:+15551234567">+1 (555) 123-4567</a></li>
-          <li><a href="mailto:support@redgear.com">support@redgear.com</a></li>
-        </ul>
-      </div>
+      <div class="footer-col"><h5 data-i18n="shop">Shop</h5><ul><li><a href="builds.html?cat=gaming" data-i18n="catGamingTitle">Gaming PCs</a></li><li><a href="builds.html?cat=creator" data-i18n="catCreatorTitle">Creator PCs</a></li><li><a href="builds.html?cat=office" data-i18n="catOfficeTitle">Office PCs</a></li><li><a href="builder.html" data-i18n="customBuild">Custom Build</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="company">Company</h5><ul><li><a href="about.html" data-i18n="about">About Us</a></li><li><a href="services.html" data-i18n="services">Services</a></li><li><a href="contact.html" data-i18n="contact">Contact</a></li></ul></div>
+      <div class="footer-col"><h5 data-i18n="support">Support</h5><ul><li><a href="tel:+15551234567">+1 (555) 123-4567</a></li><li><a href="mailto:support@redgear.com">support@redgear.com</a></li></ul></div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 RedGear PC Builds. All rights reserved.</span>
-      <span>Privacy Policy · Terms of Service</span>
-    </div>
+    <div class="footer-bottom"><span>© 2026 <span data-i18n="footerRightsLine">RedGear PC Builds. All rights reserved.</span></span><span data-i18n="footerLegal">Privacy Policy · Terms of Service</span></div>
   </div>
 </footer>
 
-<div class="toast" id="toast">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg>
-  <span id="toastMsg">Added to cart</span>
-</div>
+<div class="toast" id="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="M22 4L12 14.01l-3-3"/></svg><span id="toastMsg" data-i18n="toastAdded">Added to cart</span></div>
 
 <script src="js/script.js"></script>
 <script src="js/builder.js"></script>
