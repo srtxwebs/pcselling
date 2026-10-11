@@ -649,14 +649,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ==========================================================================
-   Build Advisor — a rules-based budget recommender over the real parts
-   catalog. NOTE: this is NOT a live conversational AI model — there's no
-   backend here to safely call one from (that needs an API key on a server,
-   not in front-end JS). This is a genuine budget-allocation algorithm that
-   picks real parts from the PARTS catalog above, upgrading piece by piece
-   until your budget runs out. Framed as a simple assistant so it's easy to
-   use, but honestly: it's an optimizer, not a chatbot.
+   Build Advisor — a real AI chat, backed by backend/server.js's
+   /api/advisor endpoint (which calls Claude server-side, so the API key
+   never touches the browser). It can recommend a build from a budget,
+   answer "will this run [game] at [res]?" with estimated FPS ranges, or
+   compare parts — genuine generated answers, not a canned script.
+
+   NOTE ON FPS NUMBERS: these are the model's best estimates from general
+   knowledge of how similar hardware performs, not numbers pulled from a
+   live benchmark database — the UI and the AI's own replies say so.
+
+   Set ADVISOR_API_URL below to your deployed backend (see backend/README.md
+   to deploy it). Until you do, or if the AI call fails for any reason,
+   the advisor falls back to the offline budget-allocation algorithm
+   further down — the panel always gives a useful answer either way.
    ========================================================================== */
+
+// Replace with your deployed backend, e.g. 'https://redgear-backend.onrender.com'
+const ADVISOR_API_URL = 'https://YOUR-BACKEND-DOMAIN.com';
 
 const ADVISOR_WEIGHTS = {
   case: 0.06, cpu: 0.18, motherboard: 0.10, gpu: 0.30, ram: 0.08,
@@ -697,6 +707,52 @@ function recommendBuild(budget) {
   return { picks, total, overBudget: total > budget };
 }
 
+function extractBudget(text) {
+  // Matches "$450", "450 dollars", "450 bucks", "1,500", "1.5k", plain "450", etc.
+  const kMatch = text.match(/(\d+(?:\.\d+)?)\s*k\b/i);
+  if (kMatch) return Math.round(parseFloat(kMatch[1]) * 1000);
+  const match = text.replace(/,/g, '').match(/\$?\s*(\d+(?:\.\d+)?)/);
+  return match ? Math.round(parseFloat(match[1])) : null;
+}
+
+// Very small, safe markdown-ish renderer for the AI's replies: paragraphs,
+// **bold**, and "- " bullet lists. Escapes HTML first so nothing from the
+// model (or a game/part name containing < >) can inject markup.
+function renderAdvisorText(raw) {
+  const esc = raw.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const blocks = esc.trim().split(/\n\s*\n/);
+  return blocks.map(block => {
+    const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+    if (lines.every(l => l.startsWith('- '))) {
+      return '<ul class="advisor-list">' + lines.map(l => `<li>${boldify(l.slice(2))}</li>`).join('') + '</ul>';
+    }
+    return `<p>${boldify(lines.join('<br>'))}</p>`;
+  }).join('');
+}
+function boldify(s) { return s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+
+// Pulls the trailing ```json {"picks": {...}} ``` block a build-recommending
+// reply ends with (see the backend system prompt), validates every part ID
+// actually exists in PARTS, and returns { displayText, picks } — picks is
+// null when there's no block or nothing in it survives validation.
+function extractPicksBlock(raw) {
+  const match = raw.match(/```json\s*([\s\S]*?)```/);
+  if (!match) return { displayText: raw, picks: null };
+  const displayText = (raw.slice(0, match.index) + raw.slice(match.index + match[0].length)).trim();
+  try {
+    const parsed = JSON.parse(match[1]);
+    const picks = {};
+    Object.entries(parsed.picks || {}).forEach(([key, id]) => {
+      const part = PARTS.find(p => p.key === key);
+      const opt = part && part.options.find(o => o.id === id);
+      if (opt) picks[key] = id;
+    });
+    return { displayText, picks: Object.keys(picks).length ? picks : null };
+  } catch (e) {
+    return { displayText, picks: null };
+  }
+}
+
 function buildAdvisorUI() {
   const fab = document.createElement('button');
   fab.className = 'advisor-fab';
@@ -718,11 +774,11 @@ function buildAdvisorUI() {
     </div>
     <div class="advisor-body" id="advisorBody">
       <div class="advisor-msg advisor-msg-bot">
-        <p>Ask me things like <strong>"what should I buy for 450 dollars?"</strong> or <strong>"I have $1500 to spend"</strong> and I'll build the best rig I can from our real catalog.</p>
+        <p>Ask me anything about your build — <strong>"what should I get for $1200?"</strong>, <strong>"what fps will an RTX 4070 get in Cyberpunk at 1440p?"</strong>, or <strong>"will my current build run Fortnite at 144fps?"</strong> FPS numbers are estimates, not guaranteed benchmarks.</p>
       </div>
     </div>
     <form class="advisor-input-row" id="advisorForm">
-      <input type="text" id="advisorBudget" placeholder="What should I buy for $450?" autocomplete="off">
+      <input type="text" id="advisorBudget" placeholder="Ask about a budget, parts, or FPS..." autocomplete="off">
       <button type="submit" class="btn btn-primary" id="advisorAskBtn">${window.t('advisorAsk')}</button>
     </form>
   `;
@@ -737,48 +793,90 @@ function buildAdvisorUI() {
   fab.addEventListener('click', () => { panel.classList.add('open'); fab.classList.add('hide'); document.getElementById('advisorBudget').focus(); });
   panel.querySelector('.advisor-close').addEventListener('click', () => { panel.classList.remove('open'); fab.classList.remove('hide'); });
 
-  function extractBudget(text) {
-    // Matches "$450", "450 dollars", "450 bucks", "1,500", "1.5k", plain "450", etc.
-    const kMatch = text.match(/(\d+(?:\.\d+)?)\s*k\b/i);
-    if (kMatch) return Math.round(parseFloat(kMatch[1]) * 1000);
-    const match = text.replace(/,/g, '').match(/\$?\s*(\d+(?:\.\d+)?)/);
-    return match ? Math.round(parseFloat(match[1])) : null;
+  const body = document.getElementById('advisorBody');
+  const history = []; // {role: 'user'|'assistant', content: string} — sent as context on every turn
+
+  function appendUserBubble(text) {
+    body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-user"><p>${text.replace(/&/g,'&amp;').replace(/</g,'&lt;')}</p></div>`);
+    body.scrollTop = body.scrollHeight;
+  }
+  function appendBotHTML(html) {
+    const el = document.createElement('div');
+    el.className = 'advisor-msg advisor-msg-bot';
+    el.innerHTML = html;
+    body.appendChild(el);
+    body.scrollTop = body.scrollHeight;
+    return el;
+  }
+  function appendThinking() {
+    return appendBotHTML(`<p class="advisor-thinking"><span></span><span></span><span></span></p>`);
   }
 
-  const body = document.getElementById('advisorBody');
-  document.getElementById('advisorForm').addEventListener('submit', (e) => {
+  function offlineFallback(userText, reasonNote) {
+    const budget = extractBudget(userText);
+    if (!budget || budget <= 0) {
+      return `<p>${reasonNote} I can still help offline for budget questions — try something like "what should I buy for $450?"</p>`;
+    }
+    const { picks, total, overBudget } = recommendBuild(budget);
+    const rows = PARTS.map(p => `<div class="advisor-row"><span>${partTitle(p.key)}</span><span>${picks[p.key].name}</span></div>`).join('');
+    const overNote = overBudget ? `<p class="advisor-over-note">Heads up — even the leanest parts I have come to ${fmt(total)}, a bit over your budget.</p>` : '';
+    const idsByKey = Object.fromEntries(Object.entries(picks).map(([k,v]) => [k, v.id]));
+    return `
+      <p>${reasonNote} Here's an offline budget pick instead:</p>
+      <div class="advisor-build-card">
+        ${rows}
+        <div class="advisor-row advisor-row-total"><span>${window.t('total')}</span><span>${fmt(total)}</span></div>
+      </div>
+      ${overNote}
+      <button class="btn btn-outline advisor-apply-btn" data-apply='${JSON.stringify(idsByKey)}'>${window.t('advisorFillBtn')}</button>
+    `;
+  }
+
+  function currentPicksIds() {
+    const out = {};
+    Object.entries(state).forEach(([key, opt]) => { out[key] = opt.id; });
+    return out;
+  }
+
+  document.getElementById('advisorForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const input = document.getElementById('advisorBudget');
     const text = input.value.trim();
     if (!text) return;
-    body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-user"><p>${text.replace(/</g,'&lt;')}</p></div>`);
+    appendUserBubble(text);
     input.value = '';
-    body.scrollTop = body.scrollHeight;
+    history.push({ role: 'user', content: text });
 
-    const budget = extractBudget(text);
-    if (!budget || budget <= 0) {
-      body.insertAdjacentHTML('beforeend', `<div class="advisor-msg advisor-msg-bot"><p>I didn't catch a dollar amount there — try something like "what should I buy for $450?"</p></div>`);
-      body.scrollTop = body.scrollHeight;
-      return;
+    const thinkingEl = appendThinking();
+    const askBtn = document.getElementById('advisorAskBtn');
+    askBtn.disabled = true;
+
+    let handled = false;
+    if (ADVISOR_API_URL && !ADVISOR_API_URL.includes('YOUR-BACKEND-DOMAIN')) {
+      try {
+        const res = await fetch(`${ADVISOR_API_URL}/api/advisor`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: history, currentPicks: currentPicksIds() }),
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const { displayText, picks } = extractPicksBlock(data.reply || '');
+          history.push({ role: 'assistant', content: data.reply || '' });
+          thinkingEl.innerHTML = renderAdvisorText(displayText) +
+            (picks ? `<button class="btn btn-outline advisor-apply-btn" data-apply='${JSON.stringify(picks)}'>${window.t('advisorFillBtn')}</button>` : '');
+          handled = true;
+        }
+      } catch (e) { /* network/backend unavailable — fall through to offline path below */ }
     }
 
-    const { picks, total, overBudget } = recommendBuild(budget);
-    const rows = PARTS.map(p => `<div class="advisor-row"><span>${partTitle(p.key)}</span><span>${picks[p.key].name}</span></div>`).join('');
-    const overNote = overBudget ? `<p class="advisor-over-note">Heads up — even the leanest parts I have come to ${fmt(total)}, a bit over your budget.</p>` : '';
-
-    body.insertAdjacentHTML('beforeend', `
-      <div class="advisor-msg advisor-msg-bot">
-        <p>${overBudget ? "Closest I can get you is this:" : `For $${budget.toLocaleString()}, here's what I'd build:`}</p>
-        <div class="advisor-build-card">
-          ${rows}
-          <div class="advisor-row advisor-row-total"><span>${window.t('total')}</span><span>${fmt(total)}</span></div>
-        </div>
-        ${overNote}
-        <button class="btn btn-outline advisor-apply-btn" data-apply='${JSON.stringify(Object.fromEntries(Object.entries(picks).map(([k,v]) => [k, v.id])))}'>
-          ${window.t('advisorFillBtn')}
-        </button>
-      </div>
-    `);
+    if (!handled) {
+      const note = (!ADVISOR_API_URL || ADVISOR_API_URL.includes('YOUR-BACKEND-DOMAIN'))
+        ? 'The live AI advisor isn\u2019t connected on this site yet (the store owner needs to deploy backend/ and set ADVISOR_API_URL).'
+        : 'The AI advisor is temporarily unavailable.';
+      thinkingEl.innerHTML = offlineFallback(text, note);
+    }
+    askBtn.disabled = false;
     body.scrollTop = body.scrollHeight;
   });
 
